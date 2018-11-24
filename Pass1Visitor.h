@@ -51,13 +51,13 @@ public:
     // antlrcpp::Any visitStatementList(mmcParser::StatementListContext *ctx) override;
     // antlrcpp::Any visitAssignmentStatement(mmcParser::AssignmentStatementContext *ctx) override;
     // antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *ctx) override;
-    // antlrcpp::Any visitBitExpr(mmcParser::BitExprContext *ctx) override;
-    // antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override;
+    antlrcpp::Any visitBitExpr(mmcParser::BitExprContext *ctx) override;
+    antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override;
     // antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     // antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;
     // antlrcpp::Any visitNumberExpr(mmcParser::NumberExprContext *ctx) override;
     // antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override;
-    // antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
+    antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
     // antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
     // antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override;
     // antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;

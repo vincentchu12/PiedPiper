@@ -106,6 +106,9 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitio
 {
     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
 
+    visitChildren(ctx->functionID());
+    visitChildren(ctx->typeID());
+    visitChildren(ctx->statementList());
     return visitChildren(ctx);
 }
 
@@ -144,7 +147,7 @@ antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
     else if (type_name == "void")
     {
         type = Predefined::void_type;
-        type_indicator = "?";
+        type_indicator = "V";
     }
     else
     {
@@ -159,7 +162,7 @@ antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
         j_file << ".field private static "
                << id->get_name() << " " << type_indicator << endl;
     }
-
+    variable_id_list.resize(0);
     return visitChildren(ctx);
 }
 
@@ -241,34 +244,54 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
-// {
+antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
+{
+    cout << "=== visitVariableExpr: " + ctx->getText() << endl;
 
-// }
+    string variable_name = ctx->variable()->IDENTIFIER()->toString();
+    SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
-// antlrcpp::Any Pass1Visitor::visitBitExpr(mmcParser::BitExprContext *ctx)
-// {
+    ctx->type = variable_id->get_typespec();
+    return visitChildren(ctx);
+}
 
-// }
+antlrcpp::Any Pass1Visitor::visitBitExpr(mmcParser::BitExprContext *ctx)
+{
+   cout << "=== visitBitExpr: " + ctx->getText() << endl;
 
-// antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
-// {
-// //    cout << "=== visitAddSubExpr: " + ctx->getText() << endl;
+    auto value = visitChildren(ctx);
 
-//     auto value = visitChildren(ctx);
+    TypeSpec *type1 = ctx->expression(0)->type;
+    TypeSpec *type2 = ctx->expression(1)->type;
 
-//     TypeSpec *type1 = ctx->expression(0)->type;
-//     TypeSpec *type2 = ctx->expression(1)->type;
+    bool integer_mode =    (type1 == Predefined::integer_type)
+                        && (type2 == Predefined::integer_type);
 
-//     bool integer_mode =    (type1 == Predefined::integer_type)
-//                         && (type2 == Predefined::integer_type);
+    TypeSpec *type = integer_mode ? Predefined::integer_type
+                   :                nullptr;
+    ctx->type = type;
 
-//     TypeSpec *type = integer_mode ? Predefined::integer_type
-//                    :                nullptr;
-//     ctx->type = type;
+    return value;
+}
 
-//     return value;
-// }
+antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
+{
+   cout << "=== visitAddSubExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+
+    TypeSpec *type1 = ctx->expression(0)->type;
+    TypeSpec *type2 = ctx->expression(1)->type;
+
+    bool integer_mode =    (type1 == Predefined::integer_type)
+                        && (type2 == Predefined::integer_type);
+
+    TypeSpec *type = integer_mode ? Predefined::integer_type
+                   :                nullptr;
+    ctx->type = type;
+
+    return value;
+}
 
 // antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
 // {
@@ -290,29 +313,35 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
-// {
-// //    cout << "=== visitMulDivExpr: " + ctx->getText() << endl;
+antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
+{
+   cout << "=== visitMulDivExpr: " + ctx->getText() << endl;
 
-//     auto value = visitChildren(ctx);
+    auto value = visitChildren(ctx);
 
-//     TypeSpec *type1 = ctx->expression(0)->type;
-//     TypeSpec *type2 = ctx->expression(1)->type;
+    TypeSpec *type1 = ctx->expression(0)->type;
+    TypeSpec *type2 = ctx->expression(1)->type;
 
-//     bool integer_mode =    (type1 == Predefined::integer_type)
-//                         && (type2 == Predefined::integer_type);
+    bool integer_mode =    (type1 == Predefined::integer_type)
+                        && (type2 == Predefined::integer_type);
 
-//     TypeSpec *type = integer_mode ? Predefined::integer_type
-//                    :                nullptr;
-//     ctx->type = type;
+    TypeSpec *type = integer_mode ? Predefined::integer_type
+                   :                nullptr;
+    ctx->type = type;
 
-//     return value;
-// }
+    return value;
+}
 
-// antlrcpp::Any Pass1Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx)
-// {
+antlrcpp::Any Pass1Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx)
+{
+    cout << "=== visitFuncCallExpr: " + ctx->getText() << endl;
 
-// }
+    string function_name = ctx->function()->IDENTIFIER()->toString();
+    SymTabEntry *function_id = symtab_stack->lookup(function_name);
+
+    ctx->type = function_id->get_typespec();
+    return visitChildren(ctx);
+}
 
 // antlrcpp::Any Pass1Visitor::visitParenExpr(mmcParser::ParenExprContext *ctx)
 // {

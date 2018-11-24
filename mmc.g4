@@ -81,9 +81,9 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
-	| variable '[' INTEGER ']'           # arrayExpr
+	| variable '[' INTEGER ']'             # arrayExpr
 	| INTEGER                              # numberExpr
-	| variable                           # variableExpr
+	| variable                             # variableExpr
 	| '(' expression ')'				   # parenExpr
 	| functionCall                         # funcCallExpr
 	;

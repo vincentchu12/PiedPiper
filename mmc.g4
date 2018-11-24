@@ -14,7 +14,7 @@ root	:
 		;
 
 declaration : typeID variableID | typeID variableID '[' INTEGER ']';
-definition  : typeID assignment ;
+definition  : typeID variableID ASSIGN expression ;
 
 
 functionDeclaration : typeID functionID '(' parameters? ')' ';' ;

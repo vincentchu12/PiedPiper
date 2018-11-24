@@ -107,7 +107,9 @@ public:
     DefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeIDContext *typeID();
-    AssignmentContext *assignment();
+    VariableIDContext *variableID();
+    antlr4::tree::TerminalNode *ASSIGN();
+    ExpressionContext *expression();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
+extern string program_name;
 
 
 // Generated from mmc.g4 by ANTLR 4.7.1
@@ -29,11 +30,11 @@ public:
   enum {
     RuleRoot = 0, RuleDeclaration = 1, RuleDefinition = 2, RuleFunctionDeclaration = 3, 
     RuleFunctionDefinition = 4, RuleFunctionCall = 5, RuleParameters = 6, 
-    RuleIdentifiers = 7, RuleTypeID = 8, RuleVariable = 9, RuleStatement = 10, 
-    RuleDeclarationStatement = 11, RuleDefinitionStatement = 12, RuleExpressionStatement = 13, 
-    RuleIfStatement = 14, RuleForStatement = 15, RuleUnaryStatement = 16, 
-    RuleStatementList = 17, RuleAssignmentStatement = 18, RuleExpression = 19, 
-    RuleUnary = 20, RuleAssignment = 21
+    RuleIdentifiers = 7, RuleTypeID = 8, RuleFunctionID = 9, RuleFunction = 10, 
+    RuleVariableID = 11, RuleVariable = 12, RuleStatement = 13, RuleDeclarationStatement = 14, 
+    RuleDefinitionStatement = 15, RuleExpressionStatement = 16, RuleIfStatement = 17, 
+    RuleForStatement = 18, RuleUnaryStatement = 19, RuleStatementList = 20, 
+    RuleAssignmentStatement = 21, RuleExpression = 22, RuleUnary = 23, RuleAssignment = 24
   };
 
   mmcParser(antlr4::TokenStream *input);
@@ -55,6 +56,9 @@ public:
   class ParametersContext;
   class IdentifiersContext;
   class TypeIDContext;
+  class FunctionIDContext;
+  class FunctionContext;
+  class VariableIDContext;
   class VariableContext;
   class StatementContext;
   class DeclarationStatementContext;
@@ -89,7 +93,7 @@ public:
     DeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeIDContext *typeID();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableIDContext *variableID();
     antlr4::tree::TerminalNode *INTEGER();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -116,7 +120,7 @@ public:
     FunctionDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeIDContext *typeID();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    FunctionIDContext *functionID();
     ParametersContext *parameters();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -130,7 +134,7 @@ public:
     FunctionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeIDContext *typeID();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    FunctionIDContext *functionID();
     ParametersContext *parameters();
     StatementListContext *statementList();
     antlr4::tree::TerminalNode *RETURN();
@@ -146,7 +150,7 @@ public:
   public:
     FunctionCallContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    FunctionContext *function();
     IdentifiersContext *identifiers();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -192,6 +196,42 @@ public:
   };
 
   TypeIDContext* typeID();
+
+  class  FunctionIDContext : public antlr4::ParserRuleContext {
+  public:
+    FunctionIDContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  FunctionIDContext* functionID();
+
+  class  FunctionContext : public antlr4::ParserRuleContext {
+  public:
+    FunctionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  FunctionContext* function();
+
+  class  VariableIDContext : public antlr4::ParserRuleContext {
+  public:
+    VariableIDContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  VariableIDContext* variableID();
 
   class  VariableContext : public antlr4::ParserRuleContext {
   public:
@@ -284,7 +324,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FOR();
     StatementListContext *statementList();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     std::vector<DeclarationContext *> declaration();
     DeclarationContext* declaration(size_t i);
     DefinitionContext *definition();
@@ -353,7 +393,7 @@ public:
   public:
     VariableExprContext(ExpressionContext *ctx);
 
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -381,7 +421,7 @@ public:
   public:
     ArrayExprContext(ExpressionContext *ctx);
 
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *INTEGER();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -459,7 +499,7 @@ public:
   public:
     PostIncContext(UnaryContext *ctx);
 
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *INC();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -469,7 +509,7 @@ public:
     PreDecContext(UnaryContext *ctx);
 
     antlr4::tree::TerminalNode *DEC();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -477,7 +517,7 @@ public:
   public:
     PostDecContext(UnaryContext *ctx);
 
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *DEC();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
@@ -487,7 +527,7 @@ public:
     PreIncContext(UnaryContext *ctx);
 
     antlr4::tree::TerminalNode *INC();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -497,7 +537,7 @@ public:
   public:
     AssignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *ASSIGN();
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *INTEGER();

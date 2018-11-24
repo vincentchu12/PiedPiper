@@ -37,6 +37,9 @@ public:
     // antlrcpp::Any visitParameters(mmcParser::ParametersContext *ctx) override;
     // antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *ctx) override;
     // antlrcpp::Any visitTypeID(mmcParser::TypeIDContext *ctx) override;
+    // antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *ctx) override;
+    // antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override;
+    // antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override;
     // antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
     // antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override;
     // antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx) override;

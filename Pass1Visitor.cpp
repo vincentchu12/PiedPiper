@@ -34,9 +34,7 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 {
     
     // Visit Header Block
-           cout << "=== visitRoot: " + ctx->getText() << endl;
-
-        // string program_name = ctx->IDENTIFIER()->toString();
+        cout << "=== visitRoot: " + ctx->getText() << endl;
 
         program_id = symtab_stack->enter_local(program_name);
         program_id->set_definition((Definition)DF_PROGRAM);
@@ -64,7 +62,7 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
     auto value = visitChildren(ctx);
 
-    //    cout << "=== visitProgram: Printing xref table." << endl;
+       cout << "=== visitRoot: Printing xref table." << endl;
 
     // Print the cross-reference table.
     CrossReferencer cross_referencer;
@@ -106,7 +104,9 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
 // {
+//     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
 
+//     return visitChildren(ctx);
 // }
 
 // antlrcpp::Any Pass1Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
@@ -126,7 +126,7 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
 // {
-// //    cout << "=== visitTypeId: " + ctx->getText() << endl;
+//     cout << "=== visitTypeId: " + ctx->getText() << endl;
 //     TypeSpec *type;
 //     string type_indicator;
 
@@ -160,7 +160,7 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
 // {
-// //    cout << "=== visitVarId: " + ctx->getText() << endl;
+//     cout << "=== visitVarId: " + ctx->getText() << endl;
 
 //     string variable_name = ctx->IDENTIFIER()->toString();
 //     SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);

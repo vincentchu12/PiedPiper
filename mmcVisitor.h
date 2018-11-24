@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
+extern string program_name;
 
 
 // Generated from mmc.g4 by ANTLR 4.7.1
@@ -41,6 +42,12 @@ public:
     virtual antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *context) = 0;
 
     virtual antlrcpp::Any visitTypeID(mmcParser::TypeIDContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunction(mmcParser::FunctionContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *context) = 0;
 
     virtual antlrcpp::Any visitVariable(mmcParser::VariableContext *context) = 0;
 

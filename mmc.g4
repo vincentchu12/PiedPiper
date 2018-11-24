@@ -4,6 +4,7 @@ grammar mmc;
 #include <stdlib.h>
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
+extern string program_name;
 }
 
 root	: 
@@ -12,24 +13,27 @@ root	:
 		)+
 		;
 
-declaration : typeID IDENTIFIER | typeID IDENTIFIER '[' INTEGER ']';
+declaration : typeID variableID | typeID variableID '[' INTEGER ']';
 definition  : typeID assignment ;
 
 
-functionDeclaration : typeID IDENTIFIER '(' parameters? ')' ';' ;
-functionDefinition  : typeID IDENTIFIER '(' parameters? ')' 
+functionDeclaration : typeID functionID '(' parameters? ')' ';' ;
+functionDefinition  : typeID functionID '(' parameters? ')' 
 					   '{'
 					   		statementList?
 					   		(RETURN expression ';')?
 					   '}'
 				     ;
 
-functionCall : IDENTIFIER '(' identifiers? ')' ;
+functionCall : function '(' identifiers? ')' ;
 parameters   : declaration (',' declaration)+ ;
 identifiers  : expression  (',' expression)+  ;
 
-typeID   : IDENTIFIER ;
-variable : IDENTIFIER ;
+typeID     : IDENTIFIER ;
+functionID : IDENTIFIER ;
+function   : IDENTIFIER ;
+variableID : IDENTIFIER ;
+variable   : IDENTIFIER ;
 
 statement   : expressionStatement
 			| unaryStatement
@@ -56,7 +60,7 @@ ifStatement	: IF '(' expression ')' '{' statementList? '}'
 forStatement : FOR '('
 			 (
 			 	(
-			 		declaration? ';' declaration? ';' IDENTIFIER
+			 		declaration? ';' declaration? ';' variable
 			 	)
 			 |
 			 	(
@@ -77,21 +81,21 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
-	| IDENTIFIER '[' INTEGER ']'           # arrayExpr
+	| variable '[' INTEGER ']'           # arrayExpr
 	| INTEGER                              # numberExpr
-	| IDENTIFIER                           # variableExpr
+	| variable                           # variableExpr
 	| '(' expression ')'				   # parenExpr
 	| functionCall                         # funcCallExpr
 	;
 
-unary	: INC IDENTIFIER # preInc 
-		| DEC IDENTIFIER # preDec
-		| IDENTIFIER INC # postInc
-		| IDENTIFIER DEC # postDec
+unary	: INC variable # preInc 
+		| DEC variable # preDec
+		| variable INC # postInc
+		| variable DEC # postDec
 		;
 
-assignment : IDENTIFIER ASSIGN expression 
-		   | IDENTIFIER '[' INTEGER ']' ASSIGN '{' identifiers '}' ;
+assignment : variable ASSIGN expression 
+		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' ;
 
 // Operations (In Order of Precedence)
 MUL_DIV_MOD_OP : MUL_OP | DIV_OP | MOD_OP ;

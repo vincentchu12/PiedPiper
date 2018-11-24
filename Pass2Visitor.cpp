@@ -151,7 +151,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentStatement(mmcParser::AssignmentStatem
 
     // Emit a field put instruction.
     j_file << "\tputstatic\t" << program_name
-           << "/" << ctx->assignment()->IDENTIFIER()->toString()
+           << "/" << ctx->assignment()->variable()->IDENTIFIER()->toString()
            << " " << type_indicator << endl;
 
     return value;
@@ -159,7 +159,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentStatement(mmcParser::AssignmentStatem
 
 antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
 {
-    string variable_name = ctx->IDENTIFIER()->toString();
+    string variable_name = ctx->variable()->IDENTIFIER()->toString();
     TypeSpec *type = ctx->type;
 
     string type_indicator = (type == Predefined::integer_type) ? "I"

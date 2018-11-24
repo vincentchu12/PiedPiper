@@ -1,0 +1,97 @@
+
+#include <stdlib.h>
+#include "wci/intermediate/TypeSpec.h"
+using namespace wci::intermediate;
+
+
+// Generated from mmc.g4 by ANTLR 4.7.1
+
+#pragma once
+
+
+#include "antlr4-runtime.h"
+#include "mmcParser.h"
+
+
+
+/**
+ * This class defines an abstract visitor for a parse tree
+ * produced by mmcParser.
+ */
+class  mmcVisitor : public antlr4::tree::AbstractParseTreeVisitor {
+public:
+
+  /**
+   * Visit parse trees produced by mmcParser.
+   */
+    virtual antlrcpp::Any visitRoot(mmcParser::RootContext *context) = 0;
+
+    virtual antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *context) = 0;
+
+    virtual antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *context) = 0;
+
+    virtual antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *context) = 0;
+
+    virtual antlrcpp::Any visitParameters(mmcParser::ParametersContext *context) = 0;
+
+    virtual antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *context) = 0;
+
+    virtual antlrcpp::Any visitTypeID(mmcParser::TypeIDContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariable(mmcParser::VariableContext *context) = 0;
+
+    virtual antlrcpp::Any visitStatement(mmcParser::StatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitExpressionStatement(mmcParser::ExpressionStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitIfStatement(mmcParser::IfStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitForStatement(mmcParser::ForStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitUnaryStatement(mmcParser::UnaryStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitStatementList(mmcParser::StatementListContext *context) = 0;
+
+    virtual antlrcpp::Any visitAssignmentStatement(mmcParser::AssignmentStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitBitExpr(mmcParser::BitExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitNumberExpr(mmcParser::NumberExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitPreInc(mmcParser::PreIncContext *context) = 0;
+
+    virtual antlrcpp::Any visitPreDec(mmcParser::PreDecContext *context) = 0;
+
+    virtual antlrcpp::Any visitPostInc(mmcParser::PostIncContext *context) = 0;
+
+    virtual antlrcpp::Any visitPostDec(mmcParser::PostDecContext *context) = 0;
+
+    virtual antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *context) = 0;
+
+
+};
+

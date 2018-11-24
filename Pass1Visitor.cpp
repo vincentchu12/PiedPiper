@@ -102,12 +102,12 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
-// {
-//     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
+antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
+{
+    cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
 
-//     return visitChildren(ctx);
-// }
+    return visitChildren(ctx);
+}
 
 // antlrcpp::Any Pass1Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
 // {
@@ -124,48 +124,74 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
-// {
-//     cout << "=== visitTypeId: " + ctx->getText() << endl;
-//     TypeSpec *type;
-//     string type_indicator;
+antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
+{
+    cout << "=== visitTypeId: " + ctx->getText() << endl;
+    TypeSpec *type;
+    string type_indicator;
 
-//     string type_name = ctx->IDENTIFIER()->toString();
-//     if (type_name == "int")
-//     {
-//         type = Predefined::integer_type;
-//         type_indicator = "I";
-//     }
-//     else if (type_name == "bool")
-//     {
-//         type = Predefined::boolean_type;
-//         type_indicator = "Z";
-//     }
-//     else
-//     {
-//         type = nullptr;
-//         type_indicator = "?";
-//     }
+    string type_name = ctx->IDENTIFIER()->toString();
+    if (type_name == "int")
+    {
+        type = Predefined::integer_type;
+        type_indicator = "I";
+    }
+    else if (type_name == "bool")
+    {
+        type = Predefined::boolean_type;
+        type_indicator = "Z";
+    }
+    else if (type_name == "void")
+    {
+        type = Predefined::void_type;
+        type_indicator = "?";
+    }
+    else
+    {
+        type = nullptr;
+        type_indicator = "?";
+    }
 
-//     for (SymTabEntry *id : variable_id_list) {
-//         id->set_typespec(type);
+    for (SymTabEntry *id : variable_id_list) {
+        id->set_typespec(type);
 
-//         // Emit a field declaration.
-//         j_file << ".field private static "
-//                << id->get_name() << " " << type_indicator << endl;
-//     }
+        // Emit a field declaration.
+        j_file << ".field private static "
+               << id->get_name() << " " << type_indicator << endl;
+    }
 
-//     return visitChildren(ctx);
-// }
+    return visitChildren(ctx);
+}
+
+antlrcpp::Any Pass1Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
+{
+    cout << "=== visitFunctionID: " + ctx->getText() << endl;
+
+    string variable_name = ctx->IDENTIFIER()->toString();
+    SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
+    variable_id->set_definition((Definition) DF_FUNCTION);
+    variable_id_list.push_back(variable_id);
+
+    return visitChildren(ctx);
+}
+
+antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
+{
+    cout << "=== visitVariableID: " + ctx->getText() << endl;
+
+    string variable_name = ctx->IDENTIFIER()->toString();
+    SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
+    variable_id->set_definition((Definition) DF_VARIABLE);
+    variable_id_list.push_back(variable_id);
+
+    return visitChildren(ctx);
+}
 
 // antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
 // {
-//     cout << "=== visitVarId: " + ctx->getText() << endl;
+//     cout << "=== visitVariable: " + ctx->getText() << endl;
 
-//     string variable_name = ctx->IDENTIFIER()->toString();
-//     SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
-//     variable_id->set_definition((Definition) DF_VARIABLE);
-//     variable_id_list.push_back(variable_id);
+
 
 //     return visitChildren(ctx);
 // }

@@ -25,10 +25,9 @@ int main(int argc, const char *args[])
     ANTLRInputStream input(ins);
     mmcLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
-//
+
     mmcParser parser(&tokens);
     tree::ParseTree *tree = parser.root();
-
 
     Pass1Visitor *pass1 = new Pass1Visitor();
     pass1->visit(tree);

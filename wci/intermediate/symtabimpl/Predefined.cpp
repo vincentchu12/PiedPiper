@@ -31,6 +31,7 @@ TypeSpec *Predefined::real_type;
 TypeSpec *Predefined::boolean_type;
 TypeSpec *Predefined::char_type;
 TypeSpec *Predefined::undefined_type;
+TypeSpec *Predefined::void_type;
 
 // Predefined identifiers.
 SymTabEntry *Predefined::integer_id;
@@ -60,6 +61,7 @@ SymTabEntry *Predefined::sqr_id;
 SymTabEntry *Predefined::sqrt_id;
 SymTabEntry *Predefined::succ_id;
 SymTabEntry *Predefined::trunc_id;
+SymTabEntry *Predefined::void_id;
 
 void Predefined::initialize(SymTabStack *symtab_stack)
 {
@@ -101,6 +103,13 @@ void Predefined::initialize_types(SymTabStack *symtab_stack)
     char_type->set_identifier(char_id);
     char_id->set_definition((Definition) DF_TYPE);
     char_id->set_typespec(char_type);
+
+    // Type void.
+    void_id = symtab_stack->enter_local("void");
+    void_type = TypeFactory::create_type((TypeForm) TF_SCALAR);
+    void_type->set_identifier(void_id);
+    void_id->set_definition((Definition) DF_TYPE);
+    void_id->set_typespec(void_type);
 
     // Undefined type.
     undefined_type = TypeFactory::create_type((TypeForm) TF_SCALAR);

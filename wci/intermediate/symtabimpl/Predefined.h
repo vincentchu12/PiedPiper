@@ -29,12 +29,14 @@ public:
     static TypeSpec *boolean_type;
     static TypeSpec *char_type;
     static TypeSpec *undefined_type;
+    static TypeSpec *void_type;
 
     // Predefined identifiers.
     static SymTabEntry *integer_id;
     static SymTabEntry *real_id;
     static SymTabEntry *boolean_id;
     static SymTabEntry *char_id;
+    static SymTabEntry *void_id;
     static SymTabEntry *false_id;
     static SymTabEntry *true_id;
     static SymTabEntry *read_id;

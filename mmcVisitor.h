@@ -51,6 +51,12 @@ public:
 
     virtual antlrcpp::Any visitVariable(mmcParser::VariableContext *context) = 0;
 
+    virtual antlrcpp::Any visitNumber(mmcParser::NumberContext *context) = 0;
+
+    virtual antlrcpp::Any visitSignedNumber(mmcParser::SignedNumberContext *context) = 0;
+
+    virtual antlrcpp::Any visitSign(mmcParser::SignContext *context) = 0;
+
     virtual antlrcpp::Any visitStatement(mmcParser::StatementContext *context) = 0;
 
     virtual antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *context) = 0;
@@ -79,15 +85,17 @@ public:
 
     virtual antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *context) = 0;
 
-    virtual antlrcpp::Any visitNumberExpr(mmcParser::NumberExprContext *context) = 0;
-
     virtual antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *context) = 0;
 
     virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *context) = 0;
 
     virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *context) = 0;
 
+    virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *context) = 0;
+
     virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *context) = 0;
 
     virtual antlrcpp::Any visitPreInc(mmcParser::PreIncContext *context) = 0;
 

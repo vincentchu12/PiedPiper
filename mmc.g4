@@ -29,11 +29,14 @@ functionCall : function '(' identifiers? ')' ;
 parameters   : declaration (',' declaration)+ ;
 identifiers  : expression  (',' expression)+  ;
 
-typeID     : IDENTIFIER ;
-functionID : IDENTIFIER ;
-function   : IDENTIFIER ;
-variableID : IDENTIFIER ;
-variable   : IDENTIFIER ;
+typeID       : IDENTIFIER ;
+functionID   : IDENTIFIER ;
+function     : IDENTIFIER ;
+variableID   : IDENTIFIER ;
+variable     : IDENTIFIER ;
+number       : INTEGER    ;
+signedNumber : sign number  ;
+sign         : ADD_SUB_OP ;
 
 statement   : expressionStatement
 			| unaryStatement
@@ -81,8 +84,9 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
-	| variable '[' INTEGER ']'             # arrayExpr
-	| INTEGER                              # numberExpr
+	| variable '[' number ']'              # arrayExpr
+	| signedNumber                         # signedNumberExpr
+	| number                               # unsignedNumberExpr
 	| variable                             # variableExpr
 	| '(' expression ')'				   # parenExpr
 	| functionCall                         # funcCallExpr

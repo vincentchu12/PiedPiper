@@ -31,10 +31,11 @@ public:
     RuleRoot = 0, RuleDeclaration = 1, RuleDefinition = 2, RuleFunctionDeclaration = 3, 
     RuleFunctionDefinition = 4, RuleFunctionCall = 5, RuleParameters = 6, 
     RuleIdentifiers = 7, RuleTypeID = 8, RuleFunctionID = 9, RuleFunction = 10, 
-    RuleVariableID = 11, RuleVariable = 12, RuleStatement = 13, RuleDeclarationStatement = 14, 
-    RuleDefinitionStatement = 15, RuleExpressionStatement = 16, RuleIfStatement = 17, 
-    RuleForStatement = 18, RuleUnaryStatement = 19, RuleStatementList = 20, 
-    RuleAssignmentStatement = 21, RuleExpression = 22, RuleUnary = 23, RuleAssignment = 24
+    RuleVariableID = 11, RuleVariable = 12, RuleNumber = 13, RuleSignedNumber = 14, 
+    RuleSign = 15, RuleStatement = 16, RuleDeclarationStatement = 17, RuleDefinitionStatement = 18, 
+    RuleExpressionStatement = 19, RuleIfStatement = 20, RuleForStatement = 21, 
+    RuleUnaryStatement = 22, RuleStatementList = 23, RuleAssignmentStatement = 24, 
+    RuleExpression = 25, RuleUnary = 26, RuleAssignment = 27
   };
 
   mmcParser(antlr4::TokenStream *input);
@@ -60,6 +61,9 @@ public:
   class FunctionContext;
   class VariableIDContext;
   class VariableContext;
+  class NumberContext;
+  class SignedNumberContext;
+  class SignContext;
   class StatementContext;
   class DeclarationStatementContext;
   class DefinitionStatementContext;
@@ -247,6 +251,43 @@ public:
 
   VariableContext* variable();
 
+  class  NumberContext : public antlr4::ParserRuleContext {
+  public:
+    NumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *INTEGER();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  NumberContext* number();
+
+  class  SignedNumberContext : public antlr4::ParserRuleContext {
+  public:
+    SignedNumberContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    SignContext *sign();
+    NumberContext *number();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  SignedNumberContext* signedNumber();
+
+  class  SignContext : public antlr4::ParserRuleContext {
+  public:
+    SignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ADD_SUB_OP();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  SignContext* sign();
+
   class  StatementContext : public antlr4::ParserRuleContext {
   public:
     StatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -424,7 +465,7 @@ public:
     ArrayExprContext(ExpressionContext *ctx);
 
     VariableContext *variable();
-    antlr4::tree::TerminalNode *INTEGER();
+    NumberContext *number();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -435,14 +476,6 @@ public:
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *MATH_COMP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  NumberExprContext : public ExpressionContext {
-  public:
-    NumberExprContext(ExpressionContext *ctx);
-
-    antlr4::tree::TerminalNode *INTEGER();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -474,11 +507,27 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  UnsignedNumberExprContext : public ExpressionContext {
+  public:
+    UnsignedNumberExprContext(ExpressionContext *ctx);
+
+    NumberContext *number();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  ParenExprContext : public ExpressionContext {
   public:
     ParenExprContext(ExpressionContext *ctx);
 
     ExpressionContext *expression();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  SignedNumberExprContext : public ExpressionContext {
+  public:
+    SignedNumberExprContext(ExpressionContext *ctx);
+
+    SignedNumberContext *signedNumber();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 

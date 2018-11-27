@@ -41,6 +41,9 @@ public:
     // antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override;
     antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override;
     // antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
+    // antlrcpp::Any visitNumber(mmcParser::NumberContext *ctx) override;
+    // antlrcpp::Any visitSignedNumber(mmcParser::SignedNumberContext *ctx) override;
+    // antlrcpp::Any visitSign(mmcParser::SignContext *ctx) override;
     // antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override;
     // antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx) override;
     // antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx) override;
@@ -59,7 +62,9 @@ public:
     // antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override;
     antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
     // antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
+    antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override;  
     // antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override;
+    // antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override;
     // antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;
     // antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
     // antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;

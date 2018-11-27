@@ -86,6 +86,21 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitNumber(mmcParser::NumberContext *ctx) override {
+    cout << "Original Function: visitNumber" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSignedNumber(mmcParser::SignedNumberContext *ctx) override {
+    cout << "Original Function: visitSignedNumber" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSign(mmcParser::SignContext *ctx) override {
+    cout << "Original Function: visitSign" << endl;
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override {
     cout << "Original Function: visitStatement" << endl;
     return visitChildren(ctx);
@@ -156,11 +171,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitNumberExpr(mmcParser::NumberExprContext *ctx) override {
-    cout << "Original Function: visitNumberExpr" << endl;
-    return visitChildren(ctx);
-  }
-
   virtual antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override {
     cout << "Original Function: visitLogicExpr" << endl;
     return visitChildren(ctx);
@@ -176,8 +186,18 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override {
+    cout << "Original Function: visitUnsignedNumberExpr" << endl;
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
     cout << "Original Function: visitParenExpr" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override {
+    cout << "Original Function: visitSignedNumberExpr" << endl;
     return visitChildren(ctx);
   }
 

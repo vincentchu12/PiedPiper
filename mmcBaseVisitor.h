@@ -22,207 +22,212 @@ class  mmcBaseVisitor : public mmcVisitor {
 public:
 
   virtual antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override {
-    cout << "Original Function: visitRoot" << endl;
+    cout << "Original function visitRoot " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override {
-    cout << "Original Function: visitDeclaration" << endl;
+    cout << "Original function visitDeclaration " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override {
-    cout << "Original Function: visitDefinition" << endl;
+    cout << "Original function visitDefinition " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override {
-    cout << "Original Function: visitFunctionDeclaration" << endl;
+    cout << "Original function visitFunctionDeclaration " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override {
-    cout << "Original Function: visitFunctionDefinition" << endl;
+    cout << "Original function visitFunctionDefinition " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *ctx) override {
-    cout << "Original Function: visitFunctionCall" << endl;
+    cout << "Original function visitFunctionCall " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitParameters(mmcParser::ParametersContext *ctx) override {
-    cout << "Original Function: visitParameters" << endl;
+    cout << "Original function visitParameters " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *ctx) override {
-    cout << "Original Function: visitIdentifiers" << endl;
+    cout << "Original function visitIdentifiers " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitTypeID(mmcParser::TypeIDContext *ctx) override {
-    cout << "Original Function: visitTypeID" << endl;
+    cout << "Original function visitTypeID " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *ctx) override {
-    cout << "Original Function: visitFunctionID" << endl;
+    cout << "Original function visitFunctionID " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override {
-    cout << "Original Function: visitFunction" << endl;
+    cout << "Original function visitFunction " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override {
-    cout << "Original Function: visitVariableID" << endl;
+    cout << "Original function visitVariableID " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override {
-    cout << "Original Function: visitVariable" << endl;
+    cout << "Original function visitVariable " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitNumber(mmcParser::NumberContext *ctx) override {
-    cout << "Original Function: visitNumber" << endl;
+    cout << "Original function visitNumber " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitSignedNumber(mmcParser::SignedNumberContext *ctx) override {
-    cout << "Original Function: visitSignedNumber" << endl;
+    cout << "Original function visitSignedNumber " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitSign(mmcParser::SignContext *ctx) override {
-    cout << "Original Function: visitSign" << endl;
+    cout << "Original function visitSign " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override {
-    cout << "Original Function: visitStatement" << endl;
+    cout << "Original function visitStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx) override {
-    cout << "Original Function: visitDeclarationStatement" << endl;
+    cout << "Original function visitDeclarationStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx) override {
-    cout << "Original Function: visitDefinitionStatement" << endl;
+    cout << "Original function visitDefinitionStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx) override {
-    cout << "Original Function: visitExpressionStatement" << endl;
+    cout << "Original function visitExpressionStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitIfStatement(mmcParser::IfStatementContext *ctx) override {
-    cout << "Original Function: visitIfStatement" << endl;
+    cout << "Original function visitIfStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitForStatement(mmcParser::ForStatementContext *ctx) override {
-    cout << "Original Function: visitForStatement" << endl;
+    cout << "Original function visitForStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitUnaryStatement(mmcParser::UnaryStatementContext *ctx) override {
-    cout << "Original Function: visitUnaryStatement" << endl;
+    cout << "Original function visitUnaryStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitStatementList(mmcParser::StatementListContext *ctx) override {
-    cout << "Original Function: visitStatementList" << endl;
+    cout << "Original function visitStatementList " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitAssignmentStatement(mmcParser::AssignmentStatementContext *ctx) override {
-    cout << "Original Function: visitAssignmentStatement" << endl;
+    cout << "Original function visitAssignmentStatement " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *ctx) override {
-    cout << "Original Function: visitVariableExpr" << endl;
+    cout << "Original function visitVariableExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitBitExpr(mmcParser::BitExprContext *ctx) override {
-    cout << "Original Function: visitBitExpr" << endl;
+    cout << "Original function visitBitExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override {
-    cout << "Original Function: visitAddSubExpr" << endl;
+    cout << "Original function visitAddSubExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override {
-    cout << "Original Function: visitArrayExpr" << endl;
+    cout << "Original function visitArrayExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override {
-    cout << "Original Function: visitMathExpr" << endl;
+    cout << "Original function visitMathExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override {
-    cout << "Original Function: visitLogicExpr" << endl;
+    cout << "Original function visitLogicExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override {
-    cout << "Original Function: visitMulDivModExpr" << endl;
+    cout << "Original function visitMulDivModExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override {
-    cout << "Original Function: visitFuncCallExpr" << endl;
+    cout << "Original function visitFuncCallExpr " << ctx->getText() << endl << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override {
+    cout << "Original function visitBoolExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override {
-    cout << "Original Function: visitUnsignedNumberExpr" << endl;
+    cout << "Original function visitUnsignedNumberExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
-    cout << "Original Function: visitParenExpr" << endl;
+    cout << "Original function visitParenExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override {
-    cout << "Original Function: visitSignedNumberExpr" << endl;
+    cout << "Original function visitSignedNumberExpr " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override {
-    cout << "Original Function: visitPreInc" << endl;
+    cout << "Original function visitPreInc " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override {
-    cout << "Original Function: visitPreDec" << endl;
+    cout << "Original function visitPreDec " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override {
-    cout << "Original Function: visitPostInc" << endl;
+    cout << "Original function visitPostInc " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override {
-    cout << "Original Function: visitPostDec" << endl;
+    cout << "Original function visitPostDec " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override {
-    cout << "Original Function: visitAssignment" << endl;
+    cout << "Original function visitAssignment " << ctx->getText() << endl << endl;
     return visitChildren(ctx);
   }
 

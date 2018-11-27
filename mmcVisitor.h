@@ -91,6 +91,8 @@ public:
 
     virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *context) = 0;
 
+    virtual antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *context) = 0;
+
     virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *context) = 0;
 
     virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *context) = 0;

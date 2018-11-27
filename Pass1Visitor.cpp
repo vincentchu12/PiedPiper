@@ -62,6 +62,18 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 
     auto value = visitChildren(ctx);
 
+    // Emit the class constructor.
+    j_file << endl;
+    j_file << ".method public <init>()V" << endl;
+    j_file << endl;
+    j_file << "\taload_0" << endl;
+    j_file << "\tinvokenonvirtual    java/lang/Object/<init>()V" << endl;
+    j_file << "\treturn" << endl;
+    j_file << endl;
+    j_file << ".limit locals 1" << endl;
+    j_file << ".limit stack 1" << endl;
+    j_file << ".end method" << endl;
+
        cout << "=== visitRoot: Printing xref table." << endl;
 
     // Print the cross-reference table.
@@ -71,69 +83,17 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
-// {
-// //    cout << "=== visitDeclarations: " << ctx->getText() << endl;
-
-//     auto value = visitChildren(ctx);
-
-//     // Emit the class constructor.
-//     j_file << endl;
-//     j_file << ".method public <init>()V" << endl;
-//     j_file << endl;
-//     j_file << "\taload_0" << endl;
-//     j_file << "\tinvokenonvirtual    java/lang/Object/<init>()V" << endl;
-//     j_file << "\treturn" << endl;
-//     j_file << endl;
-//     j_file << ".limit locals 1" << endl;
-//     j_file << ".limit stack 1" << endl;
-//     j_file << ".end method" << endl;
-
-//     return value;
-// }
-
-// antlrcpp::Any Pass1Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
-// {
-
-// }
-
-antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
+antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
 {
-    cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
+    cout << "=== visitDeclarations: " << ctx->getText() << endl;
+    variable_id_list.resize(0);
+    auto value = visitChildren(ctx);
 
-    visitChildren(ctx->functionID());
-    visitChildren(ctx->typeID());
-    visitChildren(ctx->statementList());
-    return visitChildren(ctx);
-}
 
-// antlrcpp::Any Pass1Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitParameters(mmcParser::ParametersContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitIdentifiers(mmcParser::IdentifiersContext *ctx)
-// {
-
-// }
-
-antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
-{
-    cout << "=== visitTypeId: " + ctx->getText() << endl;
     TypeSpec *type;
     string type_indicator;
 
-    string type_name = ctx->IDENTIFIER()->toString();
+    string type_name = ctx->typeID()->IDENTIFIER()->toString();
     if (type_name == "int")
     {
         type = Predefined::integer_type;
@@ -162,21 +122,63 @@ antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
         j_file << ".field private static "
                << id->get_name() << " " << type_indicator << endl;
     }
-    variable_id_list.resize(0);
-    return visitChildren(ctx);
+
+    return value;
 }
 
-antlrcpp::Any Pass1Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
+// antlrcpp::Any Pass1Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
+// {
+
+// }
+
+// antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
+// {
+
+// }
+
+// antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
+// {
+//     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
+
+//     visitChildren(ctx->functionID());
+//     visitChildren(ctx->typeID());
+//     visitChildren(ctx->statementList());
+//     return visitChildren(ctx);
+// }
+
+// antlrcpp::Any Pass1Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
+// {
+
+// }
+
+// antlrcpp::Any Pass1Visitor::visitParameters(mmcParser::ParametersContext *ctx)
+// {
+
+// }
+
+// antlrcpp::Any Pass1Visitor::visitIdentifiers(mmcParser::IdentifiersContext *ctx)
+// {
+
+// }
+
+antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
 {
-    cout << "=== visitFunctionID: " + ctx->getText() << endl;
-
-    string variable_name = ctx->IDENTIFIER()->toString();
-    SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
-    variable_id->set_definition((Definition) DF_FUNCTION);
-    variable_id_list.push_back(variable_id);
+    cout << "=== visitTypeId: " + ctx->getText() << endl;
 
     return visitChildren(ctx);
 }
+
+// antlrcpp::Any Pass1Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
+// {
+//     cout << "=== visitFunctionID: " + ctx->getText() << endl;
+
+//     string variable_name = ctx->IDENTIFIER()->toString();
+//     SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
+//     variable_id->set_definition((Definition) DF_FUNCTION);
+//     variable_id_list.push_back(variable_id);
+
+//     return visitChildren(ctx);
+// }
 
 antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 {
@@ -247,11 +249,11 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
 {
     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
-
     string variable_name = ctx->variable()->IDENTIFIER()->toString();
     SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
     ctx->type = variable_id->get_typespec();
+
     return visitChildren(ctx);
 }
 
@@ -298,24 +300,66 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass1Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitNumberExpr(mmcParser::NumberExprContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitLogicExpr(mmcParser::LogicExprContext *ctx)
-// {
-
-// }
-
-antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
+antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {
-   cout << "=== visitMulDivExpr: " + ctx->getText() << endl;
+    cout << "=== visitNumber: " + ctx->getText() << endl;
+
+    ctx->type = Predefined::integer_type;
+    return visitChildren(ctx);
+}
+
+antlrcpp::Any Pass1Visitor::visitSignedNumber(mmcParser::SignedNumberContext *ctx)
+{
+    cout << "=== visitSignedNumber: " + ctx->getText() << endl;
+
+    auto value = visit(ctx->number());
+    ctx->type = ctx->number()->type;
+    return value;
+}
+
+antlrcpp::Any Pass1Visitor::visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx)
+{
+   cout << "=== visitSignedNumberExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+    ctx->type = ctx->signedNumber()->type;
+    return value;
+}
+
+antlrcpp::Any Pass1Visitor::visitBoolExpr(mmcParser::BoolExprContext *ctx)
+{
+   cout << "=== visitBoolExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+    ctx->type = Predefined::boolean_type;
+    return value;
+}
+
+
+antlrcpp::Any Pass1Visitor::visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx)
+{
+    cout << "=== visitUnsignedNumberExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+    ctx->type = ctx->number()->type;
+    return value;
+}
+
+antlrcpp::Any Pass1Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
+{
+    cout << "=== visitMathExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+    ctx->type = Predefined::boolean_type;
+
+    return value;
+}
+
+
+
+antlrcpp::Any Pass1Visitor::visitLogicExpr(mmcParser::LogicExprContext *ctx)
+{
+    cout << "=== visitLogicExpr: " + ctx->getText() << endl;
 
     auto value = visitChildren(ctx);
 
@@ -332,25 +376,44 @@ antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
     return value;
 }
 
-antlrcpp::Any Pass1Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx)
+antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
 {
-    cout << "=== visitFuncCallExpr: " + ctx->getText() << endl;
+    cout << "=== visitMulDivExpr: " + ctx->getText() << endl;
 
-    string function_name = ctx->function()->IDENTIFIER()->toString();
-    SymTabEntry *function_id = symtab_stack->lookup(function_name);
+    auto value = visitChildren(ctx);
 
-    ctx->type = function_id->get_typespec();
-    return visitChildren(ctx);
+    TypeSpec *type1 = ctx->expression(0)->type;
+    TypeSpec *type2 = ctx->expression(1)->type;
+
+    bool integer_mode =    (type1 == Predefined::integer_type)
+                        && (type2 == Predefined::integer_type);
+
+    TypeSpec *type = integer_mode ? Predefined::integer_type
+                   :                nullptr;
+    ctx->type = type;
+
+    return value;
 }
 
-// antlrcpp::Any Pass1Visitor::visitParenExpr(mmcParser::ParenExprContext *ctx)
+// antlrcpp::Any Pass1Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx)
 // {
-// //    cout << "=== visitParenExpr: " + ctx->getText() << endl;
+//     cout << "=== visitFuncCallExpr: " + ctx->getText() << endl;
 
-//     auto value = visitChildren(ctx);
-//     ctx->type = ctx->expression()->type;
-//     return value;
+//     string function_name = ctx->function()->IDENTIFIER()->toString();
+//     SymTabEntry *function_id = symtab_stack->lookup(function_name);
+
+//     ctx->type = function_id->get_typespec();
+//     return visitChildren(ctx);
 // }
+
+antlrcpp::Any Pass1Visitor::visitParenExpr(mmcParser::ParenExprContext *ctx)
+{
+   cout << "=== visitParenExpr: " + ctx->getText() << endl;
+
+    auto value = visitChildren(ctx);
+    ctx->type = ctx->expression()->type;
+    return value;
+}
 
 // antlrcpp::Any Pass1Visitor::visitPreInc(mmcParser::PreIncContext *ctx)
 // {

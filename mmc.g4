@@ -7,10 +7,7 @@ using namespace wci::intermediate;
 extern string program_name;
 }
 
-root	: 
-		( functionDeclaration
-		| functionDefinition
-		)+
+root	: (statementList)
 		;
 
 declaration : typeID variableID | typeID variableID '[' INTEGER ']';
@@ -34,9 +31,9 @@ functionID   : IDENTIFIER ;
 function     : IDENTIFIER ;
 variableID   : IDENTIFIER ;
 variable     : IDENTIFIER ;
-number       : INTEGER    ;
-signedNumber : sign number  ;
-sign         : ADD_SUB_OP ;
+number       locals [ TypeSpec* type = nullptr ] : INTEGER    ;
+signedNumber locals [ TypeSpec* type = nullptr ] : sign number;
+sign         : ADD_OP | SUB_OP ;
 
 statement   : expressionStatement
 			| unaryStatement
@@ -67,7 +64,7 @@ forStatement : FOR '('
 			 	)
 			 |
 			 	(
-					(definition | declaration)? ';' expression? ';' (assignment | unary)?
+					(declaration | definition | assignment)? ';' expression? ';' (assignment | unary)?
 			 	)
 			 )
 			')' '{' statementList? '}'
@@ -85,6 +82,7 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
+	| BOOL                                 # boolExpr
 	| signedNumber                         # signedNumberExpr
 	| number                               # unsignedNumberExpr
 	| variable                             # variableExpr
@@ -101,10 +99,13 @@ unary	: INC variable # preInc
 assignment : variable ASSIGN expression 
 		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' ;
 
+BOOL : TRUE | FALSE ;
 // Operations (In Order of Precedence)
 MUL_DIV_MOD_OP : MUL_OP | DIV_OP | MOD_OP ;
 ADD_SUB_OP     : ADD_OP | SUB_OP          ;
 BIT_OP         : AND_OP | OR_OP  | XOR_OP ;
+
+
 
 // Comparators (In Order of Precedence)
 LOGIC_COMP : L_AND    | L_OR     | L_NOT    ;
@@ -116,6 +117,8 @@ IF         : 'if'     ;
 ELSE       : 'else'   ;
 ELIF       : 'elif'   ;
 RETURN     : 'return' ;
+TRUE       : 'true'   ;
+FALSE      : 'false'  ;
 
 IDENTIFIER : [_a-zA-Z][_a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;

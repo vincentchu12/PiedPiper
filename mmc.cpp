@@ -15,6 +15,45 @@ using namespace antlr4;
 
 string program_name;
 
+
+void printAss2Visitor()
+{
+    cout << "                  X XXX XX XX XX XXXXX" << endl;
+    cout << "         X XXXXXXX                    XX XX XXXX" << endl;
+    cout << "     XXXX                                        X X" << endl;
+    cout << "   XXX                                                  X" << endl;
+    cout << "  X                                                      XXXX" << endl;
+    cout << " X        +----------------------------------------+         XX" << endl;
+    cout << "XX        |                                        |          X" << endl;
+    cout << "X         |      Pass 2 Visitor                    |           XX" << endl;
+    cout << "X         |                                        |            X" << endl;
+    cout << "X         |                                        |            X" << endl;
+    cout << "XX        +----------------------------------------+            X" << endl;
+    cout << " XX                                                             X" << endl;
+    cout << "  XXXXX    XXXX  X                       +                     X" << endl;
+    cout << "       XXXXX    XX                       |                    X" << endl;
+    cout << "                X                        |                   X" << endl;
+    cout << "                X                        |" << endl;
+    cout << "                 X                       |                 X" << endl;
+    cout << "                 XX                      |               XX" << endl;
+    cout << "                  XX                     |             X" << endl;
+    cout << "                   XX                    |           XX" << endl;
+    cout << "                     XX                  |       XXXX" << endl;
+    cout << "                       X                 |  XX XXX" << endl;
+    cout << "                           XXX X X  X  X |X" << endl;
+    cout << "                                         |" << endl;
+    cout << "                                         |" << endl;
+    cout << "                                         |          +------>" << endl;
+    cout << "                                         |          |" << endl;
+    cout << "                                         |          |" << endl;
+    cout << "                                         |          |" << endl;
+    cout << "                                         +------------------->" << endl;
+    cout << "                                                    |" << endl;
+    cout << "                                                    |" << endl;
+    cout << "                                                    +---------->" << endl;
+    cout << "" << endl;
+}
+
 int main(int argc, const char *args[])
 {
     ifstream ins;
@@ -32,12 +71,12 @@ int main(int argc, const char *args[])
     Pass1Visitor *pass1 = new Pass1Visitor();
     pass1->visit(tree);
 
+    printAss2Visitor();
 
-   // ostream& j_file = pass1->get_assembly_file();
+    ostream& j_file = pass1->get_assembly_file();
 
-   // Pass2Visitor *pass2 = new Pass2Visitor(j_file);
-   // pass2->visit(tree);
+    Pass2Visitor *pass2 = new Pass2Visitor(j_file);
+    pass2->visit(tree);
 
-//    delete tree;
     return 0;
 }

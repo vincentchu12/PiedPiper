@@ -1,6 +1,29 @@
-int main()
+int a;
+int b;
+int c;
+int i;
+bool foo;
+
+b = 3;
+a = 4;
+foo = false;
+
+if(foo == true)
 {
-	int a = 4;
-	int b = 5;
-	int c = a + b;
+	c = 9;
+}
+
+if(a < b)
+{
+    c = 3 + 1;
+}
+else
+{
+    c = 5 * 3;
+}
+
+
+for(i = 0; i < c; i = i + 1)
+{
+    a = a + 3;
 }

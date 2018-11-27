@@ -185,7 +185,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
     bool has_else = (expression_size < statement_size) ? true : false;
 
     char last_label[4];
-    sprintf(last_label, "%d", label_num+statement_size);
+    sprintf(last_label, "%d", label_num+expression_size);
 
     for(int i = 0; i < expression_size; i++)
     {
@@ -207,7 +207,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 		j_file << "goto " << "Label_" << last_label << endl;
 	}
     j_file << "Label_" << last_label << ":" << endl;
-
+    label_num++;
     return NULL;
 }
 
@@ -309,6 +309,8 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 
     bool integer_mode =    (type1 == Predefined::integer_type)
                         && (type2 == Predefined::integer_type);
+    bool boolean_mode =    (type1 == Predefined::boolean_type)
+                        && (type2 == Predefined::boolean_type);
 
     string op = ctx->MATH_COMP()->getText();
     string opcode;
@@ -316,31 +318,37 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
     if (op == "==")
     {
         opcode = integer_mode ? "if_icmpeq"
+               : boolean_mode ? "if_icmpeq"
                :                "????";
     }
     else if (op == "!=")
     {
         opcode = integer_mode ? "if_icmpne"
+               : boolean_mode ? "if_icmpne"
                :                "????";
     }
     else if (op == "<")
     {
         opcode = integer_mode ? "if_icmplt"
+               : boolean_mode ? "if_icmplt"
                :                "????";
     }
     else if (op == "<=")
     {
         opcode = integer_mode ? "if_icmple"
+               : boolean_mode ? "if_icmple"
                :                "????";
     }
     else if (op == ">")
     {
         opcode = integer_mode ? "if_icmpgt"
+               : boolean_mode ? "if_icmpgt"
                :                "????";
     }
     else // >=
     {
         opcode = integer_mode ? "if_icmpge"
+               : boolean_mode ? "if_icmpge"
                :                "????";
     }
 

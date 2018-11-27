@@ -189,7 +189,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 
     for(int i = 0; i < expression_size; i++)
     {
-    	visitChildren(ctx->expression(i));
+    	visit(ctx->expression(i));
     }
 
     if(has_else)

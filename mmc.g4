@@ -64,7 +64,7 @@ forStatement : FOR '('
 			 	)
 			 |
 			 	(
-					(declaration | definition | assignment)? ';' expression? ';' (assignment | unary)?
+					(declaration | definition | assignment) ';' expression ';' (assignment | unary)
 			 	)
 			 )
 			')' '{' statementList? '}'

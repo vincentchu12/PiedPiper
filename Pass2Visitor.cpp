@@ -59,10 +59,10 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass2Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
-// {
-
-// }
+ antlrcpp::Any Pass2Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
+ {
+	 return visitChildren(ctx);
+ }
 
 // antlrcpp::Any Pass2Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
 // {
@@ -124,7 +124,6 @@ antlrcpp::Any Pass2Visitor::visitNumber(mmcParser::NumberContext *ctx)
     cout << "\tvisitNumber      " << ctx->getText() << endl;
     // Emit a load constant instruction.
     j_file << "\tldc\t" << ctx->getText() << endl;
-    cout << ctx->getText() << endl;
 
     return visitChildren(ctx);
 }
@@ -197,24 +196,83 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
     	visitChildren(ctx->statementList(statement_size - 1));
     }
 
-    j_file << "goto " << "Label_" << last_label << endl;
+    j_file << "\tgoto " << "Label_" << last_label << endl;
 
     for(int i = 0; i < expression_size; i++)
 	{
     	sprintf(current_label, "%d", original_label++);
     	j_file << "Label_" << current_label << ":" << endl;
     	visitChildren(ctx->statementList(i));
-		j_file << "goto " << "Label_" << last_label << endl;
+		j_file << "\tgoto " << "Label_" << last_label << endl;
 	}
     j_file << "Label_" << last_label << ":" << endl;
     label_num++;
     return NULL;
 }
 
-// antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ctx)
-// {
+antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ctx)
+{
+	cout << "\tvisitForStatement " << ctx->getText() << endl;
 
-// }
+	bool list_iterator = (ctx->variable() != NULL);
+
+	if(list_iterator)
+	{
+		// support later
+	}
+	else
+	{
+		if(ctx->declaration().size() != 0)
+		{
+			visit(ctx->declaration(0));
+		}
+		else if (ctx->definition() != NULL)
+		{
+			visit(ctx->definition());
+		}
+		else
+		{
+			visit(ctx->assignment(0));
+		}
+
+		int loop_start = label_num++;
+		int loop_true = label_num;
+		int loop_exit = label_num + 1;
+
+		sprintf(label, "%d", loop_start);
+		j_file << "Label_" << label << ":" << endl;
+		
+        visit(ctx->expression());
+
+        sprintf(label, "%d", loop_exit);
+        j_file << "\tgoto Label_" << label << endl;
+
+
+        sprintf(label, "%d", loop_true);
+        j_file << "Label_" << label << ":" << endl;
+
+		visit(ctx->statementList());
+
+		if(ctx->unary() != NULL)
+		{
+			visit(ctx->unary());
+		}
+		else
+		{
+			int child = (ctx->assignment().size() == 1) ? 0 : 1;
+			visit(ctx->assignment(child));
+
+		}
+		sprintf(label, "%d", loop_start);
+		j_file << "\tgoto Label_" << label << endl;
+
+		sprintf(label, "%d", loop_exit);
+		j_file << "Label_" << label << ":" << endl;
+
+        label_num = loop_exit + 1;
+	}
+	return NULL;
+}
 
 // antlrcpp::Any Pass2Visitor::visitUnaryStatement(mmcParser::UnaryStatementContext *ctx)
 // {
@@ -485,6 +543,25 @@ antlrcpp::Any Pass2Visitor::visitAssignment(mmcParser::AssignmentContext *ctx)
     j_file << "\tputstatic\t" << program_name
            << "/" << ctx->variable()->IDENTIFIER()->toString()
            << " " << type_indicator << endl;
+
+    j_file << "\t; Assignment" << endl;
+    j_file << "\t\tgetstatic\tjava/lang/System/out Ljava/io/PrintStream;" << endl;
+    j_file << "\t\tldc" << "\t\"The value of " << ctx->variable()->IDENTIFIER()->toString() << " is %d\\n\"" << endl;
+
+    j_file << "\t\ticonst_1\t" << endl;
+    j_file << "\t\tanewarray\tjava/lang/Object" << endl;
+    j_file << "\t\tdup" << endl;
+
+    j_file << "\t\ticonst_0" << endl;
+    j_file << "\t\tgetstatic\t" << program_name
+           << "/" << ctx->variable()->IDENTIFIER()->toString()
+           << " " << type_indicator << endl;
+    j_file << "\t\tinvokestatic\tjava/lang/Integer.valueOf(I)Ljava/lang/Integer;" << endl;
+    j_file << "\t\taastore" << endl;
+
+
+    j_file << "\t\tinvokestatic  java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" << endl;
+    j_file << "\t\tinvokevirtual java/io/PrintStream.print(Ljava/lang/String;)V" << endl;
 
     return value;
 }

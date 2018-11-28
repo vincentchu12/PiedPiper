@@ -27,7 +27,7 @@ public:
     antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override;
     // antlrcpp::Any visitBool(mmcParser::BoolContext *ctx) override;
     antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override;
-//    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
+    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
 //    antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
 //    antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
 //    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
@@ -47,7 +47,7 @@ public:
 //    antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx) override;
 //    antlrcpp::Any visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx) override;
     antlrcpp::Any visitIfStatement(mmcParser::IfStatementContext *ctx) override;
-//    antlrcpp::Any visitForStatement(mmcParser::ForStatementContext *ctx) override;
+   antlrcpp::Any visitForStatement(mmcParser::ForStatementContext *ctx) override;
 //    antlrcpp::Any visitUnaryStatement(mmcParser::UnaryStatementContext *ctx) override;
 //    antlrcpp::Any visitStatementList(mmcParser::StatementListContext *ctx) override;
 //    antlrcpp::Any visitAssignmentStatement(mmcParser::AssignmentStatementContext *ctx) override;

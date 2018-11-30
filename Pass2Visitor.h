@@ -27,8 +27,9 @@ public:
     antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override;
     // antlrcpp::Any visitBool(mmcParser::BoolContext *ctx) override;
     antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override;
-    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
-//    antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
+//    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
+    antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
+    antlrcpp::Any visitStr(mmcParser::StrContext *ctx) override;
 //    antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
 //    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
 //    antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *ctx) override;
@@ -56,16 +57,17 @@ public:
    antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override;
 //    antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;
+    antlrcpp::Any visitUnaryExpr(mmcParser::UnaryExprContext *ctx) override;
 //    antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override;
    antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
 //    antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
 //    antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override;
 //    antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override;
 //   antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override;
-//    antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;
-//    antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
-//    antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
-//    antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
+    antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;
+    antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
+    antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
+    antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
    antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override;
 
 };

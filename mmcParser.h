@@ -21,22 +21,23 @@ public:
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, BOOL = 9, MUL_DIV_MOD_OP = 10, ADD_SUB_OP = 11, BIT_OP = 12, 
     LOGIC_COMP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
-    RETURN = 19, TRUE = 20, FALSE = 21, IDENTIFIER = 22, INTEGER = 23, ASSIGN = 24, 
-    EQ = 25, NEQ = 26, LT = 27, LTE = 28, GT = 29, GTE = 30, L_AND = 31, 
-    L_OR = 32, L_NOT = 33, MUL_OP = 34, DIV_OP = 35, MOD_OP = 36, ADD_OP = 37, 
-    SUB_OP = 38, AND_OP = 39, OR_OP = 40, XOR_OP = 41, INC = 42, DEC = 43, 
-    NEWLINE = 44, WS = 45
+    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, IDENTIFIER = 23, INTEGER = 24, 
+    ASSIGN = 25, EQ = 26, NEQ = 27, LT = 28, LTE = 29, GT = 30, GTE = 31, 
+    L_AND = 32, L_OR = 33, L_NOT = 34, MUL_OP = 35, DIV_OP = 36, MOD_OP = 37, 
+    ADD_OP = 38, SUB_OP = 39, AND_OP = 40, OR_OP = 41, XOR_OP = 42, INC = 43, 
+    DEC = 44, STRING = 45, NEWLINE = 46, WS = 47
   };
 
   enum {
     RuleRoot = 0, RuleDeclaration = 1, RuleDefinition = 2, RuleFunctionDeclaration = 3, 
     RuleFunctionDefinition = 4, RuleFunctionCall = 5, RuleParameters = 6, 
     RuleIdentifiers = 7, RuleTypeID = 8, RuleFunctionID = 9, RuleFunction = 10, 
-    RuleVariableID = 11, RuleVariable = 12, RuleNumber = 13, RuleSignedNumber = 14, 
-    RuleSign = 15, RuleStatement = 16, RuleDeclarationStatement = 17, RuleDefinitionStatement = 18, 
-    RuleExpressionStatement = 19, RuleIfStatement = 20, RuleForStatement = 21, 
-    RuleUnaryStatement = 22, RuleStatementList = 23, RuleAssignmentStatement = 24, 
-    RuleExpression = 25, RuleUnary = 26, RuleAssignment = 27
+    RuleVariableID = 11, RuleVariable = 12, RuleNumber = 13, RuleStr = 14, 
+    RuleSignedNumber = 15, RuleSign = 16, RuleStatement = 17, RuleDeclarationStatement = 18, 
+    RuleDefinitionStatement = 19, RuleExpressionStatement = 20, RulePrintfStatement = 21, 
+    RuleIfStatement = 22, RuleForStatement = 23, RuleUnaryStatement = 24, 
+    RuleStatementList = 25, RuleAssignmentStatement = 26, RuleExpression = 27, 
+    RuleUnary = 28, RuleAssignment = 29
   };
 
   mmcParser(antlr4::TokenStream *input);
@@ -63,12 +64,14 @@ public:
   class VariableIDContext;
   class VariableContext;
   class NumberContext;
+  class StrContext;
   class SignedNumberContext;
   class SignContext;
   class StatementContext;
   class DeclarationStatementContext;
   class DefinitionStatementContext;
   class ExpressionStatementContext;
+  class PrintfStatementContext;
   class IfStatementContext;
   class ForStatementContext;
   class UnaryStatementContext;
@@ -262,6 +265,19 @@ public:
 
   NumberContext* number();
 
+  class  StrContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSpec* type = nullptr;
+    StrContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *STRING();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  StrContext* str();
+
   class  SignedNumberContext : public antlr4::ParserRuleContext {
   public:
     TypeSpec* type = nullptr;
@@ -343,6 +359,20 @@ public:
 
   ExpressionStatementContext* expressionStatement();
 
+  class  PrintfStatementContext : public antlr4::ParserRuleContext {
+  public:
+    PrintfStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *PRINTF();
+    StrContext *str();
+    IdentifiersContext *identifiers();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  PrintfStatementContext* printfStatement();
+
   class  IfStatementContext : public antlr4::ParserRuleContext {
   public:
     IfStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -369,12 +399,12 @@ public:
     antlr4::tree::TerminalNode *FOR();
     StatementListContext *statementList();
     VariableContext *variable();
+    ExpressionContext *expression();
     std::vector<DeclarationContext *> declaration();
     DeclarationContext* declaration(size_t i);
     DefinitionContext *definition();
     std::vector<AssignmentContext *> assignment();
     AssignmentContext* assignment(size_t i);
-    ExpressionContext *expression();
     UnaryContext *unary();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -434,6 +464,59 @@ public:
    
   };
 
+  class  AddSubExprContext : public ExpressionContext {
+  public:
+    AddSubExprContext(ExpressionContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *ADD_SUB_OP();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ArrayExprContext : public ExpressionContext {
+  public:
+    ArrayExprContext(ExpressionContext *ctx);
+
+    VariableContext *variable();
+    NumberContext *number();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  MulDivModExprContext : public ExpressionContext {
+  public:
+    MulDivModExprContext(ExpressionContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *MUL_DIV_MOD_OP();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  FuncCallExprContext : public ExpressionContext {
+  public:
+    FuncCallExprContext(ExpressionContext *ctx);
+
+    FunctionCallContext *functionCall();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ParenExprContext : public ExpressionContext {
+  public:
+    ParenExprContext(ExpressionContext *ctx);
+
+    ExpressionContext *expression();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  StringExprContext : public ExpressionContext {
+  public:
+    StringExprContext(ExpressionContext *ctx);
+
+    StrContext *str();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  VariableExprContext : public ExpressionContext {
   public:
     VariableExprContext(ExpressionContext *ctx);
@@ -452,22 +535,11 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  AddSubExprContext : public ExpressionContext {
+  class  UnaryExprContext : public ExpressionContext {
   public:
-    AddSubExprContext(ExpressionContext *ctx);
+    UnaryExprContext(ExpressionContext *ctx);
 
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *ADD_SUB_OP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  ArrayExprContext : public ExpressionContext {
-  public:
-    ArrayExprContext(ExpressionContext *ctx);
-
-    VariableContext *variable();
-    NumberContext *number();
+    UnaryContext *unary();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -491,24 +563,6 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  MulDivModExprContext : public ExpressionContext {
-  public:
-    MulDivModExprContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *MUL_DIV_MOD_OP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  FuncCallExprContext : public ExpressionContext {
-  public:
-    FuncCallExprContext(ExpressionContext *ctx);
-
-    FunctionCallContext *functionCall();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  BoolExprContext : public ExpressionContext {
   public:
     BoolExprContext(ExpressionContext *ctx);
@@ -525,14 +579,6 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  ParenExprContext : public ExpressionContext {
-  public:
-    ParenExprContext(ExpressionContext *ctx);
-
-    ExpressionContext *expression();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  SignedNumberExprContext : public ExpressionContext {
   public:
     SignedNumberExprContext(ExpressionContext *ctx);
@@ -545,6 +591,7 @@ public:
   ExpressionContext* expression(int precedence);
   class  UnaryContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec* type = nullptr;
     UnaryContext(antlr4::ParserRuleContext *parent, size_t invokingState);
    
     UnaryContext() : antlr4::ParserRuleContext() { }

@@ -32,10 +32,12 @@ function     : IDENTIFIER ;
 variableID   : IDENTIFIER ;
 variable     : IDENTIFIER ;
 number       locals [ TypeSpec* type = nullptr ] : INTEGER    ;
+str          locals [ TypeSpec* type = nullptr ] : STRING     ;
 signedNumber locals [ TypeSpec* type = nullptr ] : sign number;
 sign         : ADD_OP | SUB_OP ;
 
 statement   : expressionStatement
+			| printfStatement
 			| unaryStatement
 			| forStatement
 			| ifStatement
@@ -47,6 +49,8 @@ statement   : expressionStatement
 declarationStatement : declaration ';' ;
 definitionStatement  : definition ';' ;
 expressionStatement  : expression ';' ;
+
+printfStatement : PRINTF '(' str (identifiers)? ')' ';';
 
 ifStatement	: IF '(' expression ')' '{' statementList? '}'
 			(
@@ -83,14 +87,17 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
 	| BOOL                                 # boolExpr
+	| str    							   # stringExpr
 	| signedNumber                         # signedNumberExpr
 	| number                               # unsignedNumberExpr
+	| unary                                # unaryExpr
 	| variable                             # variableExpr
 	| '(' expression ')'				   # parenExpr
 	| functionCall                         # funcCallExpr
 	;
 
-unary	: INC variable # preInc 
+unary locals [ TypeSpec* type = nullptr ]
+		: INC variable # preInc 
 		| DEC variable # preDec
 		| variable INC # postInc
 		| variable DEC # postDec
@@ -119,6 +126,7 @@ ELIF       : 'elif'   ;
 RETURN     : 'return' ;
 TRUE       : 'true'   ;
 FALSE      : 'false'  ;
+PRINTF     : 'printf' ;
 
 IDENTIFIER : [_a-zA-Z][_a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;
@@ -155,6 +163,7 @@ XOR_OP : '^' ;
 INC    : '++' ;
 DEC    : '--' ;
 
+STRING  : '"' .*? '"' ;
 NEWLINE : '\r'? '\n' -> skip  ;		// Skip Return Return Carriage (Windows) and Newlines
 WS      : [ \t]+ -> skip ; 			// Skip Spaces and Tabs
 

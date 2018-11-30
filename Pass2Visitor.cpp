@@ -59,15 +59,29 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
- antlrcpp::Any Pass2Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
- {
-	 return visitChildren(ctx);
- }
-
-// antlrcpp::Any Pass2Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
+// antlrcpp::Any Pass2Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
 // {
-
+//	 return visitChildren(ctx);
 // }
+
+ antlrcpp::Any Pass2Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
+ {
+	    cout << "\tvisitDefinition      " << ctx->getText() << endl;
+	    auto value = visit(ctx->expression());
+
+	    string type_indicator =
+	                  (ctx->expression()->type == Predefined::integer_type) ? "I"
+	                : (ctx->expression()->type == Predefined::boolean_type) ? "Z"
+					: (ctx->expression()->type == Predefined::char_type)    ? "C"
+	                :                                                   "?";
+
+	    // Emit a field put instruction.
+	    j_file << "\tputstatic\t" << program_name
+	           << "/" << ctx->variableID()->IDENTIFIER()->toString()
+	           << " " << type_indicator << endl;
+
+	    return value;
+ }
 
 // antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
 // {
@@ -307,6 +321,7 @@ antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
 
     string type_indicator = (type == Predefined::integer_type) ? "I"
                           : (type == Predefined::boolean_type) ? "Z"
+						  : (type == Predefined::char_type)    ? "C"
                           :                                      "?";
 
     // Emit a field get instruction.
@@ -509,25 +524,81 @@ antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
 
 // }
 
-// antlrcpp::Any Pass2Visitor::visitPreInc(mmcParser::PreIncContext *ctx)
-// {
+ antlrcpp::Any Pass2Visitor::visitUnaryExpr(mmcParser::UnaryExprContext *ctx)
+ {
+	 cout << "\tvisitUnaryExpr" << endl;
+	 string child0 = ctx->unary()->children[0]->getText();
+	 string child1 = ctx->unary()->children[1]->getText();
 
-// }
+	string type_indicator =
+	                  (ctx->unary()->type == Predefined::integer_type) ? "I"
+	                : (ctx->unary()->type == Predefined::boolean_type) ? "Z"
+	                :                                                    "?";
+	 if(child0 == "++" || child0 == "--")
+	 {
+		 auto value = visitChildren(ctx);
+		 j_file << "\tgetstatic\t" << program_name << "/" << child1 << " " << type_indicator << endl;
+	 }
+	 else
+	 {
+		 j_file << "\tgetstatic\t" <<  program_name << "/" << child0 << " " << type_indicator << endl;
+		 auto value = visitChildren(ctx);
+	 }
 
-// antlrcpp::Any Pass2Visitor::visitPreDec(mmcParser::PreDecContext *ctx)
-// {
+	 return NULL;
 
-// }
+ }
 
-// antlrcpp::Any Pass2Visitor::visitPostInc(mmcParser::PostIncContext *ctx)
-// {
+ antlrcpp::Any Pass2Visitor::visitPreInc(mmcParser::PreIncContext *ctx)
+ {
+	 cout << "\tvisitPreInc" << endl;
+	 auto value = visitChildren(ctx);
+	 j_file << "\ticonst_1" << endl;
+	 bool integer_mode = (ctx->type == Predefined::integer_type);
+	 string opcode = integer_mode ? "iadd"
+	                :                "????";
+	 j_file << "\t" << opcode << endl;
 
-// }
+	 return value;
+ }
 
-// antlrcpp::Any Pass2Visitor::visitPostDec(mmcParser::PostDecContext *ctx)
-// {
+ antlrcpp::Any Pass2Visitor::visitPreDec(mmcParser::PreDecContext *ctx)
+ {
+	 cout << "\tvisitPreDec" << endl;
+	 auto value = visitChildren(ctx);
+	 j_file << "\ticonst_1" << endl;
+	 bool integer_mode = (ctx->type == Predefined::integer_type);
+	 string opcode = integer_mode ? "isub"
+					:                "????";
+	 j_file << "\t" << opcode << endl;
+	 return value;
+ }
 
-// }
+ antlrcpp::Any Pass2Visitor::visitPostInc(mmcParser::PostIncContext *ctx)
+ {
+	 cout << "\tvisitPostInc" << endl;
+	 auto value = visitChildren(ctx);
+	 j_file << "\ticonst_1" << endl;
+	 bool integer_mode = (ctx->type == Predefined::integer_type);
+	 string opcode = integer_mode ? "iadd"
+					:                "????";
+	 j_file << "\t" << opcode << endl;
+	 return value;
+ }
+
+ antlrcpp::Any Pass2Visitor::visitPostDec(mmcParser::PostDecContext *ctx)
+ {
+	 cout << "\tvisitPostDec" << endl;
+	 auto value = visitChildren(ctx);
+	 j_file << "\ticonst_1" << endl;
+	 bool integer_mode = (ctx->type == Predefined::integer_type);
+	 string opcode = integer_mode ? "isub"
+					:                "????";
+	 j_file << "\t" << opcode << endl;
+
+	 return value;
+
+ }
 
 antlrcpp::Any Pass2Visitor::visitAssignment(mmcParser::AssignmentContext *ctx)
 {
@@ -537,34 +608,24 @@ antlrcpp::Any Pass2Visitor::visitAssignment(mmcParser::AssignmentContext *ctx)
     string type_indicator =
                   (ctx->expression()->type == Predefined::integer_type) ? "I"
                 : (ctx->expression()->type == Predefined::boolean_type) ? "Z"
-                :                                                   "?";
+                : (ctx->expression()->type == Predefined::char_type)    ? "C"
+                :                                                         "?";
 
     // Emit a field put instruction.
     j_file << "\tputstatic\t" << program_name
            << "/" << ctx->variable()->IDENTIFIER()->toString()
            << " " << type_indicator << endl;
 
-    j_file << "\t; Assignment" << endl;
-    j_file << "\t\tgetstatic\tjava/lang/System/out Ljava/io/PrintStream;" << endl;
-    j_file << "\t\tldc" << "\t\"The value of " << ctx->variable()->IDENTIFIER()->toString() << " is %d\\n\"" << endl;
-
-    j_file << "\t\ticonst_1\t" << endl;
-    j_file << "\t\tanewarray\tjava/lang/Object" << endl;
-    j_file << "\t\tdup" << endl;
-
-    j_file << "\t\ticonst_0" << endl;
-    j_file << "\t\tgetstatic\t" << program_name
-           << "/" << ctx->variable()->IDENTIFIER()->toString()
-           << " " << type_indicator << endl;
-    j_file << "\t\tinvokestatic\tjava/lang/Integer.valueOf(I)Ljava/lang/Integer;" << endl;
-    j_file << "\t\taastore" << endl;
-
-
-    j_file << "\t\tinvokestatic  java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" << endl;
-    j_file << "\t\tinvokevirtual java/io/PrintStream.print(Ljava/lang/String;)V" << endl;
-
     return value;
 }
 
+
+antlrcpp::Any Pass2Visitor::visitStr(mmcParser::StrContext *ctx)
+{
+	cout << "\tvisitStr" << ctx->getText() << endl;
+	string value = ctx->STRING()->getText();
+	j_file << "\tldc\t" << value << endl;
+	return visitChildren(ctx);
+}
 
 

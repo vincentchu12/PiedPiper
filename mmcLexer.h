@@ -21,11 +21,11 @@ public:
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, BOOL = 9, MUL_DIV_MOD_OP = 10, ADD_SUB_OP = 11, BIT_OP = 12, 
     LOGIC_COMP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
-    RETURN = 19, TRUE = 20, FALSE = 21, IDENTIFIER = 22, INTEGER = 23, ASSIGN = 24, 
-    EQ = 25, NEQ = 26, LT = 27, LTE = 28, GT = 29, GTE = 30, L_AND = 31, 
-    L_OR = 32, L_NOT = 33, MUL_OP = 34, DIV_OP = 35, MOD_OP = 36, ADD_OP = 37, 
-    SUB_OP = 38, AND_OP = 39, OR_OP = 40, XOR_OP = 41, INC = 42, DEC = 43, 
-    NEWLINE = 44, WS = 45
+    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, IDENTIFIER = 23, INTEGER = 24, 
+    ASSIGN = 25, EQ = 26, NEQ = 27, LT = 28, LTE = 29, GT = 30, GTE = 31, 
+    L_AND = 32, L_OR = 33, L_NOT = 34, MUL_OP = 35, DIV_OP = 36, MOD_OP = 37, 
+    ADD_OP = 38, SUB_OP = 39, AND_OP = 40, OR_OP = 41, XOR_OP = 42, INC = 43, 
+    DEC = 44, STRING = 45, NEWLINE = 46, WS = 47
   };
 
   mmcLexer(antlr4::CharStream *input);

@@ -3,7 +3,6 @@
 
 .field private static _runTimer LRunTimer;
 .field private static _standardIn LPascalTextIn;
-.field private static a C
 
 .method public <init>()V
 
@@ -25,8 +24,9 @@
 	dup
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        input/_standardIn LPascalTextIn;
-	ldc	"hello"
-	putstatic	input/a C
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"%X"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 
 	getstatic     input/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V

@@ -310,6 +310,7 @@ public:
     StatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     ExpressionStatementContext *expressionStatement();
+    PrintfStatementContext *printfStatement();
     UnaryStatementContext *unaryStatement();
     ForStatementContext *forStatement();
     IfStatementContext *ifStatement();

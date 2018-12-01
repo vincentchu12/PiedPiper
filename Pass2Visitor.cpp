@@ -628,4 +628,12 @@ antlrcpp::Any Pass2Visitor::visitStr(mmcParser::StrContext *ctx)
 	return visitChildren(ctx);
 }
 
+antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementContext *ctx)
+{
+	cout << "\tvisitPrintfStatement" << ctx->getText() << endl;
+	j_file << "\tgetstatic java/lang/System/out Ljava/io/PrintStream;" << endl;
+	auto value = visitChildren(ctx);
+	j_file << "\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V" << endl;
+	return value;
+}
 

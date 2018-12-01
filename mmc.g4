@@ -50,7 +50,7 @@ declarationStatement : declaration ';' ;
 definitionStatement  : definition ';' ;
 expressionStatement  : expression ';' ;
 
-printfStatement : PRINTF '(' str (identifiers)? ')' ';';
+printfStatement : PRINTF '(' str (',' identifiers)? ')' ';';
 
 ifStatement	: IF '(' expression ')' '{' statementList? '}'
 			(

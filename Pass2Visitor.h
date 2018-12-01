@@ -69,6 +69,8 @@ public:
     antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
     antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
    antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override;
+   antlrcpp::Any visitPrintfStatement(mmcParser::PrintfStatementContext *ctx) override;
+
 
 };
 

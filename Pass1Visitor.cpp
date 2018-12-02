@@ -181,7 +181,13 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
 
 // antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
 // {
-
+//	 cout << "=== visitFunctionDeclaration: " + ctx->getText() << endl;
+//
+//	 auto value = visitChildren(ctx);
+//
+//	 string type_name = ctx->typeID()->IDENTIFIER()->toString();
+//	 string function_name = ctx->functionID()->IDENTIFIER()->toString();
+//
 // }
 
 // antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
@@ -343,10 +349,12 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
-// {
+ antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
+ {
+	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
 
-// }
+
+ }
 
 antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {

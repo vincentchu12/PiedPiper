@@ -10,8 +10,15 @@ extern string program_name;
 root	: (statementList)
 		;
 
-declaration : typeID variableID | typeID variableID '[' INTEGER ']';
-definition  : typeID variableID ASSIGN expression ;
+declaration
+	: typeID variableID					   # variableDecl
+	| typeID variableID '[' INTEGER ']'	   # arrayDecl
+	;
+	
+definition  
+	: typeID variableID ASSIGN expression    					   # variableDef
+	| typeID variableID '[' INTEGER ']' ASSIGN '{' identifiers '}' # arrayDef
+	;
 
 
 functionDeclaration : typeID functionID '(' parameters? ')' ';' ;
@@ -21,7 +28,7 @@ functionDefinition  : typeID functionID '(' parameters? ')'
 					   		(RETURN expression ';')?
 					   '}'
 				     ;
-
+ 
 functionCall : function '(' identifiers? ')' ;
 parameters   : declaration (',' declaration)+ ;
 identifiers  : expression  (',' expression)+  ;
@@ -78,7 +85,7 @@ unaryStatement : unary ';' ;
 
 statementList       : statement (statement)* ;
 assignmentStatement : assignment ';' ;
-
+	
 expression locals [ TypeSpec* type = nullptr ]
 	: expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
@@ -106,7 +113,8 @@ unary locals [ TypeSpec* type = nullptr ]
 		;
 
 assignment : variable ASSIGN expression 
-		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' ;
+		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' 
+		   ;
 
 BOOL : TRUE | FALSE ;
 // Operations (In Order of Precedence)

@@ -58,7 +58,6 @@ public:
 //    antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;
     antlrcpp::Any visitUnaryExpr(mmcParser::UnaryExprContext *ctx) override;
-//    antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override;
    antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
 //    antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
 //    antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override;

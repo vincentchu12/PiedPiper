@@ -20,12 +20,11 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, BOOL = 9, MUL_DIV_MOD_OP = 10, ADD_SUB_OP = 11, BIT_OP = 12, 
-    LOGIC_COMP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
-    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, IDENTIFIER = 23, INTEGER = 24, 
-    ASSIGN = 25, EQ = 26, NEQ = 27, LT = 28, LTE = 29, GT = 30, GTE = 31, 
-    L_AND = 32, L_OR = 33, L_NOT = 34, MUL_OP = 35, DIV_OP = 36, MOD_OP = 37, 
-    ADD_OP = 38, SUB_OP = 39, AND_OP = 40, OR_OP = 41, XOR_OP = 42, INC = 43, 
-    DEC = 44, STRING = 45, NEWLINE = 46, WS = 47
+    MATH_COMP = 13, FOR = 14, IF = 15, ELSE = 16, ELIF = 17, RETURN = 18, 
+    TRUE = 19, FALSE = 20, PRINTF = 21, IDENTIFIER = 22, INTEGER = 23, ASSIGN = 24, 
+    EQ = 25, NEQ = 26, LT = 27, LTE = 28, GT = 29, GTE = 30, MUL_OP = 31, 
+    DIV_OP = 32, MOD_OP = 33, ADD_OP = 34, SUB_OP = 35, AND_OP = 36, OR_OP = 37, 
+    XOR_OP = 38, INC = 39, DEC = 40, STRING = 41, NEWLINE = 42, WS = 43
   };
 
   mmcLexer(antlr4::CharStream *input);

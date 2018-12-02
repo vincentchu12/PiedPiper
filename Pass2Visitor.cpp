@@ -189,20 +189,20 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 {
     cout << "\tvisitIfStatement      " << ctx->getText() << endl;
 
-    int expression_size = ctx->expression().size();
+    int math_expression_size = ctx->mathExpr().size();
     int original_label = label_num;
     int statement_size = ctx->statementList().size();
 
     char current_label[4];
 
-    bool has_else = (expression_size < statement_size) ? true : false;
+    bool has_else = (math_expression_size < statement_size) ? true : false;
 
     char last_label[4];
-    sprintf(last_label, "%d", label_num+expression_size);
+    sprintf(last_label, "%d", label_num+math_expression_size);
 
-    for(int i = 0; i < expression_size; i++)
+    for(int i = 0; i < math_expression_size; i++)
     {
-    	visit(ctx->expression(i));
+    	visit(ctx->mathExpr(i));
     }
 
     if(has_else)
@@ -212,7 +212,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 
     j_file << "\tgoto " << "Label_" << last_label << endl;
 
-    for(int i = 0; i < expression_size; i++)
+    for(int i = 0; i < math_expression_size; i++)
 	{
     	sprintf(current_label, "%d", original_label++);
     	j_file << "Label_" << current_label << ":" << endl;
@@ -256,7 +256,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		sprintf(label, "%d", loop_start);
 		j_file << "Label_" << label << ":" << endl;
 		
-        visit(ctx->expression());
+        visit(ctx->mathExpr());
 
         sprintf(label, "%d", loop_exit);
         j_file << "\tgoto Label_" << label << endl;
@@ -390,7 +390,7 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 
     if (op == "==")
     {
-        opcode = integer_mode ? "if_icmpeq"
+        opcode = integer_mode ? "if_cmpeq"
                : boolean_mode ? "if_icmpeq"
                :                "????";
     }
@@ -431,42 +431,6 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 
     return value;
 }
-
-//antlrcpp::Any Pass2Visitor::visitLogicExpr(mmcParser::LogicExprContext *ctx)
-//{
-//    cout << "\visitLogicExpr" << endl;
-//    auto value = visitChildren(ctx);
-//
-//    TypeSpec *type1 = ctx->expression(0)->type;
-//    TypeSpec *type2 = ctx->expression(1)->type;
-//
-//    bool integer_mode =    (type1 == Predefined::integer_type)
-//                        && (type2 == Predefined::integer_type);
-//
-//    string op = ctx->MUL_DIV_MOD_OP()->getText();
-//    string opcode;
-//
-//    if (op == "&&")
-//    {
-//        opcode = integer_mode ? "iand"
-//               :                "????";
-//    }
-//    else if (op == "||")
-//    {
-//        opcode = integer_mode ? "idiv"
-//               :                "????";
-//    }
-//    else // !
-//    {
-//        opcode = integer_mode ? "irem"
-//               :                "????";
-//    }
-//
-//    // Emit a multiply or divide instruction.
-//    j_file << "\t" << opcode << endl;
-//
-//    return value;
-//}
 
 antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
 {

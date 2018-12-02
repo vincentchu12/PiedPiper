@@ -20,12 +20,11 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, BOOL = 9, MUL_DIV_MOD_OP = 10, ADD_SUB_OP = 11, BIT_OP = 12, 
-    LOGIC_COMP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
-    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, IDENTIFIER = 23, INTEGER = 24, 
-    ASSIGN = 25, EQ = 26, NEQ = 27, LT = 28, LTE = 29, GT = 30, GTE = 31, 
-    L_AND = 32, L_OR = 33, L_NOT = 34, MUL_OP = 35, DIV_OP = 36, MOD_OP = 37, 
-    ADD_OP = 38, SUB_OP = 39, AND_OP = 40, OR_OP = 41, XOR_OP = 42, INC = 43, 
-    DEC = 44, STRING = 45, NEWLINE = 46, WS = 47
+    MATH_COMP = 13, FOR = 14, IF = 15, ELSE = 16, ELIF = 17, RETURN = 18, 
+    TRUE = 19, FALSE = 20, PRINTF = 21, IDENTIFIER = 22, INTEGER = 23, ASSIGN = 24, 
+    EQ = 25, NEQ = 26, LT = 27, LTE = 28, GT = 29, GTE = 30, MUL_OP = 31, 
+    DIV_OP = 32, MOD_OP = 33, ADD_OP = 34, SUB_OP = 35, AND_OP = 36, OR_OP = 37, 
+    XOR_OP = 38, INC = 39, DEC = 40, STRING = 41, NEWLINE = 42, WS = 43
   };
 
   enum {
@@ -37,7 +36,7 @@ public:
     RuleDefinitionStatement = 19, RuleExpressionStatement = 20, RulePrintfStatement = 21, 
     RuleIfStatement = 22, RuleForStatement = 23, RuleUnaryStatement = 24, 
     RuleStatementList = 25, RuleAssignmentStatement = 26, RuleExpression = 27, 
-    RuleUnary = 28, RuleAssignment = 29
+    RuleMathExpr = 28, RuleUnary = 29, RuleAssignment = 30
   };
 
   mmcParser(antlr4::TokenStream *input);
@@ -78,6 +77,7 @@ public:
   class StatementListContext;
   class AssignmentStatementContext;
   class ExpressionContext;
+  class MathExprContext;
   class UnaryContext;
   class AssignmentContext; 
 
@@ -379,8 +379,8 @@ public:
     IfStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IF();
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
+    std::vector<MathExprContext *> mathExpr();
+    MathExprContext* mathExpr(size_t i);
     std::vector<StatementListContext *> statementList();
     StatementListContext* statementList(size_t i);
     std::vector<antlr4::tree::TerminalNode *> ELIF();
@@ -400,7 +400,7 @@ public:
     antlr4::tree::TerminalNode *FOR();
     StatementListContext *statementList();
     VariableContext *variable();
-    ExpressionContext *expression();
+    MathExprContext *mathExpr();
     std::vector<DeclarationContext *> declaration();
     DeclarationContext* declaration(size_t i);
     DefinitionContext *definition();
@@ -465,6 +465,40 @@ public:
    
   };
 
+  class  StringExprContext : public ExpressionContext {
+  public:
+    StringExprContext(ExpressionContext *ctx);
+
+    StrContext *str();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  VariableExprContext : public ExpressionContext {
+  public:
+    VariableExprContext(ExpressionContext *ctx);
+
+    VariableContext *variable();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  BitExprContext : public ExpressionContext {
+  public:
+    BitExprContext(ExpressionContext *ctx);
+
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *BIT_OP();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  UnaryExprContext : public ExpressionContext {
+  public:
+    UnaryExprContext(ExpressionContext *ctx);
+
+    UnaryContext *unary();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  AddSubExprContext : public ExpressionContext {
   public:
     AddSubExprContext(ExpressionContext *ctx);
@@ -502,68 +536,6 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  ParenExprContext : public ExpressionContext {
-  public:
-    ParenExprContext(ExpressionContext *ctx);
-
-    ExpressionContext *expression();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  StringExprContext : public ExpressionContext {
-  public:
-    StringExprContext(ExpressionContext *ctx);
-
-    StrContext *str();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  VariableExprContext : public ExpressionContext {
-  public:
-    VariableExprContext(ExpressionContext *ctx);
-
-    VariableContext *variable();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  BitExprContext : public ExpressionContext {
-  public:
-    BitExprContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *BIT_OP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  UnaryExprContext : public ExpressionContext {
-  public:
-    UnaryExprContext(ExpressionContext *ctx);
-
-    UnaryContext *unary();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  MathExprContext : public ExpressionContext {
-  public:
-    MathExprContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *MATH_COMP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
-  class  LogicExprContext : public ExpressionContext {
-  public:
-    LogicExprContext(ExpressionContext *ctx);
-
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    antlr4::tree::TerminalNode *LOGIC_COMP();
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-  };
-
   class  BoolExprContext : public ExpressionContext {
   public:
     BoolExprContext(ExpressionContext *ctx);
@@ -580,6 +552,14 @@ public:
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
+  class  ParenExprContext : public ExpressionContext {
+  public:
+    ParenExprContext(ExpressionContext *ctx);
+
+    ExpressionContext *expression();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
   class  SignedNumberExprContext : public ExpressionContext {
   public:
     SignedNumberExprContext(ExpressionContext *ctx);
@@ -590,6 +570,21 @@ public:
 
   ExpressionContext* expression();
   ExpressionContext* expression(int precedence);
+  class  MathExprContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSpec* type = nullptr;
+    MathExprContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *MATH_COMP();
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  MathExprContext* mathExpr();
+
   class  UnaryContext : public antlr4::ParserRuleContext {
   public:
     TypeSpec* type = nullptr;

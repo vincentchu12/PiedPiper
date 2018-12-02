@@ -52,9 +52,9 @@ expressionStatement  : expression ';' ;
 
 printfStatement : PRINTF '(' str (',' identifiers)? ')' ';';
 
-ifStatement	: IF '(' expression ')' '{' statementList? '}'
+ifStatement	: IF '(' mathExpr ')' '{' statementList? '}'
 			(
-				ELIF '(' expression ')' '{' statementList? '}'
+				ELIF '(' mathExpr ')' '{' statementList? '}'
 			)*
 			(
 				ELSE '{' statementList? '}'
@@ -68,7 +68,7 @@ forStatement : FOR '('
 			 	)
 			 |
 			 	(
-					(declaration | definition | assignment) ';' expression ';' (assignment | unary)
+					(declaration | definition | assignment) ';' mathExpr ';' (assignment | unary)
 			 	)
 			 )
 			')' '{' statementList? '}'
@@ -80,9 +80,7 @@ statementList       : statement (statement)* ;
 assignmentStatement : assignment ';' ;
 
 expression locals [ TypeSpec* type = nullptr ]
-	: expression LOGIC_COMP     expression # logicExpr
-	| expression MATH_COMP      expression # mathExpr
-	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
+	: expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
@@ -94,6 +92,10 @@ expression locals [ TypeSpec* type = nullptr ]
 	| variable                             # variableExpr
 	| '(' expression ')'				   # parenExpr
 	| functionCall                         # funcCallExpr
+	;
+
+mathExpr locals [ TypeSpec* type = nullptr ]
+	: expression MATH_COMP      expression
 	;
 
 unary locals [ TypeSpec* type = nullptr ]
@@ -112,10 +114,7 @@ MUL_DIV_MOD_OP : MUL_OP | DIV_OP | MOD_OP ;
 ADD_SUB_OP     : ADD_OP | SUB_OP          ;
 BIT_OP         : AND_OP | OR_OP  | XOR_OP ;
 
-
-
 // Comparators (In Order of Precedence)
-LOGIC_COMP : L_AND    | L_OR     | L_NOT    ;
 MATH_COMP  : EQ | NEQ | LT | LTE | GT | GTE ;
 
 // Reserved Words
@@ -141,11 +140,6 @@ LT     : '<'  ;
 LTE    : '<=' ;
 GT     : '>'  ;
 GTE    : '>=' ;
-
-// Logical Comparators
-L_AND  : '&&' ;
-L_OR   : '||' ;
-L_NOT  : '!'  ;
 
 // Mathematical Operators
 MUL_OP : '*' ;

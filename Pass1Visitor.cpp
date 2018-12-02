@@ -419,27 +419,6 @@ antlrcpp::Any Pass1Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
     return value;
 }
 
-
-
-antlrcpp::Any Pass1Visitor::visitLogicExpr(mmcParser::LogicExprContext *ctx)
-{
-    cout << "=== visitLogicExpr: " + ctx->getText() << endl;
-
-    auto value = visitChildren(ctx);
-
-    TypeSpec *type1 = ctx->expression(0)->type;
-    TypeSpec *type2 = ctx->expression(1)->type;
-
-    bool integer_mode =    (type1 == Predefined::integer_type)
-                        && (type2 == Predefined::integer_type);
-
-    TypeSpec *type = integer_mode ? Predefined::integer_type
-                   :                nullptr;
-    ctx->type = type;
-
-    return value;
-}
-
 antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
 {
     cout << "=== visitMulDivExpr: " + ctx->getText() << endl;

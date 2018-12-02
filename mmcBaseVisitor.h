@@ -156,31 +156,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override {
-    cout << "Original Function: visitAddSubExpr" << endl;
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override {
-    cout << "Original Function: visitArrayExpr" << endl;
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override {
-    cout << "Original Function: visitMulDivModExpr" << endl;
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override {
-    cout << "Original Function: visitFuncCallExpr" << endl;
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
-    cout << "Original Function: visitParenExpr" << endl;
-    return visitChildren(ctx);
-  }
-
   virtual antlrcpp::Any visitStringExpr(mmcParser::StringExprContext *ctx) override {
     cout << "Original Function: visitStringExpr" << endl;
     return visitChildren(ctx);
@@ -201,13 +176,23 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override {
-    cout << "Original Function: visitMathExpr" << endl;
+  virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override {
+    cout << "Original Function: visitAddSubExpr" << endl;
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitLogicExpr(mmcParser::LogicExprContext *ctx) override {
-    cout << "Original Function: visitLogicExpr" << endl;
+  virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override {
+    cout << "Original Function: visitArrayExpr" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override {
+    cout << "Original Function: visitMulDivModExpr" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override {
+    cout << "Original Function: visitFuncCallExpr" << endl;
     return visitChildren(ctx);
   }
 
@@ -221,8 +206,18 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
+    cout << "Original Function: visitParenExpr" << endl;
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override {
     cout << "Original Function: visitSignedNumberExpr" << endl;
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override {
+    cout << "Original Function: visitMathExpr" << endl;
     return visitChildren(ctx);
   }
 

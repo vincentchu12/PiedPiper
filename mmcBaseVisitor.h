@@ -117,7 +117,7 @@ public:
   }
 
   virtual antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx) override {
-    cout << "Original Function: visitDefinitionStatement" << endl;
+    cout << "Original Function: visitDefinitionStatement " << endl;
     return visitChildren(ctx);
   }
 

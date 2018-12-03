@@ -27,9 +27,13 @@ public:
    */
     virtual antlrcpp::Any visitRoot(mmcParser::RootContext *context) = 0;
 
-    virtual antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *context) = 0;
+    virtual antlrcpp::Any visitVariableDecl(mmcParser::VariableDeclContext *context) = 0;
 
-    virtual antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *context) = 0;
+    virtual antlrcpp::Any visitArrayDecl(mmcParser::ArrayDeclContext *context) = 0;
+
+    virtual antlrcpp::Any visitVariableDef(mmcParser::VariableDefContext *context) = 0;
+
+    virtual antlrcpp::Any visitArrayDef(mmcParser::ArrayDefContext *context) = 0;
 
     virtual antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *context) = 0;
 

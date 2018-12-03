@@ -112,8 +112,8 @@ unary locals [ TypeSpec* type = nullptr ]
 		| variable DEC # postDec
 		;
 
-assignment : variable ASSIGN expression 
-		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' 
+assignment : variable ASSIGN expression 						 # variableAssignment
+		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' # arrayAssignment
 		   ;
 
 BOOL : TRUE | FALSE ;

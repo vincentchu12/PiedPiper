@@ -96,13 +96,33 @@ public:
   class  DeclarationContext : public antlr4::ParserRuleContext {
   public:
     DeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    DeclarationContext() : antlr4::ParserRuleContext() { }
+    void copyFrom(DeclarationContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  VariableDeclContext : public DeclarationContext {
+  public:
+    VariableDeclContext(DeclarationContext *ctx);
+
+    TypeIDContext *typeID();
+    VariableIDContext *variableID();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  ArrayDeclContext : public DeclarationContext {
+  public:
+    ArrayDeclContext(DeclarationContext *ctx);
+
     TypeIDContext *typeID();
     VariableIDContext *variableID();
     antlr4::tree::TerminalNode *INTEGER();
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
   };
 
   DeclarationContext* declaration();
@@ -110,14 +130,37 @@ public:
   class  DefinitionContext : public antlr4::ParserRuleContext {
   public:
     DefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    DefinitionContext() : antlr4::ParserRuleContext() { }
+    void copyFrom(DefinitionContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  VariableDefContext : public DefinitionContext {
+  public:
+    VariableDefContext(DefinitionContext *ctx);
+
     TypeIDContext *typeID();
     VariableIDContext *variableID();
     antlr4::tree::TerminalNode *ASSIGN();
     ExpressionContext *expression();
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
+  };
+
+  class  ArrayDefContext : public DefinitionContext {
+  public:
+    ArrayDefContext(DefinitionContext *ctx);
+
+    TypeIDContext *typeID();
+    VariableIDContext *variableID();
+    antlr4::tree::TerminalNode *INTEGER();
+    antlr4::tree::TerminalNode *ASSIGN();
+    IdentifiersContext *identifiers();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   DefinitionContext* definition();

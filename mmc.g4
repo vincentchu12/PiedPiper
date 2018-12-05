@@ -36,7 +36,7 @@ identifiers  : expression  (',' expression)+  ;
 typeID       : IDENTIFIER ;
 functionID   : IDENTIFIER ;
 function     : IDENTIFIER ;
-variableID   : IDENTIFIER ;
+variableID   locals [ TypeSpec* type = nullptr ] : IDENTIFIER ;
 variable     locals [ int size = 0 ] : IDENTIFIER ;
 number       locals [ TypeSpec* type = nullptr ] : INTEGER    ;
 str          locals [ TypeSpec* type = nullptr ] : STRING     ;

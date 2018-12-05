@@ -20,7 +20,6 @@ Pass2Visitor::Pass2Visitor(ostream& j_file)
 Pass2Visitor::~Pass2Visitor() {}
 
 int label_num = 0;
-char label[4];
 
 antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 {
@@ -213,7 +212,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		j_file << "\tldc 0" <<endl;
 		string type_indicator = "I";
 		j_file << "\tputstatic\t" << program_name
-				   << "/" << ctx->declaration(0)->variableID()
+				   << "/" << ctx->declaration(0)->variableID()->type
 				   << " " << type_indicator << endl;
 //		visit(ctx->declaration(1));
 //		//set to first element of array
@@ -265,11 +264,9 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 				   << " I" << endl;
 
 
-		sprintf(label, "%d", loop_start);
-		j_file << "\tgoto Label_" << label << endl;
+		j_file << "\tgoto Label_" << loop_start << endl;
 
-		sprintf(label, "%d", loop_exit);
-		j_file << "Label_" << label << ":" << endl;
+		j_file << "Label_" << loop_exit << ":" << endl;
 
 		label_num = loop_exit + 1;
 	}
@@ -292,17 +289,14 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		int loop_true = label_num;
 		int loop_exit = label_num + 1;
 
-		sprintf(label, "%d", loop_start);
-		j_file << "Label_" << label << ":" << endl;
+		j_file << "Label_" << loop_start << ":" << endl;
 		
         visit(ctx->mathExpr());
 
-        sprintf(label, "%d", loop_exit);
-        j_file << "\tgoto Label_" << label << endl;
+        j_file << "\tgoto Label_" << loop_exit << endl;
 
 
-        sprintf(label, "%d", loop_true);
-        j_file << "Label_" << label << ":" << endl;
+        j_file << "Label_" << loop_true << ":" << endl;
 
 		visit(ctx->statementList());
 
@@ -316,11 +310,9 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 			visit(ctx->assignment(child));
 
 		}
-		sprintf(label, "%d", loop_start);
-		j_file << "\tgoto Label_" << label << endl;
+		j_file << "\tgoto Label_" << loop_start << endl;
 
-		sprintf(label, "%d", loop_exit);
-		j_file << "Label_" << label << ":" << endl;
+		j_file << "Label_" << loop_exit << ":" << endl;
 
         label_num = loop_exit + 1;
 	}
@@ -464,9 +456,8 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
                :                "????";
     }
 
-    sprintf(label, "%d", label_num++);
     // Emit an add or subtract instruction.
-    j_file << "\t" << opcode << " Label_" << label << endl;
+    j_file << "\t" << opcode << " Label_" << label_num++ << endl;
 
     return value;
 }

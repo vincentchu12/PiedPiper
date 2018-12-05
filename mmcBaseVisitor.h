@@ -25,11 +25,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitVariableDecl(mmcParser::VariableDeclContext *ctx) override {
+  virtual antlrcpp::Any visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitArrayDecl(mmcParser::ArrayDeclContext *ctx) override {
+  virtual antlrcpp::Any visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -205,7 +205,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override {
+  virtual antlrcpp::Any visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx) override {
     return visitChildren(ctx);
   }
 

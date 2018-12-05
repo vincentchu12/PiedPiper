@@ -19,12 +19,13 @@ class  mmcParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, BOOL = 9, MUL_DIV_MOD_OP = 10, ADD_SUB_OP = 11, BIT_OP = 12, 
-    MATH_COMP = 13, FOR = 14, IF = 15, ELSE = 16, ELIF = 17, RETURN = 18, 
-    TRUE = 19, FALSE = 20, PRINTF = 21, IDENTIFIER = 22, INTEGER = 23, ASSIGN = 24, 
-    EQ = 25, NEQ = 26, LT = 27, LTE = 28, GT = 29, GTE = 30, MUL_OP = 31, 
-    DIV_OP = 32, MOD_OP = 33, ADD_OP = 34, SUB_OP = 35, AND_OP = 36, OR_OP = 37, 
-    XOR_OP = 38, INC = 39, DEC = 40, STRING = 41, NEWLINE = 42, WS = 43
+    T__7 = 8, T__8 = 9, BOOL = 10, MUL_DIV_MOD_OP = 11, ADD_SUB_OP = 12, 
+    BIT_OP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
+    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, IDENTIFIER = 23, INTEGER = 24, 
+    ASSIGN = 25, EQ = 26, NEQ = 27, LT = 28, LTE = 29, GT = 30, GTE = 31, 
+    MUL_OP = 32, DIV_OP = 33, MOD_OP = 34, ADD_OP = 35, SUB_OP = 36, AND_OP = 37, 
+    OR_OP = 38, XOR_OP = 39, INC = 40, DEC = 41, STRING = 42, NEWLINE = 43, 
+    WS = 44
   };
 
   enum {
@@ -106,22 +107,22 @@ public:
    
   };
 
-  class  VariableDeclContext : public DeclarationContext {
+  class  ArrayDeclarationContext : public DeclarationContext {
   public:
-    VariableDeclContext(DeclarationContext *ctx);
+    ArrayDeclarationContext(DeclarationContext *ctx);
 
     TypeIDContext *typeID();
     VariableIDContext *variableID();
+    NumberContext *number();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
-  class  ArrayDeclContext : public DeclarationContext {
+  class  VariableDeclarationContext : public DeclarationContext {
   public:
-    ArrayDeclContext(DeclarationContext *ctx);
+    VariableDeclarationContext(DeclarationContext *ctx);
 
     TypeIDContext *typeID();
     VariableIDContext *variableID();
-    antlr4::tree::TerminalNode *INTEGER();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -157,7 +158,7 @@ public:
 
     TypeIDContext *typeID();
     VariableIDContext *variableID();
-    antlr4::tree::TerminalNode *INTEGER();
+    NumberContext *number();
     antlr4::tree::TerminalNode *ASSIGN();
     IdentifiersContext *identifiers();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -285,6 +286,7 @@ public:
 
   class  VariableContext : public antlr4::ParserRuleContext {
   public:
+    int size = 0;
     VariableContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
@@ -449,7 +451,7 @@ public:
     DefinitionContext *definition();
     std::vector<AssignmentContext *> assignment();
     AssignmentContext* assignment(size_t i);
-    UnaryContext *unary();
+    ExpressionContext *expression();
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -683,15 +685,36 @@ public:
   class  AssignmentContext : public antlr4::ParserRuleContext {
   public:
     AssignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+   
+    AssignmentContext() : antlr4::ParserRuleContext() { }
+    void copyFrom(AssignmentContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
+
     virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  VariableAssignmentContext : public AssignmentContext {
+  public:
+    VariableAssignmentContext(AssignmentContext *ctx);
+
     VariableContext *variable();
     antlr4::tree::TerminalNode *ASSIGN();
     ExpressionContext *expression();
-    antlr4::tree::TerminalNode *INTEGER();
-    IdentifiersContext *identifiers();
-
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
+  };
+
+  class  ArrayAssignmentContext : public AssignmentContext {
+  public:
+    ArrayAssignmentContext(AssignmentContext *ctx);
+
+    VariableContext *variable();
+    antlr4::tree::TerminalNode *ASSIGN();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    NumberContext *number();
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   AssignmentContext* assignment();

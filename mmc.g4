@@ -11,13 +11,13 @@ root	: (statementList)
 		;
 
 declaration
-	: typeID variableID					   # variableDecl
-	| typeID variableID '[' INTEGER ']'	   # arrayDecl
+	: typeID variableID					   # variableDeclaration
+	| typeID variableID '[' number ']'	   # arrayDeclaration
 	;
 	
 definition  
 	: typeID variableID ASSIGN expression    					   # variableDef
-	| typeID variableID '[' INTEGER ']' ASSIGN '{' identifiers '}' # arrayDef
+	| typeID variableID '[' number ']' ASSIGN '{' identifiers '}' # arrayDef
 	;
 
 
@@ -37,7 +37,7 @@ typeID       : IDENTIFIER ;
 functionID   : IDENTIFIER ;
 function     : IDENTIFIER ;
 variableID   : IDENTIFIER ;
-variable     : IDENTIFIER ;
+variable     locals [ int size = 0 ] : IDENTIFIER ;
 number       locals [ TypeSpec* type = nullptr ] : INTEGER    ;
 str          locals [ TypeSpec* type = nullptr ] : STRING     ;
 signedNumber locals [ TypeSpec* type = nullptr ] : sign number;
@@ -71,11 +71,11 @@ ifStatement	: IF '(' mathExpr ')' '{' statementList? '}'
 forStatement : FOR '('
 			 (
 			 	(
-			 		declaration? ';' declaration? ';' variable
+			 		declaration? ';' declaration? ':' variable
 			 	)
 			 |
 			 	(
-					(declaration | definition | assignment) ';' mathExpr ';' (assignment | unary)
+					(declaration | definition | assignment) ';' mathExpr ';' (assignment | expression)
 			 	)
 			 )
 			')' '{' statementList? '}'
@@ -112,8 +112,8 @@ unary locals [ TypeSpec* type = nullptr ]
 		| variable DEC # postDec
 		;
 
-assignment : variable ASSIGN expression 						 # variableAssignment
-		   | variable '[' INTEGER ']' ASSIGN '{' identifiers '}' # arrayAssignment
+assignment : variable ASSIGN expression 			    # variableAssignment
+		   | variable '[' (number | expression) ']' ASSIGN expression  # arrayAssignment
 		   ;
 
 BOOL : TRUE | FALSE ;

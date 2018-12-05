@@ -29,9 +29,9 @@ public:
     ostream& get_assembly_file();
 
     antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override;
-     antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
-     antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
-     antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
+//     antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
+//     antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
+//     antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
     // antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
     // antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *ctx) override;
     // antlrcpp::Any visitParameters(mmcParser::ParametersContext *ctx) override;
@@ -73,6 +73,13 @@ public:
      antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
      antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
     // antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override;
+
+     antlrcpp::Any visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx) override;
+     antlrcpp::Any visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx) override;
+     antlrcpp::Any visitVariableDef(mmcParser::VariableDefContext *ctx) override;
+     antlrcpp::Any visitArrayDef(mmcParser::ArrayDefContext *ctx) override;
+//     antlrcpp::Any visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx) override;
+//     antlrcpp::Any visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx) override;
 };
 
 #endif /* PASS1VISITOR_H_ */

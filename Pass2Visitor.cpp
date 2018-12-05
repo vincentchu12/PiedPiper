@@ -59,30 +59,6 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass2Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
-// {
-//	 return visitChildren(ctx);
-// }
-
- antlrcpp::Any Pass2Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
- {
-	    cout << "\tvisitDefinition      " << ctx->getText() << endl;
-	    auto value = visit(ctx->expression());
-
-	    string type_indicator =
-	                  (ctx->expression()->type == Predefined::integer_type) ? "I"
-	                : (ctx->expression()->type == Predefined::boolean_type) ? "Z"
-					: (ctx->expression()->type == Predefined::char_type)    ? "C"
-	                :                                                   "?";
-
-	    // Emit a field put instruction.
-	    j_file << "\tputstatic\t" << program_name
-	           << "/" << ctx->variableID()->IDENTIFIER()->toString()
-	           << " " << type_indicator << endl;
-
-	    return value;
- }
-
 // antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
 // {
 
@@ -232,7 +208,70 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 
 	if(list_iterator)
 	{
-		// support later
+		visit(ctx->declaration(0));
+		// set int i, equal to 0
+		j_file << "\tldc 0" <<endl;
+		string type_indicator = "I";
+		j_file << "\tputstatic\t" << program_name
+				   << "/" << ctx->declaration(0)->variableID()
+				   << " " << type_indicator << endl;
+//		visit(ctx->declaration(1));
+//		//set to first element of array
+//		int size = ctx->variable()->size;
+//
+		int loop_start = label_num++;
+		int loop_true = label_num++;
+		int loop_exit = label_num;
+//
+//		sprintf(label, "%d", loop_start);
+//		j_file << "Label_" << label << ":" << endl;
+//		//TODO get declaration type somehow
+//		j_file << "\tgetstatic\t" << program_name
+//					   << "/" << ctx->declaration(0)->toString()
+//					   << " I" << endl; //index always an int?
+//		j_file << "\tldc " << size <<endl;
+//		sprintf(label, "%d", loop_true);
+//		j_file << "\tif_icmplt Label_" << label <<endl;
+//
+//		sprintf(label, "%d", loop_exit);
+//		j_file << "\tgoto Label_" << label << endl;
+//
+//
+//		sprintf(label, "%d", loop_true);
+//		j_file << "Label_" << label << ":" << endl;
+
+		//set iterator to array index
+		//TODO get decl type
+		//iterator = ctx->declaration(1)
+//		j_file << "\tgetstatic\t" << program_name
+//				   << "/" << ctx->declaration(1)->toString()
+//				   << " I" << endl << "\tldc " index++ << endl
+//				   << "\tgetstatic\t" << program_name
+//				   << "/" << array
+//				   << " [I" << endl <<the index  <<
+//
+//		getstatic	input/a [I
+//			ldc	0
+//			getstatic	input/b I
+//			iastore
+//		visit(ctx->statementList());
+
+		//i++
+		j_file << "\tgetstatic\t" << program_name
+				   << "/" << ctx->declaration(0)->toString()
+				   << " I" << endl << "\ticonst_1" << endl
+				   << "\tiadd" << endl << "\tputstatic\t" << program_name
+				   << "/" << ctx->declaration(0)->toString()
+				   << " I" << endl;
+
+
+		sprintf(label, "%d", loop_start);
+		j_file << "\tgoto Label_" << label << endl;
+
+		sprintf(label, "%d", loop_exit);
+		j_file << "Label_" << label << ":" << endl;
+
+		label_num = loop_exit + 1;
 	}
 	else
 	{
@@ -267,9 +306,9 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 
 		visit(ctx->statementList());
 
-		if(ctx->unary() != NULL)
+		if(ctx->expression() != NULL)
 		{
-			visit(ctx->unary());
+			visit(ctx->expression());
 		}
 		else
 		{
@@ -501,12 +540,16 @@ antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
 	 if(child0 == "++" || child0 == "--")
 	 {
 		 auto value = visitChildren(ctx);
-		 j_file << "\tgetstatic\t" << program_name << "/" << child1 << " " << type_indicator << endl;
+		 j_file << "\tputstatic\t" << program_name << "/" << child1 << " " << type_indicator << endl;
+		 j_file << "\tgetstatic\t" <<  program_name << "/" << child1 << " " << type_indicator << endl;
+
 	 }
 	 else
 	 {
 		 j_file << "\tgetstatic\t" <<  program_name << "/" << child0 << " " << type_indicator << endl;
 		 auto value = visitChildren(ctx);
+		 j_file << "\tputstatic\t" <<  program_name << "/" << child0 << " " << type_indicator << endl;
+
 	 }
 
 	 return NULL;
@@ -564,26 +607,6 @@ antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
 
  }
 
-antlrcpp::Any Pass2Visitor::visitAssignment(mmcParser::AssignmentContext *ctx)
-{
-    cout << "\tvisitAssignment      " << ctx->getText() << endl;
-    auto value = visit(ctx->expression());
-
-    string type_indicator =
-                  (ctx->expression()->type == Predefined::integer_type) ? "I"
-                : (ctx->expression()->type == Predefined::boolean_type) ? "Z"
-                : (ctx->expression()->type == Predefined::char_type)    ? "C"
-                :                                                         "?";
-
-    // Emit a field put instruction.
-    j_file << "\tputstatic\t" << program_name
-           << "/" << ctx->variable()->IDENTIFIER()->toString()
-           << " " << type_indicator << endl;
-
-    return value;
-}
-
-
 antlrcpp::Any Pass2Visitor::visitStr(mmcParser::StrContext *ctx)
 {
 	cout << "\tvisitStr" << ctx->getText() << endl;
@@ -600,4 +623,188 @@ antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementConte
 	j_file << "\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V" << endl;
 	return value;
 }
+
+antlrcpp::Any Pass2Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
+{
+	cout << "\tvisitVariableDeclaration" << ctx->getText() << endl;
+//	j_file << "\tldc 0" <<endl;
+//	string type_indicator;
+//	if(ctx->typeID()->IDENTIFIER()->toString() == "int")
+//		type_indicator = "I";
+//	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool")
+//		type_indicator = "Z";
+//	else if(ctx->typeID()->IDENTIFIER()->toString() == "char")
+//		type_indicator = "C";
+//	else
+//		type_indicator = "?";
+//
+//	j_file << "\tputstatic\t" << program_name
+//			   << "/" << ctx->variableID()->IDENTIFIER()->toString()
+//			   << " " << type_indicator << endl;
+
+	return visitChildren(ctx);
+}
+
+antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx)
+{
+	cout << "\tvisitArrayDeclaration" << ctx->getText() << endl;
+	auto value = visitChildren(ctx);
+	string type_indicator;
+	if(ctx->typeID()->IDENTIFIER()->toString() == "int"){ //change this maybe
+		j_file << "\tnewarray int" << endl;
+		type_indicator = "[I";
+	}
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool"){
+		j_file << "\tnewarray bool" << endl;
+		type_indicator = "[Z";
+	}
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
+		j_file << "\tnewarray char" << endl;
+		type_indicator = "[C";
+	}
+	else{
+		type_indicator = "?";
+	}
+
+	j_file << "\tputstatic\t" << program_name
+			   << "/" << ctx->variableID()->IDENTIFIER()->toString()
+			   << " " << type_indicator << endl;
+
+	return value;
+}
+
+antlrcpp::Any Pass2Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
+{
+	cout << "\tvisitVariableDef" << ctx->getText() << endl;
+
+	auto value = visit(ctx->expression());
+
+	string type_indicator =
+				  (ctx->expression()->type == Predefined::integer_type) ? "I"
+				: (ctx->expression()->type == Predefined::boolean_type) ? "Z"
+				: (ctx->expression()->type == Predefined::char_type)    ? "C"
+				:                                                   "?";
+
+	// Emit a field put instruction.
+	j_file << "\tputstatic\t" << program_name
+		   << "/" << ctx->variableID()->IDENTIFIER()->toString()
+		   << " " << type_indicator << endl;
+
+	return value;
+}
+
+antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
+{
+	cout << "\tvisitArrayDef" << ctx->getText() << endl;
+	visit(ctx->typeID());
+	visit(ctx->variableID());
+	visit(ctx->number());
+
+	int nums =  ctx->identifiers()->expression().size();
+	string type_indicator;
+	if(ctx->typeID()->IDENTIFIER()->toString() == "int"){
+		j_file << "\tnewarray int" << endl;
+		type_indicator = "[I";
+	}
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool"){
+		j_file << "\tnewarray bool" << endl;
+		type_indicator = "[Z";
+	}
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
+		j_file << "\tnewarray char" << endl;
+		type_indicator = "[C";
+	}
+	else{
+		type_indicator = "?";
+	}
+
+	string varID = ctx->variableID()->IDENTIFIER()->toString();
+	j_file << "\tputstatic\t" << program_name
+			   << "/" << varID
+			   << " " << type_indicator << endl;
+
+	if(stoi(ctx->number()->getText()) == nums) {
+		for (int i = 0; i < nums; i++) {
+			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tldc " << i << endl;
+			visit(ctx->identifiers()->expression(i));
+			j_file << "\tiastore" <<endl;
+		}
+	}
+	//more elements than array size ~ truncate (premature end)
+	else if(stoi(ctx->number()->getText()) < nums) {
+		for (int i = 0; i < stoi(ctx->number()->getText()); i++) {
+			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tldc " << i << endl;
+			visit(ctx->identifiers()->expression(i));
+			j_file << "\tiastore" <<endl;
+		}
+	}
+	//less elements than array size
+	else {
+		int i;
+		for (i = 0; i < nums; i++) {
+			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tldc " << i << endl;
+			visit(ctx->identifiers()->expression(i));
+			j_file << "\tiastore" <<endl;
+		}
+		//add zeros
+		for(; i<stoi(ctx->number()->getText()); i++){
+			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tldc " << i << endl;
+			j_file << "\tldc 0" <<endl;
+			j_file << "\tiastore" <<endl;
+		}
+	}
+	return NULL;
+}
+
+antlrcpp::Any Pass2Visitor::visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx)
+{
+	cout << "\tvisitVariableAssignment" << ctx->getText() << endl;
+	auto value = visit(ctx->expression());
+
+	string type_indicator =
+				  (ctx->expression()->type == Predefined::integer_type) ? "I"
+				: (ctx->expression()->type == Predefined::boolean_type) ? "Z"
+				: (ctx->expression()->type == Predefined::char_type)    ? "C"
+				:                                                         "?";
+
+	// Emit a field put instruction.
+	j_file << "\tputstatic\t" << program_name
+		   << "/" << ctx->variable()->IDENTIFIER()->toString()
+		   << " " << type_indicator << endl;
+
+	return value;
+}
+
+antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx)
+{
+	cout << "\tvisitArrayAssignment" << ctx->getText() << endl;
+	string type_indicator =
+				  (ctx->expression(0)->type == Predefined::integer_type) ? "[I"
+				: (ctx->expression(0)->type == Predefined::boolean_type) ? "[Z"
+				: (ctx->expression(0)->type == Predefined::char_type)    ? "[C"
+				:                                                         "?";
+	string varID = ctx->variable()->getText();
+	if(ctx->number()!=NULL){ //number
+		j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+		visit(ctx->number());
+		visit(ctx->expression(0));
+		j_file << "\tiastore" <<endl;
+	}
+	else{ //expression
+		string indexID = ctx->expression(0)->getText();
+		j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+		//get index
+		j_file << "\tgetstatic\t" << program_name << "/" << indexID << " " << "I" << endl;
+		visit(ctx->expression(1));
+		j_file << "\tiastore" <<endl;
+	}
+	//TODO ADD POINTERS TO GRAMMAR FILE ARRAYS SO WE CAN DO a[i]
+	return NULL;
+}
+
+
 

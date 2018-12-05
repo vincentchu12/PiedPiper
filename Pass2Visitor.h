@@ -28,7 +28,6 @@ public:
     // antlrcpp::Any visitBool(mmcParser::BoolContext *ctx) override;
     antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override;
 //    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
-    antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
     antlrcpp::Any visitStr(mmcParser::StrContext *ctx) override;
 //    antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
 //    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
@@ -67,9 +66,14 @@ public:
     antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
     antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
     antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
-   antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override;
    antlrcpp::Any visitPrintfStatement(mmcParser::PrintfStatementContext *ctx) override;
 
+   antlrcpp::Any visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx) override;
+   antlrcpp::Any visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx) override;
+   antlrcpp::Any visitVariableDef(mmcParser::VariableDefContext *ctx) override;
+   antlrcpp::Any visitArrayDef(mmcParser::ArrayDefContext *ctx) override;
+   antlrcpp::Any visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx) override;
+   antlrcpp::Any visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx) override;
 
 };
 

@@ -83,9 +83,9 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
-antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
+antlrcpp::Any Pass1Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
 {
-    cout << "=== visitDeclarations: " << ctx->getText() << endl;
+    cout << "=== visitVariableDeclarations: " << ctx->getText() << endl;
     variable_id_list.resize(0);
     auto value = visitChildren(ctx);
 
@@ -131,9 +131,58 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
     return value;
 }
 
- antlrcpp::Any Pass1Visitor::visitDefinition(mmcParser::DefinitionContext *ctx)
+antlrcpp::Any Pass1Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx)
+{
+	//should probably change this fr tho
+    cout << "=== visitArrayDeclarations: " << ctx->getText() << endl;
+    variable_id_list.resize(0);
+    auto value = visitChildren(ctx);
+
+
+    TypeSpec *type;
+    string type_indicator;
+
+    string type_name = ctx->typeID()->IDENTIFIER()->toString();
+    if (type_name == "int")
+    {
+        type = Predefined::integer_type;
+        type_indicator = "[I";
+    }
+    else if (type_name == "bool")
+    {
+        type = Predefined::boolean_type;
+        type_indicator = "[Z";
+    }
+    else if (type_name == "string")
+    {
+        type = Predefined::char_type;
+        type_indicator = "[C";
+    }
+    else if (type_name == "void")
+    {
+        type = Predefined::void_type;
+        type_indicator = "[V";
+    }
+    else
+    {
+        type = nullptr;
+        type_indicator = "?";
+    }
+
+    for (SymTabEntry *id : variable_id_list) {
+        id->set_typespec(type);
+
+        // Emit a field declaration.
+        j_file << ".field private static "
+               << id->get_name() << " " << type_indicator << endl;
+    }
+
+    return value;
+}
+
+antlrcpp::Any Pass1Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
  {
-	    cout << "=== visitDeclarations: " << ctx->getText() << endl;
+	    cout << "=== visitVariableDefs: " << ctx->getText() << endl;
 	    variable_id_list.resize(0);
 	    auto value = visitChildren(ctx);
 
@@ -178,6 +227,64 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(mmcParser::DeclarationContext *ctx)
 
 	    return value;
  }
+
+antlrcpp::Any Pass1Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
+  {
+ 	    cout << "=== visitArrayDefs: " << ctx->getText() << endl;
+ 	    variable_id_list.resize(0);
+ 	    auto value = visitChildren(ctx);
+
+
+ 	    TypeSpec *type;
+ 	    string type_indicator;
+
+ 	    string type_name = ctx->typeID()->IDENTIFIER()->toString();
+ 	    if (type_name == "int")
+ 	    {
+ 	        type = Predefined::integer_type;
+ 	        type_indicator = "[I";
+ 	    }
+ 	    else if (type_name == "bool")
+ 	    {
+ 	        type = Predefined::boolean_type;
+ 	        type_indicator = "[Z";
+ 	    }
+ 	    else if (type_name == "string")
+ 	    {
+ 	        type = Predefined::char_type;
+ 	        type_indicator = "[C";
+ 	    }
+ 	    else if (type_name == "void")
+ 	    {
+ 	        type = Predefined::char_type;
+ 	        type_indicator = "[V";
+ 	    }
+ 	    else
+ 	    {
+ 	        type = nullptr;
+ 	        type_indicator = "?";
+ 	    }
+
+ 	    for (SymTabEntry *id : variable_id_list) {
+ 	        id->set_typespec(type);
+
+ 	        // Emit a field declaration.
+ 	        j_file << ".field private static "
+ 	               << id->get_name() << " " << type_indicator << endl;
+ 	    }
+
+ 	    return value;
+  }
+
+//antlrcpp::Any Pass1Visitor::visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx)
+//{
+//	cout << "=== visitVariableAssignments: " << ctx->getText() << endl;
+//}
+//
+//antlrcpp::Any Pass1Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx)
+//{
+//	cout << "=== visitArrayAssignments: " << ctx->getText() << endl;
+//}
 
 // antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
 // {
@@ -349,12 +456,12 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
     return value;
 }
 
- antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
- {
-	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
-
-
- }
+// antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
+// {
+//	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
+//
+//
+// }
 
 antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {

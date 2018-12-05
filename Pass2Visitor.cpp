@@ -211,9 +211,10 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		// set int i, equal to 0
 		j_file << "\tldc 0" <<endl;
 		string type_indicator = "I";
-		j_file << "\tputstatic\t" << program_name
-				   << "/" << ctx->declaration(0)->variableID()->type
-				   << " " << type_indicator << endl;
+		//TODO fix pustatic index
+//		j_file << "\tputstatic\t" << program_name
+//				   << "/i"
+//				   << " " << type_indicator << endl;
 //		visit(ctx->declaration(1));
 //		//set to first element of array
 //		int size = ctx->variable()->size;

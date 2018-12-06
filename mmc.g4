@@ -92,6 +92,7 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
+	| variable '.' 'b' '[' number ']'      # bitIndexExpr
 	| BOOL                                 # boolExpr
 	| str    							   # stringExpr
 	| signedNumber                         # signedNumberExpr
@@ -114,6 +115,7 @@ unary locals [ TypeSpec* type = nullptr ]
 
 assignment : variable ASSIGN expression 			    # variableAssignment
 		   | variable '[' (number | expression) ']' ASSIGN expression  # arrayAssignment
+		   | variable '.' 'b' '[' number ']' ASSIGN expression         # bitIndexAssignment
 		   ;
 
 BOOL : TRUE | FALSE ;

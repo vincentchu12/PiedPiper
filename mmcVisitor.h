@@ -81,6 +81,18 @@ public:
 
     virtual antlrcpp::Any visitAssignmentStatement(mmcParser::AssignmentStatementContext *context) = 0;
 
+    virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitBitIndexExpr(mmcParser::BitIndexExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *context) = 0;
+
+    virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *context) = 0;
+
     virtual antlrcpp::Any visitStringExpr(mmcParser::StringExprContext *context) = 0;
 
     virtual antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *context) = 0;
@@ -89,19 +101,9 @@ public:
 
     virtual antlrcpp::Any visitUnaryExpr(mmcParser::UnaryExprContext *context) = 0;
 
-    virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *context) = 0;
-
-    virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *context) = 0;
-
-    virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *context) = 0;
-
-    virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *context) = 0;
-
     virtual antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *context) = 0;
 
     virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *context) = 0;
-
-    virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *context) = 0;
 
     virtual antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *context) = 0;
 
@@ -118,6 +120,8 @@ public:
     virtual antlrcpp::Any visitVariableAssignment(mmcParser::VariableAssignmentContext *context) = 0;
 
     virtual antlrcpp::Any visitArrayAssignment(mmcParser::ArrayAssignmentContext *context) = 0;
+
+    virtual antlrcpp::Any visitBitIndexAssignment(mmcParser::BitIndexAssignmentContext *context) = 0;
 
 
 };

@@ -133,6 +133,30 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitStringExpr(mmcParser::StringExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -149,31 +173,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -206,6 +210,10 @@ public:
   }
 
   virtual antlrcpp::Any visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBitIndexAssignment(mmcParser::BitIndexAssignmentContext *ctx) override {
     return visitChildren(ctx);
   }
 

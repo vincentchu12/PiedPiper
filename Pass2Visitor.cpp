@@ -635,7 +635,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
 		j_file << "\tnewarray bool" << endl;
 		type_indicator = "[Z";
 	}
-	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
 		j_file << "\tnewarray char" << endl;
 		type_indicator = "[Ljava/lang/String";
 	}
@@ -687,7 +687,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 		j_file << "\tnewarray bool" << endl;
 		type_indicator = "[Z";
 	}
-	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
+	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
 		j_file << "\tnewarray char" << endl;
 		type_indicator = "[Ljava/lang/String";
 	}

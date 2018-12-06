@@ -7,7 +7,7 @@ using namespace wci::intermediate;
 extern string program_name;
 }
 
-root	: (statementList)
+root	: (statementList | functionDefinition)+
 		;
 
 declaration
@@ -21,7 +21,6 @@ definition
 	;
 
 
-functionDeclaration : typeID functionID '(' parameters? ')' ';' ;
 functionDefinition  : typeID functionID '(' parameters? ')' 
 					   '{'
 					   		statementList?
@@ -30,6 +29,7 @@ functionDefinition  : typeID functionID '(' parameters? ')'
 				     ;
  
 functionCall : function '(' identifiers? ')' ;
+
 parameters   : declaration (',' declaration)+ ;
 identifiers  : expression  (',' expression)+  ;
 
@@ -87,7 +87,8 @@ statementList       : statement (statement)* ;
 assignmentStatement : assignment ';' ;
 	
 expression locals [ TypeSpec* type = nullptr ]
-	: expression MUL_DIV_MOD_OP expression # mulDivModExpr
+	: functionCall                         # funcCallExpr
+	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
@@ -98,7 +99,7 @@ expression locals [ TypeSpec* type = nullptr ]
 	| unary                                # unaryExpr
 	| variable                             # variableExpr
 	| '(' expression ')'				   # parenExpr
-	| functionCall                         # funcCallExpr
+	
 	;
 
 mathExpr locals [ TypeSpec* type = nullptr ]

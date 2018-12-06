@@ -29,15 +29,15 @@ public:
   };
 
   enum {
-    RuleRoot = 0, RuleDeclaration = 1, RuleDefinition = 2, RuleFunctionDeclaration = 3, 
-    RuleFunctionDefinition = 4, RuleFunctionCall = 5, RuleParameters = 6, 
-    RuleIdentifiers = 7, RuleTypeID = 8, RuleFunctionID = 9, RuleFunction = 10, 
-    RuleVariableID = 11, RuleVariable = 12, RuleNumber = 13, RuleStr = 14, 
-    RuleSignedNumber = 15, RuleSign = 16, RuleStatement = 17, RuleDeclarationStatement = 18, 
-    RuleDefinitionStatement = 19, RuleExpressionStatement = 20, RulePrintfStatement = 21, 
-    RuleIfStatement = 22, RuleForStatement = 23, RuleUnaryStatement = 24, 
-    RuleStatementList = 25, RuleAssignmentStatement = 26, RuleExpression = 27, 
-    RuleMathExpr = 28, RuleUnary = 29, RuleAssignment = 30
+    RuleRoot = 0, RuleDeclaration = 1, RuleDefinition = 2, RuleFunctionDefinition = 3, 
+    RuleFunctionCall = 4, RuleParameters = 5, RuleIdentifiers = 6, RuleTypeID = 7, 
+    RuleFunctionID = 8, RuleFunction = 9, RuleVariableID = 10, RuleVariable = 11, 
+    RuleNumber = 12, RuleStr = 13, RuleSignedNumber = 14, RuleSign = 15, 
+    RuleStatement = 16, RuleDeclarationStatement = 17, RuleDefinitionStatement = 18, 
+    RuleExpressionStatement = 19, RulePrintfStatement = 20, RuleIfStatement = 21, 
+    RuleForStatement = 22, RuleUnaryStatement = 23, RuleStatementList = 24, 
+    RuleAssignmentStatement = 25, RuleExpression = 26, RuleMathExpr = 27, 
+    RuleUnary = 28, RuleAssignment = 29
   };
 
   mmcParser(antlr4::TokenStream *input);
@@ -53,7 +53,6 @@ public:
   class RootContext;
   class DeclarationContext;
   class DefinitionContext;
-  class FunctionDeclarationContext;
   class FunctionDefinitionContext;
   class FunctionCallContext;
   class ParametersContext;
@@ -87,6 +86,8 @@ public:
     RootContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     StatementListContext *statementList();
+    std::vector<FunctionDefinitionContext *> functionDefinition();
+    FunctionDefinitionContext* functionDefinition(size_t i);
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -165,20 +166,6 @@ public:
   };
 
   DefinitionContext* definition();
-
-  class  FunctionDeclarationContext : public antlr4::ParserRuleContext {
-  public:
-    FunctionDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    TypeIDContext *typeID();
-    FunctionIDContext *functionID();
-    ParametersContext *parameters();
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  FunctionDeclarationContext* functionDeclaration();
 
   class  FunctionDefinitionContext : public antlr4::ParserRuleContext {
   public:

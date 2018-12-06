@@ -35,8 +35,6 @@ public:
 
     virtual antlrcpp::Any visitArrayDef(mmcParser::ArrayDefContext *context) = 0;
 
-    virtual antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *context) = 0;
-
     virtual antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *context) = 0;
 
     virtual antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *context) = 0;

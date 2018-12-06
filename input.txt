@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 int arr[3] = {1,2,3};
 int temp[3];
 for(int idx; int val:arr){
@@ -20,3 +21,9 @@ int print(int a)
 	printf("hello");
 }
 >>>>>>> 6363286... add functions
+=======
+int main()
+{
+	int a;
+}
+>>>>>>> 77c9c1e... Fix grammar file

@@ -20,7 +20,6 @@ private:
     SymTabStack *symtab_stack;
     SymTabEntry *program_id;
     vector<SymTabEntry *> variable_id_list;
-    vector<SymTabEntry *> function_id_list;
     ofstream j_file;
 
 public:

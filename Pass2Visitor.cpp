@@ -66,10 +66,13 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 // }
 
-// antlrcpp::Any Pass2Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
-// {
-
-// }
+ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
+ {
+	 function_name = ctx->functionID()->getText() + "_";
+	 auto value = visitChildren(ctx);
+	 function_name = "";
+	 return value;
+ }
 
 // antlrcpp::Any Pass2Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
 // {
@@ -384,7 +387,7 @@ antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
 
     // Emit a field get instruction.
     j_file << "\tgetstatic\t" << program_name
-           << "/" << variable_name << " " << type_indicator << endl;
+           << "/" << function_name << variable_name << " " << type_indicator << endl;
 
     return visitChildren(ctx);
 }

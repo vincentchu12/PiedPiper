@@ -85,9 +85,10 @@ public:
   public:
     RootContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    StatementListContext *statementList();
     std::vector<FunctionDefinitionContext *> functionDefinition();
     FunctionDefinitionContext* functionDefinition(size_t i);
+    std::vector<StatementListContext *> statementList();
+    StatementListContext* statementList(size_t i);
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    

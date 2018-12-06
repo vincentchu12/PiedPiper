@@ -29,8 +29,7 @@ public:
     antlrcpp::Any visitBoolExpr(mmcParser::BoolExprContext *ctx) override;
 //    antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
     antlrcpp::Any visitStr(mmcParser::StrContext *ctx) override;
-//    antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
-//    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
+    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
 //    antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *ctx) override;
 //    antlrcpp::Any visitParameters(mmcParser::ParametersContext *ctx) override;
 //    antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *ctx) override;

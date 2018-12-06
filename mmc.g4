@@ -7,7 +7,7 @@ using namespace wci::intermediate;
 extern string program_name;
 }
 
-root	: (functionDefinition+ | statementList)
+root	: (functionDefinition | statementList)+
 		;
 
 declaration
@@ -87,7 +87,8 @@ statementList       : statement (statement)* ;
 assignmentStatement : assignment ';' ;
 	
 expression locals [ TypeSpec* type = nullptr ] 
-	: expression MUL_DIV_MOD_OP expression # mulDivModExpr
+	: functionCall                         # funcCallExpr
+	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
 	| variable '[' number ']'              # arrayExpr
@@ -97,9 +98,7 @@ expression locals [ TypeSpec* type = nullptr ]
 	| number                               # unsignedNumberExpr
 	| unary                                # unaryExpr
 	| variable                             # variableExpr
-	| '(' expression ')'				   # parenExpr
-	| functionCall                         # funcCallExpr
-	
+	| '(' expression ')'				   # parenExpr	
 	;
 
 mathExpr locals [ TypeSpec* type = nullptr ]

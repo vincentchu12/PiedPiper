@@ -1,1 +1,2 @@
-string a[2] = {"hack vikas", "vikkyDeeee"};
+
+string a = "hello";

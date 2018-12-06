@@ -9,10 +9,6 @@
 >>>>>>> 6363286... add functions
 =======
 .field private static b I
-.field private static main_a I
-.field private static foo_a I
-.field private static foo_b I
-.field private static a I
 
 .method public <init>()V
 
@@ -36,10 +32,21 @@
 	putstatic        input/_standardIn LPascalTextIn;
 	ldc	4
 	putstatic	input/b I
-	getstatic	input/foo_a I
-	putstatic	input/b I
-	ldc	3
-	putstatic	input/a I
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"hello"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	goto foo_end
+foo:
+	iload 0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"goodbye"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	ret 0
+foo_end:
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"there"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	jsr foo
 
 	getstatic     input/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V

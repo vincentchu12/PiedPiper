@@ -2,6 +2,9 @@
 #include <string>
 #include <cstdio>
 
+#include <unordered_map>
+#include <vector>
+
 #include "Pass2Visitor.h"
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
@@ -11,6 +14,8 @@
 using namespace wci;
 using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
+
+static unordered_map<string, vector<vector<string>>> function_param_map;
 
 extern string program_name;
 extern unordered_map<string, int> sizeTable;
@@ -61,23 +66,57 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
-// {
-
-// }
 
  antlrcpp::Any Pass2Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
  {
+
+	 cout << "\tvisitFunctionDefinition" << ctx->getText() << endl;
 	 function_name = ctx->functionID()->getText() + "_";
-	 auto value = visitChildren(ctx);
+
+	 j_file << "\tgoto " << function_name << "end" << endl;
+
+	 j_file << ctx->functionID()->getText() << ":" << endl;
+
+	 j_file << "\tiload 0" << endl;
+
+	 vector<vector<string>> params;
+
+	 if(ctx->parameters() != NULL)
+	 {
+		 for(int i = 0; i < ctx->parameters()->declaration().size(); i++)
+		 {
+			 string type_name     = ctx->parameters()->declaration(i)->children[0]->getText();
+			 string variable_name = ctx->parameters()->declaration(i)->children[1]->getText();
+
+			 params.push_back({function_name + variable_name, type_name});
+		 }
+	 }
+
+	 function_param_map.emplace(function_name, params);
+
+	 auto value = visitChildren(ctx->statementList());
+
+	 j_file << "\tret 0" << endl;
+	 j_file << function_name << "end:" << endl;
 	 function_name = "";
+
+
 	 return value;
  }
 
-// antlrcpp::Any Pass2Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
-// {
+ antlrcpp::Any Pass2Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
+ {
+	 j_file << "\tjsr " << function_name << ctx->function()->IDENTIFIER()->getText() << endl;
 
-// }
+	 if(ctx->identifiers() != NULL)
+	 {
+		 for(int i = 0; i < ctx->identifiers()->expression().size(); i++)
+		 {
+
+		 }
+	 }
+	 return NULL;
+ }
 
 // antlrcpp::Any Pass2Visitor::visitParameters(mmcParser::ParametersContext *ctx)
 // {
@@ -673,7 +712,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
 	}
 
 	j_file << "\tputstatic\t" << program_name
-			   << "/" << ctx->variableID()->IDENTIFIER()->toString()
+			   << "/" << function_name << ctx->variableID()->IDENTIFIER()->toString()
 			   << " " << type_indicator << endl;
 
 	return value;
@@ -693,7 +732,7 @@ antlrcpp::Any Pass2Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
 
 	// Emit a field put instruction.
 	j_file << "\tputstatic\t" << program_name
-		   << "/" << ctx->variableID()->IDENTIFIER()->toString()
+		   << "/" << function_name << ctx->variableID()->IDENTIFIER()->toString()
 		   << " " << type_indicator << endl;
 
 	return value;
@@ -726,12 +765,12 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 
 	string varID = ctx->variableID()->IDENTIFIER()->toString();
 	j_file << "\tputstatic\t" << program_name
-			   << "/" << varID
+			   << "/" << function_name << varID
 			   << " " << type_indicator << endl;
 
 	if(stoi(ctx->number()->getText()) == nums) {
 		for (int i = 0; i < nums; i++) {
-			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tgetstatic\t" << program_name << "/" << function_name <<  varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
 			j_file << "\tiastore" <<endl;
@@ -741,7 +780,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 	//more elements than array size ~ truncate (premature end)
 	else if(stoi(ctx->number()->getText()) < nums) {
 		for (int i = 0; i < stoi(ctx->number()->getText()); i++) {
-			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tgetstatic\t" << program_name << "/" << function_name <<  varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
 			j_file << "\tiastore" <<endl;
@@ -751,14 +790,14 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 	else {
 		int i;
 		for (i = 0; i < nums; i++) {
-			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
 			j_file << "\tiastore" <<endl;
 		}
 		//add zeros
 		for(; i<stoi(ctx->number()->getText()); i++){
-			j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+			j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			j_file << "\tldc 0" <<endl;
 			j_file << "\tiastore" <<endl;
@@ -780,7 +819,7 @@ antlrcpp::Any Pass2Visitor::visitVariableAssignment(mmcParser::VariableAssignmen
 
 	// Emit a field put instruction.
 	j_file << "\tputstatic\t" << program_name
-		   << "/" << ctx->variable()->IDENTIFIER()->toString()
+		   << "/" << function_name <<  ctx->variable()->IDENTIFIER()->toString()
 		   << " " << type_indicator << endl;
 
 	return value;
@@ -796,16 +835,16 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 				:                                                         "?";
 	string varID = ctx->variable()->getText();
 	if(ctx->number()!=NULL){ //number
-		j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+		j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 		visit(ctx->number());
 		visit(ctx->expression(0));
 		j_file << "\tiastore" <<endl;
 	}
 	else{ //expression
 		string indexID = ctx->expression(0)->getText();
-		j_file << "\tgetstatic\t" << program_name << "/" << varID << " " << type_indicator << endl;
+		j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 		//get index
-		j_file << "\tgetstatic\t" << program_name << "/" << indexID << " " << "I" << endl;
+		j_file << "\tgetstatic\t" << program_name << "/" << function_name << indexID << " " << "I" << endl;
 		visit(ctx->expression(1));
 		j_file << "\tiastore" <<endl;
 	}

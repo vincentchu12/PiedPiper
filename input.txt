@@ -25,28 +25,29 @@ int print(int a)
 =======
 =======
 int b = 4;
+printf("hello");
 
+<<<<<<< HEAD
 >>>>>>> aab952d... Pass1 function declarations
 int main()
 {
 	int a;
+=======
+void foo(){
+	printf("goodbye");
+>>>>>>> 2060bbe... Add function declaration and parameters
 }
 <<<<<<< HEAD
 >>>>>>> 77c9c1e... Fix grammar file
 =======
 
-int foo()
-{
 
-	int a;
-	int b;
-	
-	b = a;
-}
+printf("there");
 
-foo();
-main();
-
+<<<<<<< HEAD
 int a;
 a = 3;
 >>>>>>> aab952d... Pass1 function declarations
+=======
+foo();
+>>>>>>> 2060bbe... Add function declaration and parameters

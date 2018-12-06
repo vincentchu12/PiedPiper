@@ -7,7 +7,7 @@ using namespace wci::intermediate;
 extern string program_name;
 }
 
-root	: (statementList | functionDefinition)+
+root	: (functionDefinition | statementList)+
 		;
 
 declaration
@@ -16,12 +16,12 @@ declaration
 	;
 	
 definition  
-	: typeID variableID ASSIGN expression    					   # variableDef
+	: typeID variableID ASSIGN expression    					  # variableDef
 	| typeID variableID '[' number ']' ASSIGN '{' identifiers '}' # arrayDef
 	;
 
 
-functionDefinition  : typeID functionID '(' parameters? ')' 
+functionDefinition  : typeID functionID '(' parameters* ')' 
 					   '{'
 					   		statementList?
 					   		(RETURN expression ';')?

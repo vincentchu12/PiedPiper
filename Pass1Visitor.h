@@ -20,6 +20,7 @@ private:
     SymTabStack *symtab_stack;
     SymTabEntry *program_id;
     vector<SymTabEntry *> variable_id_list;
+    vector<SymTabEntry *> function_id_list;
     ofstream j_file;
 
 public:
@@ -31,13 +32,12 @@ public:
     antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override;
 //     antlrcpp::Any visitDeclaration(mmcParser::DeclarationContext *ctx) override;
 //     antlrcpp::Any visitDefinition(mmcParser::DefinitionContext *ctx) override;
-//     antlrcpp::Any visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx) override;
-    // antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
+    antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;
     // antlrcpp::Any visitFunctionCall(mmcParser::FunctionCallContext *ctx) override;
     // antlrcpp::Any visitParameters(mmcParser::ParametersContext *ctx) override;
     // antlrcpp::Any visitIdentifiers(mmcParser::IdentifiersContext *ctx) override;
     antlrcpp::Any visitTypeID(mmcParser::TypeIDContext *ctx) override;
-    // antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *ctx) override;
+     antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *ctx) override;
     // antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override;
     antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override;
      antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
@@ -49,7 +49,6 @@ public:
     antlrcpp::Any visitUnaryExpr(mmcParser::UnaryExprContext *ctx) override;
     // antlrcpp::Any visitSign(mmcParser::SignContext *ctx) override;
     // antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override;
-    // antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx) override;
     // antlrcpp::Any visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx) override;
     // antlrcpp::Any visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx) override;
 //     antlrcpp::Any visitIfStatement(mmcParser::IfStatementContext *ctx) override;
@@ -64,14 +63,14 @@ public:
      antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;
     antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
-    // antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
+    antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;
     antlrcpp::Any visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx) override;  
     antlrcpp::Any visitParenExpr(mmcParser::ParenExprContext *ctx) override;
     antlrcpp::Any visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx) override;
-     antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;
-     antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
-     antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
-     antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
+    antlrcpp::Any visitPreInc(mmcParser::PreIncContext *ctx) override;
+    antlrcpp::Any visitPreDec(mmcParser::PreDecContext *ctx) override;
+    antlrcpp::Any visitPostInc(mmcParser::PostIncContext *ctx) override;
+    antlrcpp::Any visitPostDec(mmcParser::PostDecContext *ctx) override;
     // antlrcpp::Any visitAssignment(mmcParser::AssignmentContext *ctx) override;
 
      antlrcpp::Any visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx) override;

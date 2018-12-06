@@ -15,6 +15,8 @@ using namespace wci::intermediate::symtabimpl;
 extern string program_name;
 extern unordered_map<string, int> sizeTable;
 
+static string function_name = "";
+
 Pass2Visitor::Pass2Visitor(ostream& j_file)
     : j_file(j_file) {}
 
@@ -146,14 +148,9 @@ antlrcpp::Any Pass2Visitor::visitSignedNumber(mmcParser::SignedNumberContext *ct
 
 // }
 
-// antlrcpp::Any Pass2Visitor::visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx)
-// {
-
-// }
-
 // antlrcpp::Any Pass2Visitor::visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx)
 // {
-
+//
 // }
 
 // antlrcpp::Any Pass2Visitor::visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx)

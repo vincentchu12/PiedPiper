@@ -353,7 +353,7 @@ antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
 
     string type_indicator = (type == Predefined::integer_type) ? "I"
                           : (type == Predefined::boolean_type) ? "Z"
-						  : (type == Predefined::char_type)    ? "C"
+						  : (type == Predefined::char_type)    ? "Ljava/lang/String"
                           :                                      "?";
 
     // Emit a field get instruction.
@@ -619,21 +619,6 @@ antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementConte
 antlrcpp::Any Pass2Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
 {
 	cout << "\tvisitVariableDeclaration" << ctx->getText() << endl;
-//	j_file << "\tldc 0" <<endl;
-//	string type_indicator;
-//	if(ctx->typeID()->IDENTIFIER()->toString() == "int")
-//		type_indicator = "I";
-//	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool")
-//		type_indicator = "Z";
-//	else if(ctx->typeID()->IDENTIFIER()->toString() == "char")
-//		type_indicator = "C";
-//	else
-//		type_indicator = "?";
-//
-//	j_file << "\tputstatic\t" << program_name
-//			   << "/" << ctx->variableID()->IDENTIFIER()->toString()
-//			   << " " << type_indicator << endl;
-
 	return visitChildren(ctx);
 }
 
@@ -652,7 +637,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
 		j_file << "\tnewarray char" << endl;
-		type_indicator = "[C";
+		type_indicator = "[Ljava/lang/String";
 	}
 	else{
 		type_indicator = "?";
@@ -674,7 +659,7 @@ antlrcpp::Any Pass2Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
 	string type_indicator =
 				  (ctx->expression()->type == Predefined::integer_type) ? "I"
 				: (ctx->expression()->type == Predefined::boolean_type) ? "Z"
-				: (ctx->expression()->type == Predefined::char_type)    ? "C"
+				: (ctx->expression()->type == Predefined::char_type)    ? "Ljava/lang/String"
 				:                                                   "?";
 
 	// Emit a field put instruction.
@@ -704,7 +689,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "char"){
 		j_file << "\tnewarray char" << endl;
-		type_indicator = "[C";
+		type_indicator = "[Ljava/lang/String";
 	}
 	else{
 		type_indicator = "?";
@@ -760,7 +745,7 @@ antlrcpp::Any Pass2Visitor::visitVariableAssignment(mmcParser::VariableAssignmen
 	string type_indicator =
 				  (ctx->expression()->type == Predefined::integer_type) ? "I"
 				: (ctx->expression()->type == Predefined::boolean_type) ? "Z"
-				: (ctx->expression()->type == Predefined::char_type)    ? "C"
+				: (ctx->expression()->type == Predefined::char_type)    ? "Ljava/lang/String"
 				:                                                         "?";
 
 	// Emit a field put instruction.
@@ -777,7 +762,7 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 	string type_indicator =
 				  (ctx->expression(0)->type == Predefined::integer_type) ? "[I"
 				: (ctx->expression(0)->type == Predefined::boolean_type) ? "[Z"
-				: (ctx->expression(0)->type == Predefined::char_type)    ? "[C"
+				: (ctx->expression(0)->type == Predefined::char_type)    ? "[Ljava/lang/String"
 				:                                                         "?";
 	string varID = ctx->variable()->getText();
 	if(ctx->number()!=NULL){ //number

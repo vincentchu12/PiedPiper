@@ -106,8 +106,8 @@ antlrcpp::Any Pass1Visitor::visitVariableDeclaration(mmcParser::VariableDeclarat
     }
     else if (type_name == "string")
     {
-        type = Predefined::char_type;
-        type_indicator = "C";
+    	type = Predefined::char_type;
+		type_indicator = "Ljava/lang/String";
     }
     else if (type_name == "void")
     {
@@ -155,8 +155,8 @@ antlrcpp::Any Pass1Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
     }
     else if (type_name == "string")
     {
-        type = Predefined::char_type;
-        type_indicator = "[C";
+    	type = Predefined::char_type;
+        type_indicator = "[Ljava/lang/String";
     }
     else if (type_name == "void")
     {
@@ -203,8 +203,8 @@ antlrcpp::Any Pass1Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
 	    }
 	    else if (type_name == "string")
 	    {
-	        type = Predefined::char_type;
-	        type_indicator = "C";
+	    	type = Predefined::char_type;
+			type_indicator = "Ljava/lang/String";
 	    }
 	    else if (type_name == "void")
 	    {
@@ -251,8 +251,8 @@ antlrcpp::Any Pass1Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
  	    }
  	    else if (type_name == "string")
  	    {
- 	        type = Predefined::char_type;
- 	        type_indicator = "[C";
+ 	    	type = Predefined::char_type;
+			type_indicator = "[Ljava/lang/String";
  	    }
  	    else if (type_name == "void")
  	    {

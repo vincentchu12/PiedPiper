@@ -3,10 +3,7 @@
 
 .field private static _runTimer LRunTimer;
 .field private static _standardIn LPascalTextIn;
-.field private static x [I
-.field private static temp [I
-.field private static i I
-.field private static val I
+.field private static a Ljava/lang/String
 
 .method public <init>()V
 
@@ -28,31 +25,8 @@
 	dup
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        input/_standardIn LPascalTextIn;
-	ldc	3
-	newarray int
-	putstatic	input/x [I
-	getstatic	input/x [I
-	ldc 0
-	ldc	1
-	iastore
-	getstatic	input/x [I
-	ldc 1
-	ldc	2
-	iastore
-	getstatic	input/x [I
-	ldc 2
-	ldc	3
-	iastore
-	ldc	3
-	newarray int
-	putstatic	input/temp [I
-	ldc 0
-	getstatic	input/[223 163 257 62] I
-	iconst_1
-	iadd
-	putstatic	input/[223 163 257 62] I
-	goto Label_0
-Label_2:
+	ldc	"hack vikas"
+	putstatic	input/a Ljava/lang/String
 
 	getstatic     input/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V

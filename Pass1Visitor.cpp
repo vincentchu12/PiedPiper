@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "Pass1Visitor.h"
 #include "wci/intermediate/SymTabFactory.h"
@@ -14,6 +15,7 @@ using namespace wci::intermediate::symtabimpl;
 using namespace wci::util;
 
 extern string program_name;
+extern unordered_map<string, int> sizeTable;
 
 Pass1Visitor::Pass1Visitor()
     : program_id(nullptr), j_file(nullptr)
@@ -272,6 +274,10 @@ antlrcpp::Any Pass1Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
  	        j_file << ".field private static "
  	               << id->get_name() << " " << type_indicator << endl;
  	    }
+ 	    SymTabEntry *id = variable_id_list[0];
+ 	    string name = id->get_name();
+ 	    int size = stoi(ctx->number()->getText());
+ 	    sizeTable.emplace(name, size);
 
  	    return value;
   }
@@ -353,14 +359,18 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
     return visitChildren(ctx);
 }
 
-// antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
-// {
-//     cout << "=== visitVariable: " + ctx->getText() << endl;
+ antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
+ {
+     cout << "=== visitVariable: " + ctx->getText() << endl;
 
+     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
+	 string variable_name = ctx->IDENTIFIER()->toString();
+	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
+	 ctx->type = variable_id->get_typespec();
 
-//     return visitChildren(ctx);
-// }
+     return visitChildren(ctx);
+ }
 
 // antlrcpp::Any Pass1Visitor::visitStatement(mmcParser::StatementContext *ctx)
 // {
@@ -410,10 +420,8 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
 {
     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
-    string variable_name = ctx->variable()->IDENTIFIER()->toString();
-    SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
-    ctx->type = variable_id->get_typespec();
+    ctx->type = ctx->variable()->type;
 
     return visitChildren(ctx);
 }
@@ -456,12 +464,15 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
     return value;
 }
 
-// antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
-// {
-//	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
-//
-//
-// }
+ antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
+ {
+	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
+
+	 ctx->type = ctx->variable()->type;
+
+	 return visitChildren(ctx);
+
+ }
 
 antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {

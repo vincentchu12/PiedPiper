@@ -3,9 +3,9 @@
 
 .field private static _runTimer LRunTimer;
 .field private static _standardIn LPascalTextIn;
-.field private static x [I
+.field private static arr [I
 .field private static temp [I
-.field private static i I
+.field private static idx I
 .field private static val I
 
 .method public <init>()V
@@ -30,16 +30,16 @@
 	putstatic        input/_standardIn LPascalTextIn;
 	ldc	3
 	newarray int
-	putstatic	input/x [I
-	getstatic	input/x [I
+	putstatic	input/arr [I
+	getstatic	input/arr [I
 	ldc 0
 	ldc	1
 	iastore
-	getstatic	input/x [I
+	getstatic	input/arr [I
 	ldc 1
 	ldc	2
 	iastore
-	getstatic	input/x [I
+	getstatic	input/arr [I
 	ldc 2
 	ldc	3
 	iastore
@@ -47,10 +47,26 @@
 	newarray int
 	putstatic	input/temp [I
 	ldc 0
-	getstatic	input/[223 163 257 62] I
+	putstatic	input/idx I
+Label_0:
+	getstatic	input/idx I
+	ldc 3
+	if_icmplt Label_1
+	goto Label_2
+Label_1:
+	ldc 3
+	getstatic	input/arr [I
+	getstatic	input/idx I
+	aaload
+	putstatic	input/val I
+	getstatic	input/temp [I
+	getstatic	input/idx I
+	getstatic	input/val ?
+	iastore
+	getstatic	input/idx I
 	iconst_1
 	iadd
-	putstatic	input/[223 163 257 62] I
+	putstatic	input/idx I
 	goto Label_0
 Label_2:
 

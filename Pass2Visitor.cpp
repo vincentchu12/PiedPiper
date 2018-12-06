@@ -13,6 +13,7 @@ using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
 
 extern string program_name;
+extern unordered_map<string, int> sizeTable;
 
 Pass2Visitor::Pass2Visitor(ostream& j_file)
     : j_file(j_file) {}
@@ -208,62 +209,91 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 	if(list_iterator)
 	{
 		visit(ctx->declaration(0));
-		// set int i, equal to 0
+
+		string array = ctx->variable()->getText();
+		int array_size = sizeTable.find(array)->second;
+
+	// set int i, equal to 0
 		j_file << "\tldc 0" <<endl;
-		string type_indicator = "I";
-		//TODO fix pustatic index
-//		j_file << "\tputstatic\t" << program_name
-//				   << "/i"
-//				   << " " << type_indicator << endl;
-//		visit(ctx->declaration(1));
-//		//set to first element of array
-//		int size = ctx->variable()->size;
-//
+		string type_idx;
+		if(ctx->declaration(0)->children[0]->getText() == "int") //change this maybe
+			type_idx = "I";
+		else if(ctx->declaration(0)->children[0]->getText() == "bool")
+			type_idx = "Z";
+		else if(ctx->declaration(0)->children[0]->getText() == "string")
+			type_idx = "Ljava/lang/String";
+		else
+			type_idx = "?";
+
+		string idx = ctx->declaration(0)->children[1]->getText();
+		//getting idx
+		j_file << "\tputstatic\t" << program_name
+				   << "/" << idx
+				   << " " << type_idx << endl;
+	//declare iterator
+		visit(ctx->declaration(1));
+
 		int loop_start = label_num++;
 		int loop_true = label_num++;
 		int loop_exit = label_num;
-//
-//		sprintf(label, "%d", loop_start);
-//		j_file << "Label_" << label << ":" << endl;
-//		//TODO get declaration type somehow
-//		j_file << "\tgetstatic\t" << program_name
-//					   << "/" << ctx->declaration(0)->toString()
-//					   << " I" << endl; //index always an int?
-//		j_file << "\tldc " << size <<endl;
-//		sprintf(label, "%d", loop_true);
-//		j_file << "\tif_icmplt Label_" << label <<endl;
-//
-//		sprintf(label, "%d", loop_exit);
-//		j_file << "\tgoto Label_" << label << endl;
-//
-//
-//		sprintf(label, "%d", loop_true);
-//		j_file << "Label_" << label << ":" << endl;
 
-		//set iterator to array index
-		//TODO get decl type
-		//iterator = ctx->declaration(1)
-//		j_file << "\tgetstatic\t" << program_name
-//				   << "/" << ctx->declaration(1)->toString()
-//				   << " I" << endl << "\tldc " index++ << endl
-//				   << "\tgetstatic\t" << program_name
-//				   << "/" << array
-//				   << " [I" << endl <<the index  <<
-//
-//		getstatic	input/a [I
-//			ldc	0
-//			getstatic	input/b I
-//			iastore
-//		visit(ctx->statementList());
+		string type_iterator;
+		if(ctx->declaration(1)->children[0]->getText() == "int")
+			type_iterator = "I";
+		else if(ctx->declaration(1)->children[0]->getText() == "bool")
+			type_iterator = "Z";
+		else if(ctx->declaration(1)->children[0]->getText() == "string")
+			type_iterator = "Ljava/lang/String";
+		else
+			type_iterator = "?";
+	//create loop start label
+		string iterator = ctx->declaration(1)->children[1]->getText();
+		j_file << "Label_" << loop_start << ":" << endl;
+
+		j_file << "\tgetstatic\t" << program_name
+				   << "/" << idx
+				   << " " << type_idx << endl;
+
+		j_file << "\tldc " << array_size << endl;
+
+		j_file << "\tif_icmplt Label_" << loop_true <<endl;
+
+		j_file << "\tgoto Label_" << loop_exit << endl;
+
+		j_file << "Label_" << loop_true << ":" << endl;
+
+
+		string type_array =  (ctx->variable()->type == Predefined::integer_type) ? "[I"
+						   : (ctx->variable()->type == Predefined::boolean_type) ? "[Z"
+						   : (ctx->variable()->type == Predefined::char_type)    ? "[C"
+						   :                                     				   "?";
+
+		j_file << "\tldc " << array_size << endl; // TODO FIX "variable" size
+	//set iterator to value of array at index
+		j_file << "\tgetstatic\t" << program_name
+				   << "/" << array
+				   << " " << type_array << endl;
+
+		j_file << "\tgetstatic\t" << program_name
+						   << "/" << idx
+						   << " " << type_idx << endl;
+
+		j_file << "\taaload" << endl
+				<< "\tputstatic\t" << program_name
+				<< "/" << iterator
+				<< " " << type_iterator << endl;
+
+		visit(ctx->statementList());
 
 		//i++
 		j_file << "\tgetstatic\t" << program_name
-				   << "/" << ctx->declaration(0)->toString()
-				   << " I" << endl << "\ticonst_1" << endl
-				   << "\tiadd" << endl << "\tputstatic\t" << program_name
-				   << "/" << ctx->declaration(0)->toString()
-				   << " I" << endl;
-
+				   << "/" << idx
+				   << " " << type_idx << endl
+				   << "\ticonst_1" << endl
+				   << "\tiadd" << endl
+				   << "\tputstatic\t" << program_name
+				   << "/" << idx
+				   << " " << type_idx << endl;
 
 		j_file << "\tgoto Label_" << loop_start << endl;
 
@@ -619,21 +649,6 @@ antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementConte
 antlrcpp::Any Pass2Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
 {
 	cout << "\tvisitVariableDeclaration" << ctx->getText() << endl;
-//	j_file << "\tldc 0" <<endl;
-//	string type_indicator;
-//	if(ctx->typeID()->IDENTIFIER()->toString() == "int")
-//		type_indicator = "I";
-//	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool")
-//		type_indicator = "Z";
-//	else if(ctx->typeID()->IDENTIFIER()->toString() == "char")
-//		type_indicator = "C";
-//	else
-//		type_indicator = "?";
-//
-//	j_file << "\tputstatic\t" << program_name
-//			   << "/" << ctx->variableID()->IDENTIFIER()->toString()
-//			   << " " << type_indicator << endl;
-
 	return visitChildren(ctx);
 }
 
@@ -721,6 +736,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
 			j_file << "\tiastore" <<endl;
+
 		}
 	}
 	//more elements than array size ~ truncate (premature end)
@@ -775,9 +791,9 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 {
 	cout << "\tvisitArrayAssignment" << ctx->getText() << endl;
 	string type_indicator =
-				  (ctx->expression(0)->type == Predefined::integer_type) ? "[I"
-				: (ctx->expression(0)->type == Predefined::boolean_type) ? "[Z"
-				: (ctx->expression(0)->type == Predefined::char_type)    ? "[C"
+				  (ctx->variable()->type == Predefined::integer_type) ? "[I"
+				: (ctx->variable()->type == Predefined::boolean_type) ? "[Z"
+				: (ctx->variable()->type == Predefined::char_type)    ? "[C"
 				:                                                         "?";
 	string varID = ctx->variable()->getText();
 	if(ctx->number()!=NULL){ //number

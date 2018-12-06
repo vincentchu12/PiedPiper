@@ -28,12 +28,16 @@ int b = 4;
 printf("hello");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> aab952d... Pass1 function declarations
 int main()
 {
 	int a;
 =======
 void foo(){
+=======
+void foo(int a, int b){
+>>>>>>> 6216578... finish function calls
 	printf("goodbye");
 >>>>>>> 2060bbe... Add function declaration and parameters
 }
@@ -45,9 +49,13 @@ void foo(){
 printf("there");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 int a;
 a = 3;
 >>>>>>> aab952d... Pass1 function declarations
 =======
 foo();
 >>>>>>> 2060bbe... Add function declaration and parameters
+=======
+foo(8, 9);
+>>>>>>> 6216578... finish function calls

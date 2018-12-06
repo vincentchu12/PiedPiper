@@ -77,7 +77,7 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 	 j_file << ctx->functionID()->getText() << ":" << endl;
 
-	 j_file << "\tiload 0" << endl;
+	 j_file << "\tastore_1" << endl;
 
 	 vector<vector<string>> params;
 
@@ -92,11 +92,11 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 		 }
 	 }
 
-	 function_param_map.emplace(function_name, params);
+	 function_param_map.emplace(ctx->functionID()->IDENTIFIER()->getText(), params);
 
 	 auto value = visitChildren(ctx->statementList());
 
-	 j_file << "\tret 0" << endl;
+	 j_file << "\tret 1" << endl;
 	 j_file << function_name << "end:" << endl;
 	 function_name = "";
 
@@ -106,15 +106,35 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 
  antlrcpp::Any Pass2Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
  {
-	 j_file << "\tjsr " << function_name << ctx->function()->IDENTIFIER()->getText() << endl;
-
 	 if(ctx->identifiers() != NULL)
 	 {
-		 for(int i = 0; i < ctx->identifiers()->expression().size(); i++)
-		 {
+		 int input_count = ctx->identifiers()->expression().size();
 
+		 vector<vector<string>> params = function_param_map.find(ctx->function()->IDENTIFIER()->getText())->second;
+
+		 int params_count = params.size();
+
+		 int max = (params_count > input_count) ? input_count: params_count;
+		 for(int i = 0; i < max; i++)
+		 {
+			 string variable_name = params[i][0];
+			 string type_name     = params[i][1];
+			 visit(ctx->identifiers()->expression(i));
+
+			string type_indicator =
+						  (type_name == "int") ? "I"
+						: (type_name == "bool") ? "Z"
+						: (type_name == "string")    ? "C"
+						:                           "?";
+
+			// Emit a field put instruction.
+			j_file << "\tputstatic\t" << program_name
+				   << "/" << function_name <<  variable_name
+				   << " " << type_indicator << endl;
 		 }
 	 }
+
+	 j_file << "\tjsr " << ctx->function()->IDENTIFIER()->getText() << endl;
 	 return NULL;
  }
 

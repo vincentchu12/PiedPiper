@@ -310,13 +310,11 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitio
     function_name = ctx->functionID()->getText() + "_";
     
     variable_id_list.resize(0);
-    cout << "got here1" << endl;
     auto value = visit(ctx->functionID());
     visit(ctx->typeID());
 
     TypeSpec *type;
     string type_indicator;
-    cout << "got here2" << endl;
     string type_name = ctx->typeID()->IDENTIFIER()->toString();
     if (type_name == "int")
     {
@@ -347,14 +345,11 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitio
     for (SymTabEntry *id : variable_id_list) {
         id->set_typespec(type);
     }
-    cout << "got here3" << endl;
     if(ctx->parameters() != NULL)
     {
         visit(ctx->parameters());
     }
-    cout << "got here4" << endl;
     visit(ctx->statementList());
-    cout << "got here5" << endl;
     function_name = "";
     return value;
 }

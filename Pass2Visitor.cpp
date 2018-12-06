@@ -287,7 +287,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		string idx = ctx->declaration(0)->children[1]->getText();
 		//getting idx
 		j_file << "\tputstatic\t" << program_name
-				   << "/" << idx
+				   << "/" << function_name << idx
 				   << " " << type_idx << endl;
 	//declare iterator
 		visit(ctx->declaration(1));
@@ -310,7 +310,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		j_file << "Label_" << loop_start << ":" << endl;
 
 		j_file << "\tgetstatic\t" << program_name
-				   << "/" << idx
+				   << "/" << function_name << idx
 				   << " " << type_idx << endl;
 
 		j_file << "\tldc " << array_size << endl;
@@ -329,16 +329,16 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 
 	//set iterator to value of array at index
 		j_file << "\tgetstatic\t" << program_name
-				   << "/" << array
+				   << "/" << function_name << array
 				   << " " << type_array << endl;
 
 		j_file << "\tgetstatic\t" << program_name
-						   << "/" << idx
+						   << "/" << function_name << idx
 						   << " " << type_idx << endl;
 
 		j_file << "\taaload" << endl
 				<< "\tputstatic\t" << program_name
-				<< "/" << iterator
+				<< "/" << function_name << iterator
 				<< " " << type_iterator << endl;
 
 		visit(ctx->statementList());
@@ -350,7 +350,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 				   << "\ticonst_1" << endl
 				   << "\tiadd" << endl
 				   << "\tputstatic\t" << program_name
-				   << "/" << idx
+				   << "/" << function_name << idx
 				   << " " << type_idx << endl;
 
 		j_file << "\tgoto Label_" << loop_start << endl;
@@ -620,15 +620,15 @@ antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
 	 if(child0 == "++" || child0 == "--")
 	 {
 		 auto value = visitChildren(ctx);
-		 j_file << "\tputstatic\t" << program_name << "/" << child1 << " " << type_indicator << endl;
-		 j_file << "\tgetstatic\t" <<  program_name << "/" << child1 << " " << type_indicator << endl;
+		 j_file << "\tputstatic\t" << program_name << "/" << function_name << child1 << " " << type_indicator << endl;
+		 j_file << "\tgetstatic\t" <<  program_name << "/" << function_name << child1 << " " << type_indicator << endl;
 
 	 }
 	 else
 	 {
-		 j_file << "\tgetstatic\t" <<  program_name << "/" << child0 << " " << type_indicator << endl;
+		 j_file << "\tgetstatic\t" <<  program_name << "/" << function_name << child0 << " " << type_indicator << endl;
 		 auto value = visitChildren(ctx);
-		 j_file << "\tputstatic\t" <<  program_name << "/" << child0 << " " << type_indicator << endl;
+		 j_file << "\tputstatic\t" <<  program_name << "/" << function_name << child0 << " " << type_indicator << endl;
 
 	 }
 

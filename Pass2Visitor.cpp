@@ -268,7 +268,6 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 						   : (ctx->variable()->type == Predefined::char_type)    ? "[C"
 						   :                                     				   "?";
 
-		j_file << "\tldc " << array_size << endl; // TODO FIX "variable" size
 	//set iterator to value of array at index
 		j_file << "\tgetstatic\t" << program_name
 				   << "/" << array

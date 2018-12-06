@@ -1,0 +1,9 @@
+int variable = 3 * 2;
+if(variable < 3)
+{
+    variable = 2; 
+}
+else
+{
+    variable = 0;   
+}

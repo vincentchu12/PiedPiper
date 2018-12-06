@@ -1,0 +1,13 @@
+int a = 2;
+int b = 6;
+int sum = 0;
+int diff = 0;
+int product = 0;
+int quotient = 0;
+int modVal = 0;
+
+sum = a + b;
+diff = b - a;
+product = a * b;
+quotient = b/a;
+mod = b % a;

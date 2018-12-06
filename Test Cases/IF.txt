@@ -1,0 +1,5 @@
+int variable = 3 + 4;
+if(variable < 3)
+{
+    variable = 2;
+}

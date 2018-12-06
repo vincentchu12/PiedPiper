@@ -1,0 +1,4 @@
+int a = 1;
+bool b = true;
+string s = "abc";
+

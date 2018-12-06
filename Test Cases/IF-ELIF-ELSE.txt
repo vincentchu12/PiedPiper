@@ -1,0 +1,15 @@
+int variable = (5 * 5) % 10;
+bool b_variable = false;
+if(variable <= 2)
+{
+    b_variable = true;
+}
+elif(variable > 2)
+{
+    b_variable = true; 
+}
+else
+{
+    variable = 2; 
+    b_variable = false;
+}

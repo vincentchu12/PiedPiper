@@ -40,7 +40,7 @@ public:
     // antlrcpp::Any visitFunctionID(mmcParser::FunctionIDContext *ctx) override;
     // antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override;
     antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override;
-    // antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
+     antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
 
     antlrcpp::Any visitStr(mmcParser::StrContext *ctx) override;
     antlrcpp::Any visitStringExpr(mmcParser::StringExprContext *ctx) override;
@@ -61,7 +61,7 @@ public:
     antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *ctx) override;
     antlrcpp::Any visitBitExpr(mmcParser::BitExprContext *ctx) override;
     antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override;
-    // antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
+     antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;
     antlrcpp::Any visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx) override;
     // antlrcpp::Any visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx) override;

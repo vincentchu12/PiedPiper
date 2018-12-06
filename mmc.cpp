@@ -14,7 +14,7 @@ using namespace antlrcpp;
 using namespace antlr4;
 
 string program_name;
-
+unordered_map<string, int> sizeTable;
 
 void printAss2Visitor()
 {
@@ -58,7 +58,6 @@ int main(int argc, const char *args[])
 {
     ifstream ins;
     program_name = args[1];
-    cout<<program_name<<endl;
     program_name = program_name.substr(0, program_name.find("."));
     ins.open(args[1]);
 

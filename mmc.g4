@@ -37,7 +37,7 @@ typeID       : IDENTIFIER ;
 functionID   : IDENTIFIER ;
 function     : IDENTIFIER ;
 variableID   locals [ TypeSpec* type = nullptr ] : IDENTIFIER ;
-variable     locals [ int size = 0 ] : IDENTIFIER ;
+variable     locals [ TypeSpec* type = nullptr, int size = 0 ] : IDENTIFIER ;
 number       locals [ TypeSpec* type = nullptr ] : INTEGER    ;
 str          locals [ TypeSpec* type = nullptr ] : STRING     ;
 signedNumber locals [ TypeSpec* type = nullptr ] : sign number;

@@ -43,6 +43,19 @@ foo:
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	ldc	"goodbye"
 	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	getstatic	input/foo_a I
+	getstatic	input/foo_b I
+	if_icmpeq Label_0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"no"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	goto Label_1
+Label_0:
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"yes"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	goto Label_1
+Label_1:
 	ret 1
 foo_end:
 	getstatic java/lang/System/out Ljava/io/PrintStream;

@@ -37,9 +37,26 @@ int main()
 void foo(){
 =======
 void foo(int a, int b){
+<<<<<<< HEAD
 >>>>>>> 6216578... finish function calls
 	printf("goodbye");
 >>>>>>> 2060bbe... Add function declaration and parameters
+=======
+
+		printf("goodbye");
+		
+		
+		
+		if(a == b)
+		{
+			printf("yes");
+		}
+		else
+		{
+			printf("no");
+		}
+
+>>>>>>> a50af94... Fix udit's bug
 }
 <<<<<<< HEAD
 >>>>>>> 77c9c1e... Fix grammar file

@@ -122,10 +122,10 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 			 visit(ctx->identifiers()->expression(i));
 
 			string type_indicator =
-						  (type_name == "int") ? "I"
-						: (type_name == "bool") ? "Z"
-						: (type_name == "string")    ? "C"
-						:                           "?";
+						  (type_name == "int")     ? "I"
+						: (type_name == "bool")    ? "Z"
+						: (type_name == "string")  ? "C"
+						:                         "?";
 
 			// Emit a field put instruction.
 			j_file << "\tputstatic\t" << program_name
@@ -510,7 +510,7 @@ antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 
     if (op == "==")
     {
-        opcode = integer_mode ? "if_cmpeq"
+        opcode = integer_mode ? "if_icmpeq"
                : boolean_mode ? "if_icmpeq"
                :                "????";
     }

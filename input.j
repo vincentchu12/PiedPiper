@@ -54,14 +54,13 @@ Label_0:
 	if_icmplt Label_1
 	goto Label_2
 Label_1:
-	ldc 3
 	getstatic	input/arr [I
 	getstatic	input/idx I
 	aaload
 	putstatic	input/val I
 	getstatic	input/temp [I
 	getstatic	input/idx I
-	getstatic	input/val ?
+	getstatic	input/val I
 	iastore
 	getstatic	input/idx I
 	iconst_1

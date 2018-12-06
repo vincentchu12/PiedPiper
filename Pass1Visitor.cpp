@@ -420,10 +420,10 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
 {
     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
-
+    auto value =  visitChildren(ctx);
     ctx->type = ctx->variable()->type;
 
-    return visitChildren(ctx);
+    return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitBitExpr(mmcParser::BitExprContext *ctx)
@@ -468,9 +468,10 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
  {
 	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
 
+	auto value = visitChildren(ctx);
 	 ctx->type = ctx->variable()->type;
 
-	 return visitChildren(ctx);
+	 return value;
 
  }
 

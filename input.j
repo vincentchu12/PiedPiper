@@ -3,10 +3,9 @@
 
 .field private static _runTimer LRunTimer;
 .field private static _standardIn LPascalTextIn;
-.field private static a [I
-.field private static b I
+.field private static a [Ljava/lang/String;
 .field private static i I
-.field private static val I
+.field private static b Ljava/lang/String;
 
 .method public <init>()V
 
@@ -29,20 +28,20 @@
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        input/_standardIn LPascalTextIn;
 	ldc	3
-	newarray int
-	putstatic	input/a [I
-	getstatic	input/a [I
+	anewarray java/lang/String
+	putstatic	input/a [Ljava/lang/String;
+	getstatic	input/a [Ljava/lang/String;
 	ldc 0
-	ldc	2
-	iastore
-	getstatic	input/a [I
+	ldc	"hello"
+	aastore
+	getstatic	input/a [Ljava/lang/String;
 	ldc 1
-	ldc	3
-	iastore
-	getstatic	input/a [I
+	ldc	"goodbye"
+	aastore
+	getstatic	input/a [Ljava/lang/String;
 	ldc 2
-	ldc	4
-	iastore
+	ldc	"there"
+	aastore
 	ldc 0
 	putstatic	input/i I
 Label_0:
@@ -51,23 +50,17 @@ Label_0:
 	if_icmplt Label_1
 	goto Label_2
 Label_1:
-	getstatic	input/a [I
+	getstatic	input/a [Ljava/lang/String;
 	getstatic	input/i I
-	iaload
-	putstatic	input/val I
+	aaload
+	putstatic	input/b Ljava/lang/String;
 	getstatic java/lang/System/out Ljava/io/PrintStream;
-	ldc	"%d %d"
-	ldc	2
+	ldc	"%s"
+	ldc	1
 	anewarray java/lang/Object
 	dup
 	ldc	0
-	getstatic	input/i I
-	invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
-	aastore
-	dup
-	ldc	1
-	getstatic	input/val I
-	invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+	getstatic	input/b Ljava/lang/String;
 	aastore
 	invokestatic  java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
 	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V

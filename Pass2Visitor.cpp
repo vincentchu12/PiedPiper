@@ -178,12 +178,11 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
     int original_label = label_num;
     int statement_size = ctx->statementList().size();
 
-    char current_label[4];
+    int current_label;
 
     bool has_else = (math_expression_size < statement_size) ? true : false;
 
-    char last_label[4];
-    sprintf(last_label, "%d", label_num+math_expression_size);
+    int last_label = label_num+math_expression_size;
 
     for(int i = 0; i < math_expression_size; i++)
     {
@@ -199,7 +198,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 
     for(int i = 0; i < math_expression_size; i++)
 	{
-    	sprintf(current_label, "%d", original_label++);
+    	current_label = original_label++;
     	j_file << "Label_" << current_label << ":" << endl;
     	visitChildren(ctx->statementList(i));
 		j_file << "\tgoto " << "Label_" << last_label << endl;
@@ -230,7 +229,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		else if(ctx->declaration(0)->children[0]->getText() == "bool")
 			type_idx = "Z";
 		else if(ctx->declaration(0)->children[0]->getText() == "string")
-			type_idx = "Ljava/lang/String";
+			type_idx = "Ljava/lang/String;";
 		else
 			type_idx = "?";
 
@@ -252,7 +251,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 		else if(ctx->declaration(1)->children[0]->getText() == "bool")
 			type_iterator = "Z";
 		else if(ctx->declaration(1)->children[0]->getText() == "string")
-			type_iterator = "Ljava/lang/String";
+			type_iterator = "Ljava/lang/String;";
 		else
 			type_iterator = "?";
 	//create loop start label
@@ -274,8 +273,13 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 
 		string type_array =  (ctx->variable()->type == Predefined::integer_type) ? "[I"
 						   : (ctx->variable()->type == Predefined::boolean_type) ? "[Z"
-						   : (ctx->variable()->type == Predefined::char_type)    ? "[C"
+						   : (ctx->variable()->type == Predefined::char_type)    ? "[Ljava/lang/String;"
 						   :                                     				   "?";
+
+		string load =  (ctx->variable()->type == Predefined::integer_type) ? "iaload"
+								   : (ctx->variable()->type == Predefined::boolean_type) ? "iaload"
+								   : (ctx->variable()->type == Predefined::char_type)    ? "aaload"
+								   :                                     				   "?load";
 
 	//set iterator to value of array at index
 		j_file << "\tgetstatic\t" << program_name
@@ -286,7 +290,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 						   << "/" << function_name << idx
 						   << " " << type_idx << endl;
 
-		j_file << "\tiaload" << endl
+		j_file << "\t" << load << endl
 				<< "\tputstatic\t" << program_name
 				<< "/" << function_name << iterator
 				<< " " << type_iterator << endl;
@@ -652,7 +656,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
 		type_indicator = "[Z";
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
-		j_file << "\tanewarray java/lang/String;" << endl;
+		j_file << "\tanewarray java/lang/String" << endl;
 		type_indicator = "[Ljava/lang/String;";
 	}
 	else{
@@ -695,17 +699,21 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 
 	int nums =  ctx->identifiers()->expression().size();
 	string type_indicator;
+	string store;
 	if(ctx->typeID()->IDENTIFIER()->toString() == "int"){
 		j_file << "\tnewarray int" << endl;
 		type_indicator = "[I";
+		store = "iastore";
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "bool"){
 		j_file << "\tnewarray bool" << endl;
 		type_indicator = "[Z";
+		store = "iastore";
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
-		j_file << "\tanewarray java/lang/String;" << endl;
+		j_file << "\tanewarray java/lang/String" << endl;
 		type_indicator = "[Ljava/lang/String;";
+		store = "aastore";
 	}
 	else{
 		type_indicator = "?";
@@ -721,7 +729,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 			j_file << "\tgetstatic\t" << program_name << "/" << function_name <<  varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
-			j_file << "\tiastore" <<endl;
+			j_file << "\t" << store <<endl;
 
 		}
 	}
@@ -731,7 +739,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 			j_file << "\tgetstatic\t" << program_name << "/" << function_name <<  varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
-			j_file << "\tiastore" <<endl;
+			j_file << "\t" << store <<endl;
 		}
 	}
 	//less elements than array size
@@ -741,14 +749,14 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 			j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			visit(ctx->identifiers()->expression(i));
-			j_file << "\tiastore" <<endl;
+			j_file << "\t" << store <<endl;
 		}
 		//add zeros
 		for(; i<stoi(ctx->number()->getText()); i++){
 			j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 			j_file << "\tldc " << i << endl;
 			j_file << "\tldc 0" <<endl;
-			j_file << "\tiastore" <<endl;
+			j_file << "\t" << store <<endl;
 		}
 	}
 	return NULL;
@@ -761,11 +769,16 @@ antlrcpp::Any Pass2Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
 
     string type_indicator =
                   (ctx->type == Predefined::integer_type) ? "[I"
-			    : (ctx->type == Predefined::char_type) ? "[java/lang/String;"
+			    : (ctx->type == Predefined::char_type) ? "[Ljava/lang/String;"
                 :                                                         "?";
+
+    string load =
+                   (ctx->type == Predefined::integer_type) ? "iaload"
+ 			    : (ctx->type == Predefined::char_type) ? "aaload"
+                 :                                                         "?";
 	j_file << "\tgetstatic " <<  program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
 	auto value = visit(ctx->expression());
-	j_file << "\tiaload" << endl;
+	j_file << "\t" << load << endl;
 	return value;
 }
 
@@ -855,12 +868,18 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 				: (ctx->expression(0)->type == Predefined::boolean_type) ? "[Z"
 				: (ctx->expression(0)->type == Predefined::char_type)    ? "[Ljava/lang/String;"
 				:                                                         "?";
+
+	string store =
+				  (ctx->expression(0)->type == Predefined::integer_type) ? "iastore"
+				: (ctx->expression(0)->type == Predefined::boolean_type) ? "iastore"
+				: (ctx->expression(0)->type == Predefined::char_type)    ? "aastore"
+				:                                                         "?";
 	string varID = ctx->variable()->getText();
 
 	j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
 	visit(ctx->expression(0));
 	visit(ctx->expression(1));
-	j_file << "\tiastore" <<endl;
+	j_file << "\t" << store <<endl;
 
 	//TODO ADD POINTERS TO GRAMMAR FILE ARRAYS SO WE CAN DO a[i]
 	return NULL;

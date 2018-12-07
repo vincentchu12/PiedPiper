@@ -1,6 +1,6 @@
-int a[3] = {2, 3, 4};
-int b;
-for(int i; int val:a)
+string a[3] = {"hello", "goodbye", "there"};
+
+for(int i; string b: a)
 {
-	printf("%d %d", i, val);
+	printf("%s", b);
 }

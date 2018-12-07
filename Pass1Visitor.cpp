@@ -331,7 +331,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitio
     else if (type_name == "string")
     {
         type = Predefined::char_type;
-        type_indicator = "C";
+        type_indicator = "Ljava/lang/String;";
     }
     else if (type_name == "void")
     {
@@ -463,6 +463,15 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 // {
 
 // }
+
+antlrcpp::Any Pass1Visitor::visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx)
+{
+    cout << "=== visitBitIndexExpr: " + ctx->getText() << endl;
+    auto value = visitChildren(ctx);
+    ctx->type = ctx->variable()->type;
+
+    return value;
+}
 
 antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ctx)
 {

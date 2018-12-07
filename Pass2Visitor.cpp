@@ -129,7 +129,7 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 			string type_indicator =
 						  (type_name == "int")     ? "I"
 						: (type_name == "bool")    ? "Z"
-						: (type_name == "string")  ? "C"
+						: (type_name == "string")  ? "Ljava/lang/String;"
 						:                         "?";
 
 			// Emit a field put instruction.
@@ -720,7 +720,7 @@ antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementConte
 
     	for(int i = 0; i < identifier_count; i++)
     	{
-    		j_file << "dup" << endl;
+    		j_file << "\tdup" << endl;
     		j_file << "\tldc\t" << i << endl;
     		visit(ctx->identifiers()->expression(i));
     		TypeSpec *type = ctx->identifiers()->expression(i)->type;
@@ -860,6 +860,65 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 	return NULL;
 }
 
+antlrcpp::Any Pass2Visitor::visitBitIndexAssignment(mmcParser::BitIndexAssignmentContext *ctx)
+{
+    cout << "\tvisitBitIndexAssignment" << ctx->getText() << endl;
+    string type_indicator =
+                  (ctx->expression(1)->type == Predefined::integer_type) ? "I"
+                :                                                         "?";
+
+    string variable_name = ctx->variable()->IDENTIFIER()->getText();
+    
+    int label_set = label_num++;
+    int label_clear = label_num++;
+    int label_end   = label_num++;
+    visit(ctx->expression(1));
+    j_file << "\tldc 0" << endl;
+    j_file << "\tif_icmpeq" << " Label_" << label_clear << endl;
+    j_file << "\tgoto Label_" << label_set << endl;
+
+    // set bit
+    j_file << "Label_" << label_set << ":" << endl;
+    j_file << "\tgetstatic\t" << program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
+    j_file << "\ticonst_1" << endl;
+    auto value = visit(ctx->expression(0));
+    j_file << "\tishl" << endl;
+    j_file << "\tior"  << endl;
+    j_file << "\tgoto Label_" << label_end << endl;
+    // clear bit
+    j_file << "Label_" << label_clear << ":" << endl;
+    j_file << "\tgetstatic\t" << program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
+    j_file << "\ticonst_1" << endl;
+    value = visit(ctx->expression(0));
+    j_file << "\tishl" << endl;
+    j_file << "\tineg"  << endl;
+    j_file << "\ticonst_1" << endl;
+    j_file << "\tisub" << endl;
+    j_file << "\tiand" << endl;
+
+    j_file << "Label_" << label_end << ":" << endl;
+    j_file << "\tputstatic\t" << program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
+    return value;
+}
+
+antlrcpp::Any  Pass2Visitor::visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx)
+{
+    cout << "\visitBitIndexExpr" << ctx->getText() << endl;
+    string variable_name = ctx->variable()->IDENTIFIER()->getText();
+    string type_indicator =
+                  (ctx->variable()->type == Predefined::integer_type) ? "I"
+                :                                                         "?";
+
+
+    j_file << "\tgetstatic\t" << program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
+    auto value = visit(ctx->expression());
+    j_file << "\tishr" << endl;
+    j_file << "\ticonst_1" << endl;
+    j_file << "\tiand" << endl;
+    
+    return value;
+}
+
 antlrcpp::Any Pass2Visitor::visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx)
 {
 	cout << "\tvisitVariableAssignment" << ctx->getText() << endl;
@@ -888,20 +947,12 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 				: (ctx->expression(0)->type == Predefined::char_type)    ? "[Ljava/lang/String;"
 				:                                                         "?";
 	string varID = ctx->variable()->getText();
-	if(ctx->number()!=NULL){ //number
-		j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
-		visit(ctx->number());
-		visit(ctx->expression(0));
-		j_file << "\tiastore" <<endl;
-	}
-	else{ //expression
-		string indexID = ctx->expression(0)->getText();
-		j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
-		//get index
-		j_file << "\tgetstatic\t" << program_name << "/" << function_name << indexID << " " << "I" << endl;
-		visit(ctx->expression(1));
-		j_file << "\tiastore" <<endl;
-	}
+
+	j_file << "\tgetstatic\t" << program_name << "/" << function_name << varID << " " << type_indicator << endl;
+	visit(ctx->expression(0));
+	visit(ctx->expression(1));
+	j_file << "\tiastore" <<endl;
+
 	//TODO ADD POINTERS TO GRAMMAR FILE ARRAYS SO WE CAN DO a[i]
 	return NULL;
 }

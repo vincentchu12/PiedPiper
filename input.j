@@ -3,10 +3,8 @@
 
 .field private static _runTimer LRunTimer;
 .field private static _standardIn LPascalTextIn;
-.field private static arr [I
-.field private static temp [I
-.field private static idx I
-.field private static val I
+.field private static a [I
+.field private static i I
 
 .method public <init>()V
 
@@ -30,42 +28,42 @@
 	putstatic        input/_standardIn LPascalTextIn;
 	ldc	3
 	newarray int
-	putstatic	input/arr [I
-	getstatic	input/arr [I
+	putstatic	input/a [I
+	getstatic	input/a [I
 	ldc 0
-	ldc	1
-	iastore
-	getstatic	input/arr [I
-	ldc 1
 	ldc	2
 	iastore
-	getstatic	input/arr [I
+	getstatic	input/a [I
+	ldc 1
+	ldc	3
+	iastore
+	getstatic	input/a [I
 	ldc 2
 	ldc	3
 	iastore
-	ldc	3
-	newarray int
-	putstatic	input/temp [I
-	ldc 0
-	putstatic	input/idx I
+	ldc	0
+	putstatic	input/i I
 Label_0:
-	getstatic	input/idx I
-	ldc 3
+	getstatic	input/i I
+	ldc	3
 	if_icmplt Label_1
 	goto Label_2
 Label_1:
-	getstatic	input/arr [I
-	getstatic	input/idx I
-	aaload
-	putstatic	input/val I
-	getstatic	input/temp [I
-	getstatic	input/idx I
-	getstatic	input/val ?
-	iastore
-	getstatic	input/idx I
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc	"%d"
+	ldc	1
+	anewarray java/lang/Object
+	dup
+	ldc	0
+	getstatic	input/i I
+	invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokestatic  java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	getstatic	input/i I
 	iconst_1
 	iadd
-	putstatic	input/idx I
+	putstatic	input/i I
 	goto Label_0
 Label_2:
 

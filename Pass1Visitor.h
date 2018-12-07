@@ -40,7 +40,7 @@ public:
     // antlrcpp::Any visitFunction(mmcParser::FunctionContext *ctx) override;
     antlrcpp::Any visitVariableID(mmcParser::VariableIDContext *ctx) override;
      antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
-
+    antlrcpp::Any visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx) override;
     antlrcpp::Any visitStr(mmcParser::StrContext *ctx) override;
     antlrcpp::Any visitStringExpr(mmcParser::StringExprContext *ctx) override;
     antlrcpp::Any visitNumber(mmcParser::NumberContext *ctx) override;

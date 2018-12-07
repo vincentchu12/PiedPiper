@@ -7,7 +7,7 @@ using namespace wci::intermediate;
 extern string program_name;
 }
 
-root	: (functionDefinition | statementList)+
+root	: (statementList | functionDefinition)+
 		;
 
 declaration
@@ -91,8 +91,8 @@ expression locals [ TypeSpec* type = nullptr ]
 	| expression MUL_DIV_MOD_OP expression # mulDivModExpr
 	| expression ADD_SUB_OP     expression # addSubExpr
 	| expression BIT_OP         expression # bitExpr
-	| variable '[' number ']'              # arrayExpr
-	| variable '.' 'b' '[' number ']'      # bitIndexExpr
+	| variable '[' expression ']'          # arrayExpr
+	| variable BIT '[' expression ']'  # bitIndexExpr
 	| BOOL                                 # boolExpr
 	| str    							   # stringExpr
 	| signedNumber                         # signedNumberExpr
@@ -114,8 +114,8 @@ unary locals [ TypeSpec* type = nullptr ]
 		;
 
 assignment : variable ASSIGN expression 			    # variableAssignment
-		   | variable '[' (number | expression) ']' ASSIGN expression  # arrayAssignment
-		   | variable '.' 'b' '[' number ']' ASSIGN expression         # bitIndexAssignment
+		   | variable '[' expression ']' ASSIGN expression  # arrayAssignment
+		   | variable BIT '[' expression ']' ASSIGN expression         # bitIndexAssignment
 		   ;
 
 BOOL : TRUE | FALSE ;
@@ -136,6 +136,7 @@ RETURN     : 'return' ;
 TRUE       : 'true'   ;
 FALSE      : 'false'  ;
 PRINTF     : 'printf' ;
+BIT        : '.b'	  ;
 
 IDENTIFIER : [_a-zA-Z][_a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;

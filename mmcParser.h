@@ -19,13 +19,13 @@ class  mmcParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, BOOL = 12, MUL_DIV_MOD_OP = 13, 
-    ADD_SUB_OP = 14, BIT_OP = 15, MATH_COMP = 16, FOR = 17, IF = 18, ELSE = 19, 
-    ELIF = 20, RETURN = 21, TRUE = 22, FALSE = 23, PRINTF = 24, IDENTIFIER = 25, 
-    INTEGER = 26, ASSIGN = 27, EQ = 28, NEQ = 29, LT = 30, LTE = 31, GT = 32, 
-    GTE = 33, MUL_OP = 34, DIV_OP = 35, MOD_OP = 36, ADD_OP = 37, SUB_OP = 38, 
-    AND_OP = 39, OR_OP = 40, XOR_OP = 41, INC = 42, DEC = 43, STRING = 44, 
-    NEWLINE = 45, WS = 46
+    T__7 = 8, T__8 = 9, BOOL = 10, MUL_DIV_MOD_OP = 11, ADD_SUB_OP = 12, 
+    BIT_OP = 13, MATH_COMP = 14, FOR = 15, IF = 16, ELSE = 17, ELIF = 18, 
+    RETURN = 19, TRUE = 20, FALSE = 21, PRINTF = 22, BIT = 23, IDENTIFIER = 24, 
+    INTEGER = 25, ASSIGN = 26, EQ = 27, NEQ = 28, LT = 29, LTE = 30, GT = 31, 
+    GTE = 32, MUL_OP = 33, DIV_OP = 34, MOD_OP = 35, ADD_OP = 36, SUB_OP = 37, 
+    AND_OP = 38, OR_OP = 39, XOR_OP = 40, INC = 41, DEC = 42, STRING = 43, 
+    NEWLINE = 44, WS = 45
   };
 
   enum {
@@ -85,10 +85,10 @@ public:
   public:
     RootContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<FunctionDefinitionContext *> functionDefinition();
-    FunctionDefinitionContext* functionDefinition(size_t i);
     std::vector<StatementListContext *> statementList();
     StatementListContext* statementList(size_t i);
+    std::vector<FunctionDefinitionContext *> functionDefinition();
+    FunctionDefinitionContext* functionDefinition(size_t i);
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
    
@@ -515,7 +515,7 @@ public:
     ArrayExprContext(ExpressionContext *ctx);
 
     VariableContext *variable();
-    NumberContext *number();
+    ExpressionContext *expression();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -524,7 +524,8 @@ public:
     BitIndexExprContext(ExpressionContext *ctx);
 
     VariableContext *variable();
-    NumberContext *number();
+    antlr4::tree::TerminalNode *BIT();
+    ExpressionContext *expression();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -709,10 +710,9 @@ public:
     ArrayAssignmentContext(AssignmentContext *ctx);
 
     VariableContext *variable();
-    antlr4::tree::TerminalNode *ASSIGN();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
-    NumberContext *number();
+    antlr4::tree::TerminalNode *ASSIGN();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
@@ -721,9 +721,10 @@ public:
     BitIndexAssignmentContext(AssignmentContext *ctx);
 
     VariableContext *variable();
-    NumberContext *number();
+    antlr4::tree::TerminalNode *BIT();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *ASSIGN();
-    ExpressionContext *expression();
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 

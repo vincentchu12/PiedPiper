@@ -40,6 +40,8 @@ public:
 //    antlrcpp::Any visitVariable(mmcParser::VariableContext *ctx) override;
    antlrcpp::Any visitNumber(mmcParser::NumberContext *ctx) override;
     antlrcpp::Any visitSignedNumber(mmcParser::SignedNumberContext *ctx) override;
+    antlrcpp::Any visitBitIndexAssignment(mmcParser::BitIndexAssignmentContext *ctx) override;
+    antlrcpp::Any visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx) override;
 //    antlrcpp::Any visitSign(mmcParser::SignContext *ctx) override;
 //    antlrcpp::Any visitStatement(mmcParser::StatementContext *ctx) override;
 //    antlrcpp::Any visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx) override;

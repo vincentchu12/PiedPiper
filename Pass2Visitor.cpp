@@ -143,41 +143,6 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 	 return NULL;
  }
 
-// antlrcpp::Any Pass2Visitor::visitParameters(mmcParser::ParametersContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitIdentifiers(mmcParser::IdentifiersContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitFunction(mmcParser::FunctionContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitVariable(mmcParser::VariableContext *ctx)
-// {
-
-// }
-
 antlrcpp::Any Pass2Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {
     cout << "\tvisitNumber      " << ctx->getText() << endl;
@@ -204,26 +169,6 @@ antlrcpp::Any Pass2Visitor::visitSignedNumber(mmcParser::SignedNumberContext *ct
 
     return value;
 }
-
-// antlrcpp::Any Pass2Visitor::visitSign(mmcParser::SignContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitStatement(mmcParser::StatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx)
-// {
-//
-// }
-
-// antlrcpp::Any Pass2Visitor::visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx)
-// {
-
-// }
 
 antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
 {
@@ -413,21 +358,6 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 	return NULL;
 }
 
-// antlrcpp::Any Pass2Visitor::visitUnaryStatement(mmcParser::UnaryStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitStatementList(mmcParser::StatementListContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitAssignmentStatement(mmcParser::AssignmentStatementContext *ctx)
-// {
-
-// }
-
 antlrcpp::Any Pass2Visitor::visitBoolExpr(mmcParser::BoolExprContext *ctx)
 {
     cout << "\tvisitBoolExpr      " << ctx->getText() << endl;
@@ -455,11 +385,6 @@ antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
 
     return visitChildren(ctx);
 }
-
-// antlrcpp::Any Pass2Visitor::visitBitExpr(mmcParser::BitExprContext *ctx)
-// {
-
-// }
 
 antlrcpp::Any Pass2Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
 {
@@ -491,11 +416,6 @@ antlrcpp::Any Pass2Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
 
     return value;
 }
-
-// antlrcpp::Any Pass2Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
-// {
-
-// }
 
 antlrcpp::Any Pass2Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 {
@@ -591,26 +511,6 @@ antlrcpp::Any Pass2Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *
 
     return value;
 }
-
-// antlrcpp::Any Pass2Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitParenExpr(mmcParser::ParenExprContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass2Visitor::visitSignedNumberExpr(mmcParser::SignedNumberExprContext *ctx)
-// {
-
-// }
 
  antlrcpp::Any Pass2Visitor::visitUnaryExpr(mmcParser::UnaryExprContext *ctx)
  {
@@ -736,12 +636,6 @@ antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementConte
 
 	j_file << "\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V" << endl;
 	return value;
-}
-
-antlrcpp::Any Pass2Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
-{
-	cout << "\tvisitVariableDeclaration" << ctx->getText() << endl;
-	return visitChildren(ctx);
 }
 
 antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx)

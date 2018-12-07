@@ -283,27 +283,6 @@ antlrcpp::Any Pass1Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
  	    return value;
   }
 
-//antlrcpp::Any Pass1Visitor::visitVariableAssignment(mmcParser::VariableAssignmentContext *ctx)
-//{
-//	cout << "=== visitVariableAssignments: " << ctx->getText() << endl;
-//}
-//
-//antlrcpp::Any Pass1Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentContext *ctx)
-//{
-//	cout << "=== visitArrayAssignments: " << ctx->getText() << endl;
-//}
-
-// antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(mmcParser::FunctionDeclarationContext *ctx)
-// {
-//	 cout << "=== visitFunctionDeclaration: " + ctx->getText() << endl;
-//
-//	 auto value = visitChildren(ctx);
-//
-//	 string type_name = ctx->typeID()->IDENTIFIER()->toString();
-//	 string function_name = ctx->functionID()->IDENTIFIER()->toString();
-//
-// }
-
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
 {
     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
@@ -354,34 +333,6 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitio
     return value;
 }
 
-// antlrcpp::Any Pass1Visitor::visitFunctionCall(mmcParser::FunctionCallContext *ctx)
-// {
-//     cout << "=== visitFunctionCall: " + ctx->getText() << endl;
-//     string func_name = ctx->variable()->IDENTIFIER()->toString();
-//     SymTabEntry *variable_id = symtab_stack->lookup(func_name);
-
-//     ctx->type = variable_id->get_typespec();
-
-//     return visitChildren(ctx);
-// }
-
-// antlrcpp::Any Pass1Visitor::visitParameters(mmcParser::ParametersContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitIdentifiers(mmcParser::IdentifiersContext *ctx)
-// {
-
-// }
-
-antlrcpp::Any Pass1Visitor::visitTypeID(mmcParser::TypeIDContext *ctx)
-{
-    cout << "=== visitTypeId: " + ctx->getText() << endl;
-
-    return visitChildren(ctx);
-}
-
 antlrcpp::Any Pass1Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
 {
     cout << "=== visitFunctionID: " + ctx->getText() << endl;
@@ -409,8 +360,6 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
  antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
  {
      cout << "=== visitVariable: " + ctx->getText() << endl;
-
-     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
 	 string variable_name = function_name + ctx->IDENTIFIER()->toString();
 	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
@@ -418,51 +367,6 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
 
      return visitChildren(ctx);
  }
-
-// antlrcpp::Any Pass1Visitor::visitStatement(mmcParser::StatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitDeclarationStatement(mmcParser::DeclarationStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitDefinitionStatement(mmcParser::DefinitionStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitExpressionStatement(mmcParser::ExpressionStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitForStatement(mmcParser::ForStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitUnaryStatement(mmcParser::UnaryStatementContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitStatementList(mmcParser::StatementListContext *ctx)
-// {
-
-// }
-
-// antlrcpp::Any Pass1Visitor::visitAssignmentStatement(mmcParser::AssignmentStatementContext *ctx)
-// {
-
-// }
 
 antlrcpp::Any Pass1Visitor::visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx)
 {
@@ -478,8 +382,6 @@ antlrcpp::Any Pass1Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
     cout << "=== visitVariableExpr: " + ctx->getText() << endl;
     auto value =  visitChildren(ctx);
     ctx->type = ctx->variable()->type;
-    string variable_name = function_name + ctx->variable()->IDENTIFIER()->toString();
-    SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
 
     return value;
 }
@@ -699,9 +601,3 @@ antlrcpp::Any Pass1Visitor::visitUnaryExpr(mmcParser::UnaryExprContext *ctx)
 	 ctx->type = variable_id->get_typespec();
 	 return value;
  }
-
-// antlrcpp::Any Pass1Visitor::visitAssignment(mmcParser::AssignmentContext *ctx)
-// {
-
-// }
-

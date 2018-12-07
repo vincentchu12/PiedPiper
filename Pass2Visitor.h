@@ -35,6 +35,7 @@ public:
     antlrcpp::Any visitBitIndexExpr(mmcParser::BitIndexExprContext *ctx) override;
     antlrcpp::Any visitIfStatement(mmcParser::IfStatementContext *ctx) override;
     antlrcpp::Any visitForStatement(mmcParser::ForStatementContext *ctx) override;
+    antlrcpp::Any visitArrayExpr(mmcParser::ArrayExprContext *ctx) override;
     antlrcpp::Any visitVariableExpr(mmcParser::VariableExprContext *ctx) override;
     antlrcpp::Any visitAddSubExpr(mmcParser::AddSubExprContext *ctx) override;
     antlrcpp::Any visitMathExpr(mmcParser::MathExprContext *ctx) override;

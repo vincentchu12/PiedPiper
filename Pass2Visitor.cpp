@@ -286,7 +286,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 						   << "/" << function_name << idx
 						   << " " << type_idx << endl;
 
-		j_file << "\taaload" << endl
+		j_file << "\tiaload" << endl
 				<< "\tputstatic\t" << program_name
 				<< "/" << function_name << iterator
 				<< " " << type_iterator << endl;
@@ -652,7 +652,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationCon
 		type_indicator = "[Z";
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
-		j_file << "\tnewarray char" << endl;
+		j_file << "\tanewarray java/lang/String;" << endl;
 		type_indicator = "[Ljava/lang/String;";
 	}
 	else{
@@ -704,7 +704,7 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 		type_indicator = "[Z";
 	}
 	else if(ctx->typeID()->IDENTIFIER()->toString() == "string"){
-		j_file << "\tnewarray char" << endl;
+		j_file << "\tanewarray java/lang/String;" << endl;
 		type_indicator = "[Ljava/lang/String;";
 	}
 	else{
@@ -752,6 +752,21 @@ antlrcpp::Any Pass2Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
 		}
 	}
 	return NULL;
+}
+
+antlrcpp::Any Pass2Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
+{
+	cout << "\tvisitArrayExpr" << ctx->getText() << endl;
+	string variable_name = ctx->variable()->IDENTIFIER()->getText();
+
+    string type_indicator =
+                  (ctx->type == Predefined::integer_type) ? "[I"
+			    : (ctx->type == Predefined::char_type) ? "[java/lang/String;"
+                :                                                         "?";
+	j_file << "\tgetstatic " <<  program_name << "/" << function_name << variable_name << " " << type_indicator << endl;
+	auto value = visit(ctx->expression());
+	j_file << "\tiaload" << endl;
+	return value;
 }
 
 antlrcpp::Any Pass2Visitor::visitBitIndexAssignment(mmcParser::BitIndexAssignmentContext *ctx)

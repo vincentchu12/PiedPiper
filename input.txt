@@ -1,6 +1,6 @@
-int a[3] = {2, 3, 3};
-
-for(int i = 0; i < 3; i++)
+int a[3] = {2, 3, 4};
+int b;
+for(int i; int val:a)
 {
-	printf("%d", a[i]);
+	printf("%d %d", i, val);
 }

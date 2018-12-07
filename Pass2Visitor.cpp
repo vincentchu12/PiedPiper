@@ -96,6 +96,11 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 
 	 auto value = visitChildren(ctx->statementList());
 
+	 if(ctx->expression() != NULL)
+	 {
+		 visit(ctx->expression());
+	 }
+
 	 j_file << "\tret 1" << endl;
 	 j_file << function_name << "end:" << endl;
 	 function_name = "";
@@ -697,9 +702,38 @@ antlrcpp::Any Pass2Visitor::visitStr(mmcParser::StrContext *ctx)
 
 antlrcpp::Any Pass2Visitor::visitPrintfStatement(mmcParser::PrintfStatementContext *ctx)
 {
-	cout << "\tvisitPrintfStatement" << ctx->getText() << endl;
-	j_file << "\tgetstatic java/lang/System/out Ljava/io/PrintStream;" << endl;
-	auto value = visitChildren(ctx);
+	
+    cout << "\tvisitPrintfStatement" << ctx->getText() << endl;
+
+    j_file << "\tgetstatic java/lang/System/out Ljava/io/PrintStream;" << endl;
+    auto value = visit(ctx->str());
+
+    if(ctx->identifiers() != NULL)
+    {
+    	int identifier_count = ctx->identifiers()->expression().size();
+
+
+    	j_file << "\tldc\t" << identifier_count << endl;
+    	j_file << "\tanewarray java/lang/Object" << endl;
+
+
+
+    	for(int i = 0; i < identifier_count; i++)
+    	{
+    		j_file << "dup" << endl;
+    		j_file << "\tldc\t" << i << endl;
+    		visit(ctx->identifiers()->expression(i));
+    		TypeSpec *type = ctx->identifiers()->expression(i)->type;
+    		if(type == Predefined::integer_type || type == Predefined::boolean_type)
+    		{
+    			j_file << "\tinvokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer;" << endl;
+    		}
+    		j_file << "\taastore" << endl;
+    	}
+
+    	j_file << "\tinvokestatic  java/lang/String.format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;" << endl;
+    }
+
 	j_file << "\tinvokevirtual java/io/PrintStream/println(Ljava/lang/String;)V" << endl;
 	return value;
 }

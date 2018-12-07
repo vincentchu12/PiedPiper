@@ -31,7 +31,7 @@ functionDefinition  : typeID functionID '(' parameters? ')'
 functionCall : function '(' identifiers? ')' ;
 
 parameters   : declaration (',' declaration)* ;
-identifiers  : expression  (',' expression)+  ;
+identifiers  : expression  (',' expression)*  ;
 
 typeID       : IDENTIFIER ;
 functionID   : IDENTIFIER ;

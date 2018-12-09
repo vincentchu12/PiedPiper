@@ -1,0 +1,2 @@
+printf("This is just a regular string print");
+printf("This is a print with an integer: %d", );

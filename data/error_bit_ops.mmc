@@ -1,0 +1,10 @@
+int a = 9;
+
+printf("%d", a);
+printf("%d%d%d%d", a.b[3], a.b[2], a.b[1], a.b[0]);
+
+a.b[3] = 0;
+printf("%d", a);
+
+a.b[1] = 1;
+printf("%d", a);

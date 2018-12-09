@@ -1,0 +1,6 @@
+int a[4] = {94, 127, 47, 298};
+
+for(; int val:a)
+{
+    printf("The value at index: %d is %d", idx, val);
+}

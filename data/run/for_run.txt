@@ -3,4 +3,4 @@ Count 1!
 Count 2!
 Count 3!
 
-                0.03 seconds total execution time.
+                0.02 seconds total execution time.

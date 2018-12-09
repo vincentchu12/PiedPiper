@@ -434,10 +434,10 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FOR();
     StatementListContext *statementList();
-    VariableContext *variable();
-    MathExprContext *mathExpr();
     std::vector<DeclarationContext *> declaration();
     DeclarationContext* declaration(size_t i);
+    VariableContext *variable();
+    MathExprContext *mathExpr();
     DefinitionContext *definition();
     std::vector<AssignmentContext *> assignment();
     AssignmentContext* assignment(size_t i);

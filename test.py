@@ -1,7 +1,7 @@
 import sys
 import os
 
-files = list(filter(lambda file: ".txt" in file, os.listdir("data")))
+files = list(filter(lambda file: ".mmc" in file, os.listdir("data")))
 
 os.chdir("data")
 

@@ -31,25 +31,24 @@ int main(int argc, const char *args[])
     mmcParser parser(&tokens);
     tree::ParseTree *tree = parser.root();
 
-    cout << "+--------------------+" << endl;
-    cout << "|                    |" << endl;
-    cout << "|   Pass 1 Visitor   |" << endl;
-    cout << "|                    |" << endl;
-    cout << "+--------------------+" << endl;
+    // cout << "+--------------------+" << endl;
+    // cout << "|                    |" << endl;
+    // cout << "|   Pass 1 Visitor   |" << endl;
+    // cout << "|                    |" << endl;
+    // cout << "+--------------------+" << endl;
 
     Pass1Visitor *pass1 = new Pass1Visitor();
     pass1->visit(tree);
 
-    cout << "+--------------------+" << endl;
-    cout << "|                    |" << endl;
-    cout << "|   Pass 2 Visitor   |" << endl;
-    cout << "|                    |" << endl;
-    cout << "+--------------------+" << endl;
+    // cout << "+--------------------+" << endl;
+    // cout << "|                    |" << endl;
+    // cout << "|   Pass 2 Visitor   |" << endl;
+    // cout << "|                    |" << endl;
+    // cout << "+--------------------+" << endl;
 
     ostream& j_file = pass1->get_assembly_file();
 
     Pass2Visitor *pass2 = new Pass2Visitor(j_file);
     pass2->visit(tree);
-
     return 0;
 }

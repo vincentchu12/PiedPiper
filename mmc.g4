@@ -71,7 +71,7 @@ ifStatement	: IF '(' mathExpr ')' '{' statementList? '}'
 forStatement : FOR '('
 			 (
 			 	(
-			 		declaration? ';' declaration? ':' variable
+			 		declaration ';' declaration ':' variable
 			 	)
 			 |
 			 	(

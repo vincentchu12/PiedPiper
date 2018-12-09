@@ -2,6 +2,7 @@
 #define PASS1VISITOR_H_
 
 #include <iostream>
+#include <string>
 
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
@@ -27,6 +28,9 @@ public:
     virtual ~Pass1Visitor();
 
     ostream& get_assembly_file();
+
+    bool lookupVariable(mmcParser::VariableContext *ctx, SymTabEntry ** var_id);
+    bool determineType(mmcParser::TypeIDContext *ctx, TypeSpec ** type, string * type_indicator);
 
     antlrcpp::Any visitRoot(mmcParser::RootContext *ctx) override;
     antlrcpp::Any visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx) override;

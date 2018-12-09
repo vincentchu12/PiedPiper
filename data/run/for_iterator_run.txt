@@ -1,0 +1,10 @@
+The value at index: 0 is 94
+The value at index: 1 is 127
+The value at index: 2 is 47
+The value at index: 3 is 298
+The value at index: 0 is this
+The value at index: 1 is is
+The value at index: 2 is our
+The value at index: 3 is language
+
+                0.03 seconds total execution time.

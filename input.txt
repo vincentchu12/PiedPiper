@@ -1,5 +1,0 @@
-int a;
-string b;
-bool c;
-
-fuck a;

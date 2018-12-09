@@ -1,0 +1,53 @@
++--------------------+
+|                    |
+|   Pass 1 Visitor   |
+|                    |
++--------------------+
+=== Pass1Visitor(): symtab stack initialized.
+=== visitRoot: printf("This is just a regular string print");printf("This is a print with an integer: %d",4);printf("This is a print with an string: %s","Hello!");inta=19;printf("This is a print with a variable: %d",a);
+=== visitStrExpr: "This is just a regular string print"
+=== visitStrExpr: "This is a print with an integer: %d"
+=== visitUnsignedNumberExpr: 4
+=== visitNumber: 4
+=== visitStrExpr: "This is a print with an string: %s"
+=== visitStringExpr: "Hello!"
+=== visitStrExpr: "Hello!"
+=== visitVariableDefs: inta=19
+=== visitVariableID: a
+=== visitUnsignedNumberExpr: 19
+=== visitNumber: 19
+=== visitStrExpr: "This is a print with a variable: %d"
+=== visitVariableExpr: a
+=== visitVariable: a
+=== visitRoot: Printing xref table.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM printf ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a               
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
++--------------------+
+|                    |
+|   Pass 2 Visitor   |
+|                    |
++--------------------+
+	visitRoot      printf("This is just a regular string print");printf("This is a print with an integer: %d",4);printf("This is a print with an string: %s","Hello!");inta=19;printf("This is a print with a variable: %d",a);
+	visitPrintfStatementprintf("This is just a regular string print");
+	visitStr"This is just a regular string print"
+	visitPrintfStatementprintf("This is a print with an integer: %d",4);
+	visitStr"This is a print with an integer: %d"
+	visitNumber      4
+	visitPrintfStatementprintf("This is a print with an string: %s","Hello!");
+	visitStr"This is a print with an string: %s"
+	visitStr"Hello!"
+	visitVariableDefinta=19
+	visitNumber      19
+	visitPrintfStatementprintf("This is a print with a variable: %d",a);
+	visitStr"This is a print with a variable: %d"
+	visitVariableExpr      a
+I

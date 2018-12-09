@@ -1,0 +1,44 @@
++--------------------+
+|                    |
+|   Pass 1 Visitor   |
+|                    |
++--------------------+
+=== Pass1Visitor(): symtab stack initialized.
+=== visitRoot: inta=4;if(a!=5){printf("a is not 5");}
+=== visitVariableDefs: inta=4
+=== visitVariableID: a
+=== visitUnsignedNumberExpr: 4
+=== visitNumber: 4
+=== visitMathExpr: a!=5
+=== visitVariableExpr: a
+=== visitVariable: a
+=== visitUnsignedNumberExpr: 5
+=== visitNumber: 5
+=== visitStrExpr: "a is not 5"
+=== visitRoot: Printing xref table.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM if ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a               
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
++--------------------+
+|                    |
+|   Pass 2 Visitor   |
+|                    |
++--------------------+
+	visitRoot      inta=4;if(a!=5){printf("a is not 5");}
+	visitVariableDefinta=4
+	visitNumber      4
+	visitIfStatement      if(a!=5){printf("a is not 5");}
+	visitMathExpr      a!=5
+	visitVariableExpr      a
+I
+	visitNumber      5
+	visitPrintfStatementprintf("a is not 5");
+	visitStr"a is not 5"

@@ -1,0 +1,47 @@
++--------------------+
+|                    |
+|   Pass 1 Visitor   |
+|                    |
++--------------------+
+=== Pass1Visitor(): symtab stack initialized.
+=== visitRoot: inta=4;if(a<3){printf("a is less than 3");}else{printf("a is greater than 3");}
+=== visitVariableDefs: inta=4
+=== visitVariableID: a
+=== visitUnsignedNumberExpr: 4
+=== visitNumber: 4
+=== visitMathExpr: a<3
+=== visitVariableExpr: a
+=== visitVariable: a
+=== visitUnsignedNumberExpr: 3
+=== visitNumber: 3
+=== visitStrExpr: "a is less than 3"
+=== visitStrExpr: "a is greater than 3"
+=== visitRoot: Printing xref table.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM if_else ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+a               
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
++--------------------+
+|                    |
+|   Pass 2 Visitor   |
+|                    |
++--------------------+
+	visitRoot      inta=4;if(a<3){printf("a is less than 3");}else{printf("a is greater than 3");}
+	visitVariableDefinta=4
+	visitNumber      4
+	visitIfStatement      if(a<3){printf("a is less than 3");}else{printf("a is greater than 3");}
+	visitMathExpr      a<3
+	visitVariableExpr      a
+I
+	visitNumber      3
+	visitPrintfStatementprintf("a is greater than 3");
+	visitStr"a is greater than 3"
+	visitPrintfStatementprintf("a is less than 3");
+	visitStr"a is less than 3"

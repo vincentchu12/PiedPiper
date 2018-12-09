@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
+
 #include "Pass1Visitor.h"
 #include "wci/intermediate/SymTabFactory.h"
 #include "wci/intermediate/symtabimpl/Predefined.h"
@@ -18,14 +19,23 @@ extern string program_name;
 extern unordered_map<string, int> sizeTable;
 static string function_name = "";
 
+static SymTabEntry *variable_id;
+
 static void EXCEPTION(string message)
 {
 	cout << "Error: " << message << endl;
 	exit(1);
 }
 
-static bool determineType(string type_name, TypeSpec ** type, string * type_indicator)
+bool Pass1Visitor::determineType(mmcParser::TypeIDContext *ctx, TypeSpec ** type, string * type_indicator)
 {
+	if(ctx == NULL)
+	{
+		EXCEPTION("No type found");
+	}
+
+	string type_name = ctx->IDENTIFIER()->toString();
+    
     bool success = true;
     if(type_name == "int")
     {
@@ -54,6 +64,19 @@ static bool determineType(string type_name, TypeSpec ** type, string * type_indi
         success = false;
     }
     return success;
+}
+
+bool Pass1Visitor::lookupVariable(mmcParser::VariableContext *ctx, SymTabEntry ** var_id)
+{
+	if(ctx == NULL)
+	{
+		EXCEPTION("Variable is missing");
+	}
+
+	string variable_name = function_name + ctx->IDENTIFIER()->toString();
+    *var_id = symtab_stack->lookup(variable_name);
+
+    return *var_id != NULL;
 }
 
 Pass1Visitor::Pass1Visitor()
@@ -125,226 +148,130 @@ antlrcpp::Any Pass1Visitor::visitVariableDeclaration(mmcParser::VariableDeclarat
 {
     cout << "=== visitVariableDeclarations: " << ctx->getText() << endl;
     
-    variable_id_list.resize(0);
+    variable_id = nullptr;
     
     auto value = visitChildren(ctx);
 
     TypeSpec *type;
     string type_indicator;
-    string type_name = ctx->typeID()->IDENTIFIER()->toString();
 
-    if(determineType(type_name, &type, &type_indicator) == false)
+    if(determineType(ctx->typeID(), &type, &type_indicator) == false)
     {
         EXCEPTION("Invalid type!");
     }
 
-    for (SymTabEntry *id : variable_id_list) {
-        id->set_typespec(type);
+    // set the variable type
+    variable_id->set_typespec(type);
 
-        // Emit a field declaration.
-        j_file << ".field private static "
-               << id->get_name() << " " << type_indicator << endl;
-    }
-
+    // Emit a field declaration.
+    j_file << ".field private static " << variable_id->get_name() << " " << type_indicator << endl;
+    
     return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitArrayDeclaration(mmcParser::ArrayDeclarationContext *ctx)
 {
-	//should probably change this fr tho
     cout << "=== visitArrayDeclarations: " << ctx->getText() << endl;
-    variable_id_list.resize(0);
-    auto value = visitChildren(ctx);
+    variable_id = nullptr;
 
+    auto value = visitChildren(ctx);
 
     TypeSpec *type;
     string type_indicator;
+    
+    if(determineType(ctx->typeID(), &type, &type_indicator) == false)
+    {
+        EXCEPTION("Invalid type!");
+    }
+    
+    // Set the Variable Type
+    variable_id->set_typespec(type);
 
-    string type_name = ctx->typeID()->IDENTIFIER()->toString();
-    if (type_name == "int")
-    {
-        type = Predefined::integer_type;
-        type_indicator = "[I";
-    }
-    else if (type_name == "bool")
-    {
-        type = Predefined::boolean_type;
-        type_indicator = "[Z";
-    }
-    else if (type_name == "string")
-    {
-    	type = Predefined::char_type;
-        type_indicator = "[Ljava/lang/String;";
-    }
-    else if (type_name == "void")
-    {
-        type = Predefined::void_type;
-        type_indicator = "[V";
-    }
-    else
-    {
-        type = nullptr;
-        type_indicator = "?";
-    }
-
-    for (SymTabEntry *id : variable_id_list) {
-        id->set_typespec(type);
-
-        // Emit a field declaration.
-        j_file << ".field private static "
-               << id->get_name() << " " << type_indicator << endl;
-    }
+    // Emit a field declaration for arrays [.
+    j_file << ".field private static " << variable_id->get_name() << " " << "[" << type_indicator << endl;
 
     return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitVariableDef(mmcParser::VariableDefContext *ctx)
- {
-	    cout << "=== visitVariableDefs: " << ctx->getText() << endl;
-	    variable_id_list.resize(0);
-	    auto value = visitChildren(ctx);
+{
+    cout << "=== visitVariableDefs: " << ctx->getText() << endl;
+    variable_id = nullptr;
 
+    auto value = visitChildren(ctx);
 
-	    TypeSpec *type;
-	    string type_indicator;
+    TypeSpec *type;
+    string type_indicator;
 
-	    string type_name = ctx->typeID()->IDENTIFIER()->toString();
-	    if (type_name == "int")
-	    {
-	        type = Predefined::integer_type;
-	        type_indicator = "I";
-	    }
-	    else if (type_name == "bool")
-	    {
-	        type = Predefined::boolean_type;
-	        type_indicator = "Z";
-	    }
-	    else if (type_name == "string")
-	    {
-	    	type = Predefined::char_type;
-			type_indicator = "Ljava/lang/String;";
-	    }
-	    else if (type_name == "void")
-	    {
-	        type = Predefined::char_type;
-	        type_indicator = "V";
-	    }
-	    else
-	    {
-	        type = nullptr;
-	        type_indicator = "?";
-	    }
+    if(determineType(ctx->typeID(), &type, &type_indicator) == false)
+    {
+        EXCEPTION("Invalid type!");
+    }
 
-	    for (SymTabEntry *id : variable_id_list) {
-	        id->set_typespec(type);
+    // Set the Variable Type
+    variable_id->set_typespec(type);
 
-	        // Emit a field declaration.
-	        j_file << ".field private static "
-	               << id->get_name() << " " << type_indicator << endl;
-	    }
+    // Emit a field declaration.
+    j_file << ".field private static " << variable_id->get_name() << " " << type_indicator << endl;
 
-	    return value;
- }
+    return value;
+}
 
 antlrcpp::Any Pass1Visitor::visitArrayDef(mmcParser::ArrayDefContext *ctx)
   {
- 	    cout << "=== visitArrayDefs: " << ctx->getText() << endl;
- 	    variable_id_list.resize(0);
- 	    auto value = visitChildren(ctx);
+    cout << "=== visitArrayDefs: " << ctx->getText() << endl;
+    variable_id = nullptr;
 
+    auto value = visitChildren(ctx);
 
- 	    TypeSpec *type;
- 	    string type_indicator;
+    TypeSpec *type;
+    string type_indicator;
 
- 	    string type_name = ctx->typeID()->IDENTIFIER()->toString();
- 	    if (type_name == "int")
- 	    {
- 	        type = Predefined::integer_type;
- 	        type_indicator = "[I";
- 	    }
- 	    else if (type_name == "bool")
- 	    {
- 	        type = Predefined::boolean_type;
- 	        type_indicator = "[Z";
- 	    }
- 	    else if (type_name == "string")
- 	    {
- 	    	type = Predefined::char_type;
-			type_indicator = "[Ljava/lang/String;";
- 	    }
- 	    else if (type_name == "void")
- 	    {
- 	        type = Predefined::char_type;
- 	        type_indicator = "[V";
- 	    }
- 	    else
- 	    {
- 	        type = nullptr;
- 	        type_indicator = "?";
- 	    }
+    if(determineType(ctx->typeID(), &type, &type_indicator) == false)
+    {
+        EXCEPTION("Invalid type!");
+    }
 
- 	    for (SymTabEntry *id : variable_id_list) {
- 	        id->set_typespec(type);
+    // Set the Variable Type
+    variable_id->set_typespec(type);
 
- 	        // Emit a field declaration.
- 	        j_file << ".field private static "
- 	               << id->get_name() << " " << type_indicator << endl;
- 	    }
- 	    SymTabEntry *id = variable_id_list[0];
- 	    string name = id->get_name();
- 	    int size = stoi(ctx->number()->getText());
- 	    sizeTable.emplace(name, size);
+    // Emit a field declaration for arrays [.
+    j_file << ".field private static " << variable_id->get_name() << " " << "[" << type_indicator << endl;
+    
+    // Add array size to dictionary
+    string array_name = variable_id->get_name();
+    int    array_size = stoi(ctx->number()->getText());
+    
+    sizeTable.emplace(array_name, array_size);
 
- 	    return value;
+    return value;
   }
 
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(mmcParser::FunctionDefinitionContext *ctx)
 {
     cout << "=== visitFunctionDefinition: " + ctx->getText() << endl;
-    function_name = ctx->functionID()->getText() + "_";
-    
-    variable_id_list.resize(0);
 
+    function_name = ctx->functionID()->getText() + "_";
+        
+    variable_id = nullptr;
     auto value = visit(ctx->functionID());
     visit(ctx->typeID());
 
     TypeSpec *type;
     string type_indicator;
     
-    string type_name = ctx->typeID()->IDENTIFIER()->toString();
-    if (type_name == "int")
+    if(determineType(ctx->typeID(), &type, &type_indicator) == false)
     {
-        type = Predefined::integer_type;
-        type_indicator = "I";
+        EXCEPTION("Invalid type!");
     }
-    else if (type_name == "bool")
-    {
-        type = Predefined::boolean_type;
-        type_indicator = "Z";
-    }
-    else if (type_name == "string")
-    {
-        type = Predefined::char_type;
-        type_indicator = "Ljava/lang/String;";
-    }
-    else if (type_name == "void")
-    {
-        type = Predefined::char_type;
-        type_indicator = "V";
-    }
-    else
-    {
-        type = nullptr;
-        type_indicator = "?";
-    }
-
-    for (SymTabEntry *id : variable_id_list) {
-        id->set_typespec(type);
-    }
+    
+    variable_id->set_typespec(type);
 
     visit(ctx->parameters());
     visit(ctx->statementList());
+    visit(ctx->expression());
     function_name = "";
+
     return value;
 }
 
@@ -353,9 +280,14 @@ antlrcpp::Any Pass1Visitor::visitFunctionID(mmcParser::FunctionIDContext *ctx)
     cout << "=== visitFunctionID: " + ctx->getText() << endl;
 
     string func_name = ctx->IDENTIFIER()->toString();
-    SymTabEntry *function_id = symtab_stack->enter_local(func_name);
-    function_id->set_definition((Definition) DF_FUNCTION);
-    variable_id_list.push_back(function_id);
+    
+    if(symtab_stack->lookup(func_name) != NULL)
+    {
+        EXCEPTION("Redeclaration of function");
+    }
+
+    variable_id = symtab_stack->enter_local(func_name);
+    variable_id->set_definition((Definition) DF_FUNCTION);
 
     return visitChildren(ctx);
 }
@@ -365,9 +297,14 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
     cout << "=== visitVariableID: " + ctx->getText() << endl;
 
     string variable_name = function_name + ctx->IDENTIFIER()->toString();
-    SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
+    
+    if(symtab_stack->lookup(variable_name) != NULL)
+    {
+        EXCEPTION("Redeclaration of variable");
+    }
+
+    variable_id = symtab_stack->enter_local(variable_name);
     variable_id->set_definition((Definition) DF_VARIABLE);
-    variable_id_list.push_back(variable_id);
 
     return visitChildren(ctx);
 }
@@ -375,11 +312,13 @@ antlrcpp::Any Pass1Visitor::visitVariableID(mmcParser::VariableIDContext *ctx)
  antlrcpp::Any Pass1Visitor::visitVariable(mmcParser::VariableContext *ctx)
  {
      cout << "=== visitVariable: " + ctx->getText() << endl;
-	 string variable_name = function_name + ctx->IDENTIFIER()->toString();
-	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
+
+     if(lookupVariable(ctx, &variable_id) == false)
+     {
+         EXCEPTION("Variable is not defined");
+     }
 
 	 ctx->type = variable_id->get_typespec();
-
      return visitChildren(ctx);
  }
 
@@ -425,7 +364,7 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
    cout << "=== visitAddSubExpr: " + ctx->getText() << endl;
 
     auto value = visitChildren(ctx);
-
+    
     TypeSpec *type1 = ctx->expression(0)->type;
     TypeSpec *type2 = ctx->expression(1)->type;
 
@@ -441,13 +380,12 @@ antlrcpp::Any Pass1Visitor::visitAddSubExpr(mmcParser::AddSubExprContext *ctx)
 
  antlrcpp::Any Pass1Visitor::visitArrayExpr(mmcParser::ArrayExprContext *ctx)
  {
-	 cout << "=== visitArrayExpr: " + ctx->getText() << endl;
+	cout << "=== visitArrayExpr: " + ctx->getText() << endl;
 
 	auto value = visitChildren(ctx);
 	ctx->type = ctx->variable()->type;
 
-	 return value;
-
+	return value;
  }
 
 antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
@@ -455,6 +393,7 @@ antlrcpp::Any Pass1Visitor::visitNumber(mmcParser::NumberContext *ctx)
     cout << "=== visitNumber: " + ctx->getText() << endl;
 
     ctx->type = Predefined::integer_type;
+    
     return visitChildren(ctx);
 }
 
@@ -464,6 +403,7 @@ antlrcpp::Any Pass1Visitor::visitSignedNumber(mmcParser::SignedNumberContext *ct
 
     auto value = visit(ctx->number());
     ctx->type = ctx->number()->type;
+
     return value;
 }
 
@@ -473,6 +413,7 @@ antlrcpp::Any Pass1Visitor::visitSignedNumberExpr(mmcParser::SignedNumberExprCon
 
     auto value = visitChildren(ctx);
     ctx->type = ctx->signedNumber()->type;
+
     return value;
 }
 
@@ -482,13 +423,15 @@ antlrcpp::Any Pass1Visitor::visitBoolExpr(mmcParser::BoolExprContext *ctx)
 
     auto value = visitChildren(ctx);
     ctx->type = Predefined::boolean_type;
+
     return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitStr(mmcParser::StrContext *ctx)
 {
 	 cout << "=== visitStrExpr: " + ctx->getText() << endl;
-	 ctx->type = Predefined::char_type;
+	 
+     ctx->type = Predefined::char_type;
 
 	 return visitChildren(ctx);
 }
@@ -496,18 +439,20 @@ antlrcpp::Any Pass1Visitor::visitStr(mmcParser::StrContext *ctx)
 antlrcpp::Any Pass1Visitor::visitStringExpr(mmcParser::StringExprContext *ctx)
 {
 	   cout << "=== visitStringExpr: " + ctx->getText() << endl;
-
-	    auto value = visitChildren(ctx);
+	    
+        auto value = visitChildren(ctx);
 	    ctx->type = ctx->str()->type;
+
 	    return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitUnsignedNumberExpr(mmcParser::UnsignedNumberExprContext *ctx)
 {
     cout << "=== visitUnsignedNumberExpr: " + ctx->getText() << endl;
-
+    
     auto value = visitChildren(ctx);
     ctx->type = ctx->number()->type;
+
     return value;
 }
 
@@ -524,7 +469,6 @@ antlrcpp::Any Pass1Visitor::visitMathExpr(mmcParser::MathExprContext *ctx)
 antlrcpp::Any Pass1Visitor::visitMulDivModExpr(mmcParser::MulDivModExprContext *ctx)
 {
     cout << "=== visitMulDivExpr: " + ctx->getText() << endl;
-
     auto value = visitChildren(ctx);
 
     TypeSpec *type1 = ctx->expression(0)->type;
@@ -547,72 +491,91 @@ antlrcpp::Any Pass1Visitor::visitFuncCallExpr(mmcParser::FuncCallExprContext *ct
     string func_name = ctx->functionCall()->function()->IDENTIFIER()->toString();
     SymTabEntry *function_id = symtab_stack->lookup(func_name);
 
+    if(function_id == NULL)
+    {
+    	EXCEPTION("Function is not defined");
+    }
     ctx->type = function_id->get_typespec();
+
     return visitChildren(ctx);
 }
 
 antlrcpp::Any Pass1Visitor::visitParenExpr(mmcParser::ParenExprContext *ctx)
 {
-   cout << "=== visitParenExpr: " + ctx->getText() << endl;
+    cout << "=== visitParenExpr: " + ctx->getText() << endl;
 
     auto value = visitChildren(ctx);
     ctx->type = ctx->expression()->type;
+
     return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitUnaryExpr(mmcParser::UnaryExprContext *ctx)
 {
-   cout << "=== visitUnaryExpr: " + ctx->getText() << endl;
+    cout << "=== visitUnaryExpr: " + ctx->getText() << endl;
 
     auto value = visitChildren(ctx);
     ctx->type = ctx->unary()->type;
+
     return value;
 }
 
  antlrcpp::Any Pass1Visitor::visitPreInc(mmcParser::PreIncContext *ctx)
  {
-	 cout << "=== visitPreInc: " + ctx->getText() << endl;
-	 auto value = visitChildren(ctx);
+    cout << "=== visitPreInc: " + ctx->getText() << endl;
+    
+    auto value = visitChildren(ctx);
 
-	 string variable_name = ctx->variable()->IDENTIFIER()->toString();
-	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
+    if(lookupVariable(ctx->variable(), &variable_id) == false)
+    {
+        EXCEPTION("Variable is not defined");
+    }
+    ctx->type = variable_id->get_typespec();
 
-	 ctx->type = variable_id->get_typespec();
-	 return value;
+    return value;
  }
 
  antlrcpp::Any Pass1Visitor::visitPreDec(mmcParser::PreDecContext *ctx)
  {
-	 cout << "=== visitPreDec: " + ctx->getText() << endl;
-	 auto value = visitChildren(ctx);
+    cout << "=== visitPreDec: " + ctx->getText() << endl;
+    
+    auto value = visitChildren(ctx);
 
-	 string variable_name = ctx->variable()->IDENTIFIER()->toString();
-	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
+    if(lookupVariable(ctx->variable(), &variable_id) == false)
+    {
+        EXCEPTION("Variable is not defined");
+    }
+    ctx->type = variable_id->get_typespec();
 
-	 ctx->type = variable_id->get_typespec();
-	 return value;
+    return value;
  }
 
  antlrcpp::Any Pass1Visitor::visitPostInc(mmcParser::PostIncContext *ctx)
  {
-	 cout << "=== visitPostInc: " + ctx->getText() << endl;
-	 auto value = visitChildren(ctx);
+	cout << "=== visitPostInc: " + ctx->getText() << endl;
+	
+    auto value = visitChildren(ctx);
+    
+    if(lookupVariable(ctx->variable(), &variable_id) == false)
+    {
+        EXCEPTION("Variable is not defined");
+    }
+	ctx->type = variable_id->get_typespec();
 
-	 string variable_name = ctx->variable()->IDENTIFIER()->toString();
-	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
-
-	 ctx->type = variable_id->get_typespec();
-	 return value;
+	return value;
  }
 
  antlrcpp::Any Pass1Visitor::visitPostDec(mmcParser::PostDecContext *ctx)
  {
-	 cout << "=== visitPostDec: " + ctx->getText() << endl;
-	 auto value = visitChildren(ctx);
+    cout << "=== visitPostDec: " + ctx->getText() << endl;
+    
+    auto value = visitChildren(ctx);
 
-	 string variable_name = ctx->variable()->IDENTIFIER()->toString();
-	 SymTabEntry *variable_id = symtab_stack->lookup(variable_name);
+    if(lookupVariable(ctx->variable(), &variable_id) == false)
+    {
+        EXCEPTION("Variable is not defined");
+    }
+    ctx->type = variable_id->get_typespec();
 
-	 ctx->type = variable_id->get_typespec();
-	 return value;
+    return value;
  }

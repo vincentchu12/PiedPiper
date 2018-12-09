@@ -22,6 +22,12 @@ extern unordered_map<string, int> sizeTable;
 
 static string function_name = "";
 
+static void EXCEPTION(string message)
+{
+    cout << "Error: " << message << endl;
+    exit(1);
+}
+
 Pass2Visitor::Pass2Visitor(ostream& j_file)
     : j_file(j_file) {}
 
@@ -33,36 +39,35 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 {
     cout << "\tvisitRoot      " << ctx->getText() << endl;
     // visitMainBlock
-        // Emit the main program header.
-        j_file << endl;
-        j_file << ".method public static main([Ljava/lang/String;)V" << endl;
-        j_file << endl;
-        j_file << "\tnew RunTimer" << endl;
-        j_file << "\tdup" << endl;
-        j_file << "\tinvokenonvirtual RunTimer/<init>()V" << endl;
-        j_file << "\tputstatic        " << program_name
+    // Emit the main program header.
+    j_file << endl;
+    j_file << ".method public static main([Ljava/lang/String;)V" << endl;
+    j_file << endl;
+    j_file << "\tnew RunTimer" << endl;
+    j_file << "\tdup" << endl;
+    j_file << "\tinvokenonvirtual RunTimer/<init>()V" << endl;
+    j_file << "\tputstatic        " << program_name
+           << "/_runTimer LRunTimer;" << endl;
+    j_file << "\tnew PascalTextIn" << endl;
+    j_file << "\tdup" << endl;
+    j_file << "\tinvokenonvirtual PascalTextIn/<init>()V" << endl;
+    j_file << "\tputstatic        " + program_name
+           << "/_standardIn LPascalTextIn;" << endl;
+
+    auto value = visitChildren(ctx);
+
+    // Emit the main program epilogue.
+    j_file << endl;
+    j_file << "\tgetstatic     " << program_name
                << "/_runTimer LRunTimer;" << endl;
-        j_file << "\tnew PascalTextIn" << endl;
-        j_file << "\tdup" << endl;
-        j_file << "\tinvokenonvirtual PascalTextIn/<init>()V" << endl;
-        j_file << "\tputstatic        " + program_name
-               << "/_standardIn LPascalTextIn;" << endl;
+    j_file << "\tinvokevirtual RunTimer.printElapsedTime()V" << endl;
+    j_file << endl;
+    j_file << "\treturn" << endl;
+    j_file << endl;
+    j_file << ".limit locals 16" << endl;
+    j_file << ".limit stack 16" << endl;
+    j_file << ".end method" << endl;
 
-        auto value = visitChildren(ctx);
-
-        // Emit the main program epilogue.
-        j_file << endl;
-        j_file << "\tgetstatic     " << program_name
-                   << "/_runTimer LRunTimer;" << endl;
-        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V" << endl;
-        j_file << endl;
-        j_file << "\treturn" << endl;
-        j_file << endl;
-        j_file << ".limit locals 16" << endl;
-        j_file << ".limit stack 16" << endl;
-        j_file << ".end method" << endl;
-    //
-    //j_file.close();
     return value;
 }
 
@@ -146,6 +151,7 @@ antlrcpp::Any Pass2Visitor::visitRoot(mmcParser::RootContext *ctx)
 antlrcpp::Any Pass2Visitor::visitNumber(mmcParser::NumberContext *ctx)
 {
     cout << "\tvisitNumber      " << ctx->getText() << endl;
+    
     // Emit a load constant instruction.
     j_file << "\tldc\t" << ctx->getText() << endl;
 
@@ -156,11 +162,10 @@ antlrcpp::Any Pass2Visitor::visitSignedNumber(mmcParser::SignedNumberContext *ct
 {
     cout << "\tvisitSignedNumber      " << ctx->getText() << endl;
     auto value = visitChildren(ctx);
-    TypeSpec *type = ctx->number()->type;
 
     if (ctx->sign()->children[0]->getText() == "-")
     {
-        string opcode = (type == Predefined::integer_type) ? "ineg"
+        string opcode = (ctx->type == Predefined::integer_type) ? "ineg"
                       :                                      "?neg";
 
         // Emit a negate instruction.
@@ -175,14 +180,14 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(mmcParser::IfStatementContext *ctx)
     cout << "\tvisitIfStatement      " << ctx->getText() << endl;
 
     int math_expression_size = ctx->mathExpr().size();
-    int original_label = label_num;
-    int statement_size = ctx->statementList().size();
+    int original_label       = label_num;
+    int statement_size       = ctx->statementList().size();
 
     int current_label;
 
     bool has_else = (math_expression_size < statement_size) ? true : false;
 
-    int last_label = label_num+math_expression_size;
+    int last_label = label_num + math_expression_size;
 
     for(int i = 0; i < math_expression_size; i++)
     {
@@ -299,7 +304,7 @@ antlrcpp::Any Pass2Visitor::visitForStatement(mmcParser::ForStatementContext *ct
 
 		//i++
 		j_file << "\tgetstatic\t" << program_name
-				   << "/" << idx
+				   << "/" << function_name << idx
 				   << " " << type_idx << endl
 				   << "\ticonst_1" << endl
 				   << "\tiadd" << endl
@@ -382,7 +387,7 @@ antlrcpp::Any Pass2Visitor::visitVariableExpr(mmcParser::VariableExprContext *ct
                           : (type == Predefined::boolean_type) ? "Z"
 						  : (type == Predefined::char_type)    ? "Ljava/lang/String;"
                           :                                      "?";
-
+cout << type_indicator << endl;
     // Emit a field get instruction.
     j_file << "\tgetstatic\t" << program_name
            << "/" << function_name << variable_name << " " << type_indicator << endl;
@@ -881,7 +886,6 @@ antlrcpp::Any Pass2Visitor::visitArrayAssignment(mmcParser::ArrayAssignmentConte
 	visit(ctx->expression(1));
 	j_file << "\t" << store <<endl;
 
-	//TODO ADD POINTERS TO GRAMMAR FILE ARRAYS SO WE CAN DO a[i]
 	return NULL;
 }
 

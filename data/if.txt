@@ -1,0 +1,6 @@
+int a = 4;
+
+if(a != 5)
+{
+    printf("a is not 5");
+}

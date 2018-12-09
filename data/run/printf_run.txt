@@ -1,0 +1,6 @@
+This is just a regular string print
+This is a print with an integer: 4
+This is a print with an string: Hello!
+This is a print with a variable: 19
+
+                0.03 seconds total execution time.

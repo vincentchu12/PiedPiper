@@ -1,0 +1,13 @@
+int a[4] = {94, 127, 47, 298};
+
+for(int idx; int val:a)
+{
+    printf("The value at index: %d is %d", idx, val);
+}
+
+string c[4] = {"this", "is", "our", "language"};
+
+for(int index; string value:c)
+{
+    printf("The value at index: %d is %s", index, value);
+}

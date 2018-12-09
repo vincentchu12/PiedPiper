@@ -1,0 +1,9 @@
+
+printf("This is just a regular string print");
+printf("This is a print with an integer: %d", 4);
+printf("This is a print with an string: %s", "Hello!");
+
+int a = 19;
+
+printf("This is a print with a variable: %d", a);
+

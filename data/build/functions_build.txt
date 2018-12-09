@@ -1,0 +1,102 @@
++--------------------+
+|                    |
+|   Pass 1 Visitor   |
+|                    |
++--------------------+
+=== Pass1Visitor(): symtab stack initialized.
+=== visitRoot: intpowerOf(intnum,intn){intans=1;for(inti=0;i<n;i++){ans=ans*num;}returnans;}printf("4 to the power of 8 is: %d",powerOf(4,8));
+=== visitFunctionDefinition: intpowerOf(intnum,intn){intans=1;for(inti=0;i<n;i++){ans=ans*num;}returnans;}
+=== visitFunctionID: powerOf
+=== visitVariableDeclarations: intnum
+=== visitVariableID: num
+=== visitVariableDeclarations: intn
+=== visitVariableID: n
+=== visitVariableDefs: intans=1
+=== visitVariableID: ans
+=== visitUnsignedNumberExpr: 1
+=== visitNumber: 1
+=== visitVariableDefs: inti=0
+=== visitVariableID: i
+=== visitUnsignedNumberExpr: 0
+=== visitNumber: 0
+=== visitMathExpr: i<n
+=== visitVariableExpr: i
+=== visitVariable: i
+=== visitVariableExpr: n
+=== visitVariable: n
+=== visitUnaryExpr: i++
+=== visitPostInc: i++
+=== visitVariable: i
+=== visitVariable: ans
+=== visitMulDivExpr: ans*num
+=== visitVariableExpr: ans
+=== visitVariable: ans
+=== visitVariableExpr: num
+=== visitVariable: num
+=== visitVariableExpr: ans
+=== visitVariable: ans
+=== visitStrExpr: "4 to the power of 8 is: %d"
+=== visitFuncCallExpr: powerOf(4,8)
+=== visitUnsignedNumberExpr: 4
+=== visitNumber: 4
+=== visitUnsignedNumberExpr: 8
+=== visitNumber: 8
+=== visitRoot: Printing xref table.
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM functions ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+powerOf         
+                                 Defined as: FUNCTION
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
+powerOf_ans     
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
+powerOf_i       
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
+powerOf_n       
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
+powerOf_num     
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = integer
++--------------------+
+|                    |
+|   Pass 2 Visitor   |
+|                    |
++--------------------+
+	visitRoot      intpowerOf(intnum,intn){intans=1;for(inti=0;i<n;i++){ans=ans*num;}returnans;}printf("4 to the power of 8 is: %d",powerOf(4,8));
+	visitFunctionDefinitionintpowerOf(intnum,intn){intans=1;for(inti=0;i<n;i++){ans=ans*num;}returnans;}
+	visitVariableDefintans=1
+	visitNumber      1
+	visitForStatement for(inti=0;i<n;i++){ans=ans*num;}
+	visitVariableDefinti=0
+	visitNumber      0
+	visitMathExpr      i<n
+	visitVariableExpr      i
+I
+	visitVariableExpr      n
+I
+	visitVariableAssignmentans=ans*num
+	visitMulDivModExpr      ans*num
+	visitVariableExpr      ans
+I
+	visitVariableExpr      num
+I
+	visitUnaryExpr
+	visitPostInc
+	visitVariableExpr      ans
+I
+	visitPrintfStatementprintf("4 to the power of 8 is: %d",powerOf(4,8));
+	visitStr"4 to the power of 8 is: %d"
+	visitNumber      4
+	visitNumber      8

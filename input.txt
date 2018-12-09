@@ -1,6 +1,5 @@
-string a[3] = {"hello", "goodbye", "there"};
+int a;
+string b;
+bool c;
 
-for(int i; string b: a)
-{
-	printf("%s", b);
-}
+fuck a;

@@ -18,6 +18,44 @@ extern string program_name;
 extern unordered_map<string, int> sizeTable;
 static string function_name = "";
 
+static void EXCEPTION(string message)
+{
+	cout << "Error: " << message << endl;
+	exit(1);
+}
+
+static bool determineType(string type_name, TypeSpec ** type, string * type_indicator)
+{
+    bool success = true;
+    if(type_name == "int")
+    {
+        *type = Predefined::integer_type;
+        *type_indicator = "I";
+    }
+    else if (type_name == "bool")
+    {
+        *type = Predefined::boolean_type;
+        *type_indicator = "Z";
+    }
+    else if (type_name == "string")
+    {
+        *type = Predefined::char_type;
+        *type_indicator = "Ljava/lang/String;";
+    }
+    else if (type_name == "void")
+    {
+        *type = Predefined::void_type;
+        *type_indicator = "V";
+    }
+    else
+    {
+        *type = nullptr;
+        *type_indicator = "?";
+        success = false;
+    }
+    return success;
+}
+
 Pass1Visitor::Pass1Visitor()
     : program_id(nullptr), j_file(nullptr)
 {
@@ -26,7 +64,6 @@ Pass1Visitor::Pass1Visitor()
     Predefined::initialize(symtab_stack);
 
     cout << "=== Pass1Visitor(): symtab stack initialized." << endl;
-
 }
 
 Pass1Visitor::~Pass1Visitor() {}
@@ -34,34 +71,32 @@ Pass1Visitor::~Pass1Visitor() {}
 ostream& Pass1Visitor::get_assembly_file() { return j_file; }
 
 antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
-{
-    
+{   
     // Visit Header Block
-        cout << "=== visitRoot: " + ctx->getText() << endl;
+    cout << "=== visitRoot: " + ctx->getText() << endl;
 
-        program_id = symtab_stack->enter_local(program_name);
-        program_id->set_definition((Definition)DF_PROGRAM);
-        program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB,
-                                  symtab_stack->push());
-        symtab_stack->set_program_id(program_id);
+    program_id = symtab_stack->enter_local(program_name);
+    program_id->set_definition((Definition)DF_PROGRAM);
+    program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB,
+                              symtab_stack->push());
+    symtab_stack->set_program_id(program_id);
 
-        // Create the assembly output file.
-        j_file.open(program_name + ".j");
-        if (j_file.fail())
-        {
-                cout << "***** Cannot open assembly file." << endl;
-                exit(-99);
-        }
+    // Create the assembly output file.
+    j_file.open(program_name + ".j");
+    if (j_file.fail())
+    {
+            cout << "***** Cannot open assembly file." << endl;
+            exit(-99);
+    }
 
-        // Emit the program header.
-        j_file << ".class public " << program_name << endl;
-        j_file << ".super java/lang/Object" << endl;
+    // Emit the program header.
+    j_file << ".class public " << program_name << endl;
+    j_file << ".super java/lang/Object" << endl;
 
-        // Emit the RunTimer and PascalTextIn fields.
-        j_file << endl;
-        j_file << ".field private static _runTimer LRunTimer;" << endl;
-        j_file << ".field private static _standardIn LPascalTextIn;" << endl;
-    // Visit Header Block
+    // Emit the RunTimer and PascalTextIn fields.
+    j_file << endl;
+    j_file << ".field private static _runTimer LRunTimer;" << endl;
+    j_file << ".field private static _standardIn LPascalTextIn;" << endl;
 
     auto value = visitChildren(ctx);
 
@@ -89,38 +124,18 @@ antlrcpp::Any Pass1Visitor::visitRoot(mmcParser::RootContext *ctx)
 antlrcpp::Any Pass1Visitor::visitVariableDeclaration(mmcParser::VariableDeclarationContext *ctx)
 {
     cout << "=== visitVariableDeclarations: " << ctx->getText() << endl;
+    
     variable_id_list.resize(0);
+    
     auto value = visitChildren(ctx);
-
 
     TypeSpec *type;
     string type_indicator;
-
     string type_name = ctx->typeID()->IDENTIFIER()->toString();
-    if (type_name == "int")
+
+    if(determineType(type_name, &type, &type_indicator) == false)
     {
-        type = Predefined::integer_type;
-        type_indicator = "I";
-    }
-    else if (type_name == "bool")
-    {
-        type = Predefined::boolean_type;
-        type_indicator = "Z";
-    }
-    else if (type_name == "string")
-    {
-    	type = Predefined::char_type;
-		type_indicator = "Ljava/lang/String;";
-    }
-    else if (type_name == "void")
-    {
-        type = Predefined::void_type;
-        type_indicator = "V";
-    }
-    else
-    {
-        type = nullptr;
-        type_indicator = "?";
+        EXCEPTION("Invalid type!");
     }
 
     for (SymTabEntry *id : variable_id_list) {

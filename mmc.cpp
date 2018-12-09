@@ -16,43 +16,6 @@ using namespace antlr4;
 string program_name;
 unordered_map<string, int> sizeTable;
 
-void printAss2Visitor()
-{
-    cout << "                  X XXX XX XX XX XXXXX" << endl;
-    cout << "         X XXXXXXX                    XX XX XXXX" << endl;
-    cout << "     XXXX                                        X X" << endl;
-    cout << "   XXX                                                  X" << endl;
-    cout << "  X                                                      XXXX" << endl;
-    cout << " X        +----------------------------------------+         XX" << endl;
-    cout << "XX        |                                        |          X" << endl;
-    cout << "X         |      Pass 2 Visitor                    |           XX" << endl;
-    cout << "X         |                                        |            X" << endl;
-    cout << "X         |                                        |            X" << endl;
-    cout << "XX        +----------------------------------------+            X" << endl;
-    cout << " XX                                                             X" << endl;
-    cout << "  XXXXX    XXXX  X                       +                     X" << endl;
-    cout << "       XXXXX    XX                       |                    X" << endl;
-    cout << "                X                        |                   X" << endl;
-    cout << "                X                        |" << endl;
-    cout << "                 X                       |                 X" << endl;
-    cout << "                 XX                      |               XX" << endl;
-    cout << "                  XX                     |             X" << endl;
-    cout << "                   XX                    |           XX" << endl;
-    cout << "                     XX                  |       XXXX" << endl;
-    cout << "                       X                 |  XX XXX" << endl;
-    cout << "                           XXX X X  X  X |X" << endl;
-    cout << "                                         |" << endl;
-    cout << "                                         |" << endl;
-    cout << "                                         |          +------>" << endl;
-    cout << "                                         |          |" << endl;
-    cout << "                                         |          |" << endl;
-    cout << "                                         |          |" << endl;
-    cout << "                                         +------------------->" << endl;
-    cout << "                                                    |" << endl;
-    cout << "                                                    |" << endl;
-    cout << "                                                    +---------->" << endl;
-    cout << "" << endl;
-}
 
 int main(int argc, const char *args[])
 {
@@ -68,10 +31,20 @@ int main(int argc, const char *args[])
     mmcParser parser(&tokens);
     tree::ParseTree *tree = parser.root();
 
+    cout << "+--------------------+" << endl;
+    cout << "|                    |" << endl;
+    cout << "|   Pass 1 Visitor   |" << endl;
+    cout << "|                    |" << endl;
+    cout << "+--------------------+" << endl;
+
     Pass1Visitor *pass1 = new Pass1Visitor();
     pass1->visit(tree);
 
-    printAss2Visitor();
+    cout << "+--------------------+" << endl;
+    cout << "|                    |" << endl;
+    cout << "|   Pass 2 Visitor   |" << endl;
+    cout << "|                    |" << endl;
+    cout << "+--------------------+" << endl;
 
     ostream& j_file = pass1->get_assembly_file();
 
